@@ -1,4 +1,10 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="NuGet.Config" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="Fleet.API/Fleet.API.csproj" />
   <Project Path="ShoppingList.API/ShoppingList.API.csproj" />
   <Project Path="Webshop.API/Webshop.API.csproj" />
