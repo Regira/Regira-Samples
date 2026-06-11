@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Fleet.API/Fleet.API.csproj" />
+  <Project Path="ShoppingList.API/ShoppingList.API.csproj" />
+  <Project Path="Webshop.API/Webshop.API.csproj" />
+</Solution>

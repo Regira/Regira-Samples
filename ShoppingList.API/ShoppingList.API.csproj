@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ShoppingList.API</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- API surface: OpenAPI + Scalar UI (Regira default, no Swagger) -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="*" />
+
+    <!-- Structured logging (Regira BasicApi template) -->
+    <PackageReference Include="Serilog.AspNetCore" Version="*" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="*" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="*" />
+    <PackageReference Include="Serilog.Sinks.File" Version="*" />
+
+    <!-- EF Core provider -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+
+    <!-- Regira Entities framework -->
+    <PackageReference Include="Regira.Entities.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Regira.Entities.EFcore" Version="6.0.0" />
+    <PackageReference Include="Regira.Entities.Web" Version="6.0.0" />
+    <PackageReference Include="Regira.Entities.Mapping.Mapster" Version="6.0.0" />
+
+    <!-- Fake data generation for seeding -->
+    <PackageReference Include="Bogus" Version="*" />
+  </ItemGroup>
+
+</Project>
