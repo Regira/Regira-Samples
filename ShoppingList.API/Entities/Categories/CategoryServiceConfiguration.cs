@@ -1,27 +1,24 @@
 using Microsoft.EntityFrameworkCore;
-using Regira.Entities.DependencyInjection.ServiceBuilders;
-using Regira.Entities.DependencyInjection.ServiceBuilders.Abstractions;
+using Regira.Entities.DependencyInjection.ServiceCollections;
+using Regira.Entities.DependencyInjection.ServiceCollections.Abstractions;
 using Regira.Entities.Models;
-using ShoppingList.API.Data;
+using ShoppingListApi.Data;
 
-namespace ShoppingList.API.Entities.Categories;
+namespace ShoppingListApi.Entities.Categories;
 
 public static class CategoryServiceConfiguration
 {
-    /// <summary>
-    /// Registers the <see cref="Category"/> entity service: hierarchy filtering, text search (Q),
-    /// parent/child includes, an article-count processor, and synchronization of the self-referential links.
-    /// </summary>
-    public static IEntityServiceCollection<ShoppingDbContext> AddCategories(this IEntityServiceCollection<ShoppingDbContext> services)
-    {
-        services.For<Category, CategorySearchObject, EntitySortBy, CategoryIncludes>(e =>
+    public static EntityServiceCollection<ShoppingListDbContext> AddCategories(
+        this IEntityServiceCollection<ShoppingListDbContext> services)
+        => services.For<Category, CategorySearchObject, EntitySortBy, CategoryIncludes>(e =>
         {
-            // Nested output projections + the InputDto->entity pair used by Related().
-            e.AddMapping<CategoryCoreDto, CategoryCoreDto>();
-            e.AddMapping<ParentCategoryDto, ParentCategoryDto>();
-            e.AddMapping<ChildCategoryDto, ChildCategoryDto>();
-            e.AddMapping<RelatedCategoryInputDto, RelatedCategory>();
+            // DTO mapping — top-level pair + the nested related collections (read & write).
+            e.UseMapping<CategoryDto, CategoryInputDto>();
+            e.AddMapping<ParentCategoryDto, ParentCategoryDto>();   // nested output collection
+            e.AddMapping<ChildCategoryDto, ChildCategoryDto>();     // nested output collection
+            e.AddMapping<RelatedCategoryInputDto, RelatedCategory>(); // input items synced via Related()
 
+            // Filtering (Q full-text search is provided globally for IHasNormalizedContent).
             e.Filter((query, so) =>
             {
                 if (so?.ParentId?.Any() == true)
@@ -34,19 +31,23 @@ public static class CategoryServiceConfiguration
                         : query.Where(x => x.ParentEntities!.Any());
                 return query;
             });
-            e.SortBy((query, _) => query.OrderBy(x => x.Title));
+
+            e.SortBy((query, sortBy) => query.OrderBy(x => x.Title));
+
+            // Eager-load the hierarchy on demand (?includes=Parents / Children / All).
             e.Includes((query, includes) =>
             {
                 if (includes?.HasFlag(CategoryIncludes.Parents) == true)
-                    query = query.Include(x => x.ParentEntities!).ThenInclude(x => x.Parent);
+                    query = query.Include(x => x.ParentEntities!).ThenInclude(rc => rc.Parent);
                 if (includes?.HasFlag(CategoryIncludes.Children) == true)
-                    query = query.Include(x => x.ChildEntities!).ThenInclude(x => x.Child);
+                    query = query.Include(x => x.ChildEntities!).ThenInclude(rc => rc.Child);
                 return query;
             });
+
             e.AddProcessor<CategoryProcessor>();
+
+            // Owned join collections — synchronized through this service.
             e.Related(x => x.ParentEntities);
             e.Related(x => x.ChildEntities);
         });
-        return services;
-    }
 }

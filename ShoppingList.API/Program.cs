@@ -5,9 +5,9 @@ using Regira.Entities.EFcore.Normalizing;
 using Regira.Entities.EFcore.Primers;
 using Scalar.AspNetCore;
 using Serilog;
-using ShoppingList.API.Data;
-using ShoppingList.API.Extensions;
-using ShoppingList.API.Infrastructure;
+using ShoppingListApi.Data;
+using ShoppingListApi.Extensions;
+using ShoppingListApi.Seeding;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
@@ -16,7 +16,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
 
-    // Fail fast on entity-service registration mismatches.
+    // Catch missing / mismatched entity-service registrations at startup instead of first request.
     builder.Host.UseDefaultServiceProvider(o =>
     {
         o.ValidateOnBuild = true;
@@ -31,20 +31,24 @@ try
         });
     builder.Services.AddOpenApi();
 
-    // DbContext with Regira interceptors (primers, normalizers, auto-truncate).
-    builder.Services.AddDbContext<ShoppingDbContext>((sp, options) =>
+    // EF Core (SQLite) with Regira interceptors for primers, normalizers, and auto-truncate.
+    builder.Services.AddDbContext<ShoppingListDbContext>((sp, options) =>
         options.UseSqlite(builder.Configuration.GetConnectionString("Default"))
             .AddPrimerInterceptors(sp)
             .AddNormalizerInterceptors(sp)
             .AddAutoTruncateInterceptors());
 
-    // Regira entity services + shopping-list domain entities.
-    builder.Services.AddEntityServices();
+    builder.Services.AddEntityServices(builder.Configuration);
 
     var app = builder.Build();
 
-    // Create the SQLite database (disposable test infrastructure) and seed sample data.
-    await SeedData.InitializeAsync(app.Services);
+    // Create the SQLite database (no migrations for the disposable starter DB) and seed sample data.
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ShoppingListDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
+        await DataSeeder.SeedAsync(scope.ServiceProvider);
+    }
 
     app.MapOpenApi();
     app.MapScalarApiReference();

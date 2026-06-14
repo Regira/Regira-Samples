@@ -1,53 +1,60 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Regira.DAL.EFcore.Services;
-using Regira.Entities.EFcore.Normalizing;
-using Regira.Entities.EFcore.Primers;
 using Scalar.AspNetCore;
+using Serilog;
 using Webshop.API.Data;
 using Webshop.API.Extensions;
-using Webshop.API.Seeding;
+using Webshop.API.Infrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
-builder.Host.UseDefaultServiceProvider(o =>
+try
 {
-    o.ValidateOnBuild = true;
-    o.ValidateScopes = true;
-});
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    builder.Host.UseDefaultServiceProvider(o =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        o.ValidateOnBuild = true;
+        o.ValidateScopes = true;
     });
 
-builder.Services.AddDbContext<WebshopDbContext>((sp, options) =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default"))
-           .AddPrimerInterceptors(sp)
-           .AddNormalizerInterceptors(sp)
-           .AddAutoTruncateInterceptors());
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
-builder.Services.AddEntityServices(builder.Configuration);
+    builder.Services.AddOpenApi();
 
-builder.Services.AddOpenApi();
+    builder.Services.AddEntityServices(builder.Configuration);
 
-var app = builder.Build();
+    var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
-    await dbContext.Database.EnsureCreatedAsync();
-    await DataSeeder.SeedAsync(scope.ServiceProvider);
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
+        dbContext.Database.EnsureCreated();
+        await scope.ServiceProvider.SeedDataAsync();
+    }
+
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.MapOpenApi();
-app.MapScalarApiReference();
-
-app.UseHttpsRedirection();
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application start-up failed");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

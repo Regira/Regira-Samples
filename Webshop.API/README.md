@@ -1,30 +1,16 @@
 # Webshop.API
 
-A RESTful webshop API built with **ASP.NET Core 10** and the **Regira Entities** framework. Customers can browse categorised products, filter by category, price, and stock, and submit orders.
+A RESTful API for a webshop built with **ASP.NET Core (.NET 10)** and the **Regira Entities** framework.  
+Customers can browse categorised products and submit orders. The API is fully self-contained: it uses an SQLite database (created automatically on first run) and seeds ~110 sample orders on startup.
 
 ---
 
-## Table of Contents
-
-- [Getting Started](#getting-started)
-- [API Endpoints](#api-endpoints)
-  - [Categories](#categories)
-  - [Products](#products)
-  - [Customers](#customers)
-  - [Orders](#orders)
-- [Filtering & Searching](#filtering--searching)
-- [Common Patterns for SPA Consumers](#common-patterns-for-spa-consumers)
-- [Sample Data](#sample-data)
-- [Project Structure](#project-structure)
-- [Credits](#credits)
-
----
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- The Regira private NuGet feed is already wired in `NuGet.Config` at the solution root.
 
 ### Run
 
@@ -33,334 +19,220 @@ cd Webshop.API
 dotnet run
 ```
 
-The API starts on `https://localhost:5001` (or `http://localhost:5000`).  
-Interactive API documentation (Scalar UI) is available at:
-
-```
-https://localhost:5001/scalar/v1
-```
-
-The SQLite database (`webshop.db`) is created automatically on first run and seeded with:
-- 8 categories
-- 41 products
-- 20 customers
-- ~102 orders
+The Scalar API explorer opens automatically at `https://localhost:7200/scalar`.  
+The SQLite database (`webshop.db`) and sample data are created on first startup.
 
 ---
 
-## API Endpoints
+## Domain model
 
-All endpoints follow the Regira Entities convention. Each resource exposes:
+| Entity | Key | Description |
+|--------|-----|-------------|
+| `Category` | `int` | Product category (Electronics, Clothing, …) |
+| `Product` | `int` | A sellable item; belongs to one or more categories via `ProductCategory` |
+| `Customer` | `Guid` | Registered shopper |
+| `Order` | `int` | A customer's purchase; holds one or more `OrderLine` items |
+| `OrderLine` | `int` | A single product + quantity + unit price inside an order |
 
-| Method   | Route              | Description                      |
-|----------|--------------------|----------------------------------|
-| `GET`    | `/{id}`            | Get single item by ID            |
-| `GET`    | `/`                | List all items (no filter)       |
-| `POST`   | `/list`            | List with filter in request body |
-| `GET`    | `/search`          | Search with count (query string) |
-| `POST`   | `/search`          | Search with count (body)         |
-| `POST`   | `/`                | Create new item                  |
-| `POST`   | `/save`            | Upsert (create or update)        |
-| `PUT`    | `/{id}`            | Full update                      |
-| `PATCH`  | `/{id}`            | Partial update (JSON Merge Patch)|
-| `DELETE` | `/{id}`            | Delete item                      |
+### Category → Product (many-to-many)
 
----
+A product can appear in multiple categories. The `ProductCategory` join table links them.  
+Filter products by one or more `CategoryId` values via the product search endpoint.
 
-### Categories
+### Customer → Order → OrderLine → Product
 
-**Base route:** `/categories`
-
-#### SearchObject fields
-
-| Field       | Type       | Description                                 |
-|-------------|------------|---------------------------------------------|
-| `q`         | `string`   | Full-text search (title + description)      |
-| `ids`       | `int[]`    | Filter by specific IDs                      |
-| `parentId`  | `int[]`    | Categories that have these parent IDs       |
-| `childId`   | `int[]`    | Categories that have these child IDs        |
-| `isRoot`    | `bool`     | `true` = top-level only, `false` = sub only |
-
-#### Includes (query string `?includes=`)
-
-| Value      | Description                                   |
-|------------|-----------------------------------------------|
-| `Parents`  | Include parent category relationships         |
-| `Children` | Include child category relationships          |
-| `All`      | Include both parents and children             |
-
-**Each category DTO includes a `productCount` field** filled automatically.
+Each order belongs to exactly one customer and contains one or more order lines referencing products.  
+The `Total` on `Order` is calculated automatically from the lines on every save.
 
 ---
 
-### Products
+## API reference
 
-**Base route:** `/products`
+The full, interactive API reference is available at `/scalar` when the app is running.  
+All endpoints return JSON with null fields omitted and enum values serialised as strings.
 
-#### SearchObject fields
+### Categories  `/categories`
 
-| Field        | Type       | Description                                   |
-|--------------|------------|-----------------------------------------------|
-| `q`          | `string`   | Full-text search (title + description)        |
-| `ids`        | `int[]`    | Filter by specific IDs                        |
-| `categoryId` | `int[]`    | Filter products belonging to these categories |
-| `minPrice`   | `decimal`  | Minimum price                                 |
-| `maxPrice`   | `decimal`  | Maximum price                                 |
-| `inStock`    | `bool`     | `true` = only products with stock > 0         |
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/categories` | List all categories (supports `?q=` text search) |
+| `GET` | `/categories/{id}` | Category details |
+| `POST` | `/categories` | Create a new category |
+| `PUT` | `/categories/{id}` | Full update |
+| `PATCH` | `/categories/{id}` | Partial update (JSON Merge Patch) |
+| `DELETE` | `/categories/{id}` | Delete |
+| `POST` | `/categories/save` | Upsert (create or update) |
 
-#### SortBy values
+**Filter parameters (query string or POST body)**
 
-| Value       | Description           |
-|-------------|-----------------------|
-| `Default`   | Title A–Z             |
-| `Title`     | Title A–Z             |
-| `TitleDesc` | Title Z–A             |
-| `Price`     | Price low–high        |
-| `PriceDesc` | Price high–low        |
-| `Newest`    | Newest first          |
-| `Oldest`    | Oldest first          |
-
-#### Includes
-
-| Value | Description                               |
-|-------|-------------------------------------------|
-| `All` | Include product categories with category details |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `q` | `string` | Text search on title and description |
+| `id` | `int` | Filter by exact id |
+| `ids` | `int[]` | Filter by id list |
+| `isArchived` | `bool` | Show only archived / non-archived |
 
 ---
 
-### Customers
+### Products  `/products`
 
-**Base route:** `/customers`
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/products` | List products |
+| `POST` | `/products/list` | List products (filter in body) |
+| `GET` | `/products/search` | Search with total count |
+| `POST` | `/products/search` | Search (filter in body) |
+| `GET` | `/products/{id}` | Product details |
+| `POST` | `/products` | Create |
+| `PUT` | `/products/{id}` | Full update |
+| `PATCH` | `/products/{id}` | Partial update |
+| `DELETE` | `/products/{id}` | Delete |
+| `POST` | `/products/save` | Upsert |
 
-> Customer IDs are **GUIDs** (not integers).
+**Filter / sort parameters**
 
-#### SearchObject fields
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `q` | `string` | Full-text search on title and description |
+| `categoryId` | `int[]` | Filter by one or more category ids |
+| `minPrice` | `decimal` | Minimum price |
+| `maxPrice` | `decimal` | Maximum price |
+| `inStock` | `bool` | Only show products with `Stock > 0` |
+| `sortBy` | `ProductSortBy` | `Default`, `Title`, `TitleDesc`, `Price`, `PriceDesc`, `Newest` |
+| `includes` | `EntityIncludes` | `All` to include category details in the response |
+| `page` | `int` | Page number (default 1) |
+| `pageSize` | `int` | Page size (default 50, max 200) |
 
-| Field | Type     | Description            |
-|-------|----------|------------------------|
-| `q`   | `string` | Full-text search (name + email) |
-| `ids` | `guid[]` | Filter by specific IDs |
-
-#### Input model
+**Create / update body** (`ProductInputDto`)
 
 ```json
 {
-  "name": "Alice Johnson",
-  "email": "alice@example.com",
-  "phone": "+32 470 000 001"
-}
-```
-
----
-
-### Orders
-
-**Base route:** `/orders`
-
-#### SearchObject fields
-
-| Field        | Type            | Description                                |
-|--------------|-----------------|--------------------------------------------|
-| `q`          | `string`        | Full-text search                           |
-| `ids`        | `int[]`         | Filter by specific order IDs               |
-| `code`       | `string`        | Exact order code match                     |
-| `customerId` | `guid[]`        | Filter by customer GUIDs                   |
-| `productId`  | `int[]`         | Orders containing these products           |
-| `categoryId` | `int[]`         | Orders containing products from categories |
-| `status`     | `OrderStatus[]` | Filter by order status                     |
-
-#### OrderStatus values
-
-| Value        | Meaning                   |
-|--------------|---------------------------|
-| `Pending`    | Awaiting processing       |
-| `Processing` | Being prepared/packed     |
-| `Shipped`    | Dispatched to carrier     |
-| `Delivered`  | Received by customer      |
-| `Cancelled`  | Order was cancelled       |
-
-#### Includes
-
-| Value        | Description                              |
-|--------------|------------------------------------------|
-| `Customer`   | Embed full customer object               |
-| `OrderLines` | Embed order lines with product details   |
-| `All`        | Include both customer and order lines    |
-
-#### Submit an order
-
-```http
-POST /orders
-Content-Type: application/json
-
-{
-  "customerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "shippingAddress": "42 Main Street, Brussels",
-  "orderLines": [
-    { "productId": 1, "quantity": 2, "unitPrice": 249.99 },
-    { "productId": 4, "quantity": 1, "unitPrice": 49.99 }
+  "title": "Wireless Keyboard",
+  "description": "Compact Bluetooth keyboard for desk and travel.",
+  "price": 44.99,
+  "stock": 75,
+  "categories": [
+    { "categoryId": 1 }
   ]
 }
 ```
 
-The order `code`, `total`, and line `subTotal` values are computed automatically.
-
 ---
 
-## Filtering & Searching
+### Customers  `/customers`
 
-### List vs Search
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/customers` | List customers |
+| `GET` | `/customers/{id}` | Customer details (id is a GUID) |
+| `POST` | `/customers` | Create |
+| `PUT` | `/customers/{id}` | Full update |
+| `PATCH` | `/customers/{id}` | Partial update |
+| `DELETE` | `/customers/{id}` | Delete |
+| `POST` | `/customers/save` | Upsert |
 
-- **`/list`** — returns an array of items.
-- **`/search`** — returns `{ items: [...], count: N }` — use this when you need pagination counts.
-
-### Paging
-
-Pass `page` and `pageSize` in the search object body or query string:
+**Create / update body** (`CustomerInputDto`)
 
 ```json
 {
-  "q": "headphones",
-  "categoryId": [1],
-  "page": 1,
-  "pageSize": 12
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "phone": "+1-800-555-0100",
+  "address": "42 Acacia Avenue, Springfield"
 }
 ```
 
-### Full-text search
+---
 
-All entities support the `q` field for full-text search over normalised content. Example:
+### Orders  `/orders`
 
-```http
-POST /products/search
-Content-Type: application/json
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/orders` | List orders |
+| `POST` | `/orders/list` | List orders (filter in body) |
+| `GET` | `/orders/search` | Search with total count |
+| `POST` | `/orders/search` | Search (filter in body) |
+| `GET` | `/orders/{id}` | Order details (always includes customer + lines + products) |
+| `POST` | `/orders` | Create a new order |
+| `PUT` | `/orders/{id}` | Full update |
+| `PATCH` | `/orders/{id}` | Partial update |
+| `DELETE` | `/orders/{id}` | Delete |
+| `POST` | `/orders/save` | Upsert |
 
+**Filter parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `q` | `string` | Text search |
+| `code` | `string` | Exact order code, e.g. `ORD-20240615120000123` |
+| `customerId` | `Guid[]` | Filter by customer |
+| `productId` | `int[]` | Orders containing a specific product |
+| `categoryId` | `int[]` | Orders containing a product in a specific category |
+| `status` | `OrderStatus[]` | `Pending`, `Processing`, `Shipped`, `Delivered`, `Cancelled` |
+| `minCreatedDate` | `DateTime` | Earliest order date |
+| `maxCreatedDate` | `DateTime` | Latest order date |
+
+**Create body** (`OrderInputDto`)
+
+```json
 {
-  "q": "wireless bluetooth",
-  "minPrice": 50,
-  "maxPrice": 200,
-  "sortBy": "Price"
+  "customerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "status": "Pending",
+  "notes": "Please leave at the door.",
+  "orderLines": [
+    { "productId": 1, "quantity": 2, "unitPrice": 89.99 },
+    { "productId": 4, "quantity": 1, "unitPrice": 34.99 }
+  ]
 }
 ```
 
----
-
-## Common Patterns for SPA Consumers
-
-### Load products for a category page
-
-```js
-// GET /products?categoryId=1&includes=All&sortBy=Price&pageSize=12
-const res = await fetch('/products/search', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    categoryId: [1],
-    inStock: true,
-    sortBy: 'Price',
-    pageSize: 12,
-    page: 1,
-  }),
-});
-const { items, count } = await res.json();
-```
-
-### Load root categories for navigation
-
-```js
-const res = await fetch('/categories/list', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ isRoot: true }),
-});
-const categories = await res.json();
-```
-
-### Submit an order
-
-```js
-const res = await fetch('/orders', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    customerId: currentUser.id,
-    shippingAddress: cart.shippingAddress,
-    orderLines: cart.items.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      unitPrice: item.price,
-    })),
-  }),
-});
-const order = await res.json();
-```
-
-### Get a customer's order history
-
-```js
-const res = await fetch('/orders/search', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    customerId: [currentUser.id],
-    includes: 'OrderLines',
-    sortBy: 'Default',
-    pageSize: 20,
-    page: 1,
-  }),
-});
-const { items, count } = await res.json();
-```
+> The `code` and `total` fields are computed automatically on the server.
 
 ---
 
-## Sample Data
+## Paging
+
+All list and search endpoints support paging via query-string parameters:
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `page` | `1` | 1-based page number |
+| `pageSize` | `50` | Items per page (max 200) |
+
+---
+
+## Sample data
 
 On first startup the API seeds:
 
-| Entity    | Count |
-|-----------|-------|
-| Categories | 8 |
-| Products  | 41 |
-| Customers | 20 |
-| Orders    | ~102 |
-
-Products span all 8 categories. Orders are distributed across all customers with 1–4 order lines each, and carry randomised statuses and dates spread over the last year.
+- **8 categories** (Electronics, Clothing, Books, Home & Garden, Sports & Outdoors, Toys & Games, Health & Beauty, Food & Drink)
+- **25 products** spread across categories, with realistic prices and stock levels
+- **10 customers** with names, emails, phone numbers and addresses
+- **~110 orders** distributed across all customers, each with 1–3 order lines, assigned random statuses
 
 ---
 
-## Project Structure
+## Architecture notes
 
-```
-Webshop.API/
-├── Controllers/          # EntityControllerBase-derived controllers
-├── Data/
-│   └── WebshopDbContext.cs
-├── Entities/
-│   ├── Categories/       # Category, RelatedCategory, DTOs, SearchObject, Processor, ServiceConfig
-│   ├── Customers/        # Customer, DTOs, ServiceConfig
-│   ├── Orders/           # Order, OrderLine, DTOs, SearchObject, Includes, QueryBuilder, ServiceConfig
-│   └── Products/         # Product, ProductCategory, DTOs, SearchObject, SortBy, QueryBuilder, ServiceConfig
-├── Extensions/
-│   └── ServiceCollectionExtensions.cs
-├── Seeding/
-│   └── DataSeeder.cs
-├── Program.cs
-├── appsettings.json
-├── NuGet.Config
-└── Webshop.API.csproj
-```
+The project follows the **Regira Entities** framework conventions:
+
+- **`Regira.Entities.Web`** — `EntityControllerBase<>` provides all CRUD + search endpoints out of the box.
+- **`Regira.Entities.Mapping.Mapster`** — DTO mapping handled automatically by Mapster convention; only non-trivial nested types require `AddMapping<>()`.
+- **SQLite + EF Core** — The database is created with `EnsureCreated()` on startup; no migrations required for development. Switch to PostgreSQL or SQL Server by changing the connection string and EF Core provider.
+- **Serilog** — Structured logging to console and a rolling file under `logs/`.
+- **Scalar** — Interactive API explorer at `/scalar` (replaces Swagger UI).
+
+### Tier budget (Regira free tier: 5 simple + 2 complex entity registrations)
+
+| Entity | Registration | Tier slot |
+|--------|-------------|-----------|
+| `Category` | `For<Category, int, CategorySearchObject>()` | Simple #1 |
+| `Customer` | `For<Customer, Guid>()` | Simple #2 |
+| `Product` | `For<Product, ProductSearchObject, ProductSortBy, EntityIncludes>()` | Complex #1 |
+| `Order` | `For<Order, OrderSearchObject, EntitySortBy, OrderIncludes>()` | Complex #2 |
 
 ---
 
 ## Credits
 
-Built with:
-
-- [ASP.NET Core 10](https://learn.microsoft.com/aspnet/core)
-- [Regira Entities](https://regira.com) — entity framework for rapid CRUD API development
-- [Entity Framework Core](https://learn.microsoft.com/ef/core) with SQLite
-- [Scalar](https://scalar.com) — OpenAPI UI
-- [Mapster](https://github.com/MapsterMapper/Mapster) — object mapping
-
-> **AI Agent:** This project was scaffolded and implemented by **Claude Sonnet 4.6** (Anthropic), running as an autonomous agent via the **Claude Agent SDK** inside the Claude Code CLI.
+Generated with assistance from **Claude Sonnet 4.6** (claude-sonnet-4-6) using the **Claude Code** agent (VS Code extension, autonomous agent mode) guided by the Regira MCP server for package discovery and API reference.

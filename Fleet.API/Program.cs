@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using Fleet.API.Data;
-using Fleet.API.Infrastructure;
+using Fleet.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Regira.DAL.EFcore.Services;
 using Regira.Entities.EFcore.Normalizing;
@@ -15,7 +15,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
 
-    // Fail fast on mismatched / missing entity service registrations at startup.
+    // Fail fast on DI misconfiguration (e.g. .For<>() / controller generic mismatches).
     builder.Host.UseDefaultServiceProvider(o =>
     {
         o.ValidateOnBuild = true;
@@ -27,25 +27,27 @@ try
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
     builder.Services.AddOpenApi();
 
+    // SQLite + Regira entity interceptors (primers, normalizers, auto-truncate).
     builder.Services.AddDbContext<FleetDbContext>((sp, options) =>
         options.UseSqlite(builder.Configuration.GetConnectionString("Default"))
                .AddPrimerInterceptors(sp)
                .AddNormalizerInterceptors(sp)
                .AddAutoTruncateInterceptors());
 
-    builder.Services.AddFleetEntityServices();
+    builder.Services.AddEntityServices(builder.Configuration);
 
     var app = builder.Build();
 
-    // Create the disposable SQLite database and seed sample data.
+    // Create the SQLite database (disposable test infrastructure) and seed sample data.
     using (var scope = app.Services.CreateScope())
     {
-        await DataSeeder.SeedAsync(scope.ServiceProvider);
+        var dbContext = scope.ServiceProvider.GetRequiredService<FleetDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
     }
+    await FleetDbSeeder.SeedAsync(app.Services, app.Services.GetRequiredService<ILogger<Program>>());
 
     app.MapOpenApi();
     app.MapScalarApiReference();

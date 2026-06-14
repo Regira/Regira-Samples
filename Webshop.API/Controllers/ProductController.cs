@@ -6,4 +6,5 @@ using Webshop.API.Entities.Products;
 namespace Webshop.API.Controllers;
 
 [ApiController, Route("products")]
-public class ProductController : EntityControllerBase<Product, ProductSearchObject, ProductSortBy, EntityIncludes, ProductDto, ProductInputDto>;
+public class ProductController
+    : EntityControllerBase<Product, ProductSearchObject, ProductSortBy, EntityIncludes, ProductDto, ProductInputDto>;

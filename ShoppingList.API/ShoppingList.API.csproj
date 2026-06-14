@@ -4,30 +4,34 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>ShoppingList.API</RootNamespace>
+    <!--
+      The assembly is named ShoppingList.API, but the root namespace is overridden to
+      ShoppingListApi so the `ShoppingList` *entity* does not collide with a `ShoppingList`
+      namespace segment (which would cause CS0118 / CS0234 ambiguity).
+    -->
+    <RootNamespace>ShoppingListApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- API surface: OpenAPI + Scalar UI (Regira default, no Swagger) -->
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <!-- Regira Entities — Web API entry point (brings DependencyInjection + EFcore + abstractions) -->
+    <PackageReference Include="Regira.Entities.Web" Version="6.0.0" />
+    <!-- DTO mapping provider (not pulled transitively) -->
+    <PackageReference Include="Regira.Entities.Mapping.Mapster" Version="6.0.0" />
+
+    <!-- EF Core database provider -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="*" />
+
+    <!-- OpenAPI + Scalar UI (Regira API documentation baseline) -->
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="*" />
     <PackageReference Include="Scalar.AspNetCore" Version="*" />
 
-    <!-- Structured logging (Regira BasicApi template) -->
+    <!-- Structured logging (BasicApi template baseline) -->
     <PackageReference Include="Serilog.AspNetCore" Version="*" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="*" />
     <PackageReference Include="Serilog.Sinks.Console" Version="*" />
     <PackageReference Include="Serilog.Sinks.File" Version="*" />
 
-    <!-- EF Core provider -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
-
-    <!-- Regira Entities framework -->
-    <PackageReference Include="Regira.Entities.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Regira.Entities.EFcore" Version="6.0.0" />
-    <PackageReference Include="Regira.Entities.Web" Version="6.0.0" />
-    <PackageReference Include="Regira.Entities.Mapping.Mapster" Version="6.0.0" />
-
-    <!-- Fake data generation for seeding -->
+    <!-- Sample data generation for seeding -->
     <PackageReference Include="Bogus" Version="*" />
   </ItemGroup>
 

@@ -6,4 +6,5 @@ using Webshop.API.Entities.Orders;
 namespace Webshop.API.Controllers;
 
 [ApiController, Route("orders")]
-public class OrderController : EntityControllerBase<Order, OrderSearchObject, EntitySortBy, OrderIncludes, OrderDto, OrderInputDto>;
+public class OrderController
+    : EntityControllerBase<Order, OrderSearchObject, EntitySortBy, OrderIncludes, OrderDto, OrderInputDto>;

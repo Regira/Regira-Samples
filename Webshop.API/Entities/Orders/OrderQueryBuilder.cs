@@ -1,5 +1,6 @@
 using Regira.Entities.EFcore.Extensions;
 using Regira.Entities.QueryBuilders.Abstractions;
+using Regira.Entities.Models.Abstractions;
 
 namespace Webshop.API.Entities.Orders;
 
@@ -18,10 +19,10 @@ public class OrderQueryBuilder : IFilteredQueryBuilder<Order, int, OrderSearchOb
             query = query.Where(x => x.OrderLines!.Any(ol => ol.Product!.Categories!.Any(pc => so.CategoryId.Contains(pc.CategoryId))));
         if (so.Status?.Any() == true)
             query = query.Where(x => so.Status.Contains(x.Status));
-        if (so.MinCreated.HasValue)
-            query = query.FilterCreated(so.MinCreated, null);
-        if (so.MaxCreated.HasValue)
-            query = query.FilterCreated(null, so.MaxCreated);
+        if (so.MinCreatedDate.HasValue)
+            query = query.Where(x => x.Created >= so.MinCreatedDate.Value);
+        if (so.MaxCreatedDate.HasValue)
+            query = query.Where(x => x.Created <= so.MaxCreatedDate.Value);
         return query;
     }
 }

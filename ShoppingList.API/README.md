@@ -1,177 +1,169 @@
 # ShoppingList.API
 
-A small but complete **Shopping List** REST API built on the [Regira](https://regira.com) entity
-framework. It lets shoppers keep multiple lists, put articles on those lists and activate/deactivate
-them, organise articles into a multi-parent / multi-child category hierarchy, and search & filter the
-catalog — full-text search included.
+A REST API for running shopping lists, built on the **[Regira](https://regira.com) Entities**
+framework. Shoppers keep multiple lists, put articles on them, and activate/deactivate those
+articles as they shop. Articles are organised in a multi-parent/multi-child category graph and are
+fully searchable.
 
-The project was generated **exclusively** from the Regira MCP server documentation (no external code
-references) and ships with ~500 seeded articles so it is usable the moment it starts.
+Built with **.NET 10**, **EF Core 10 (SQLite)**, **Mapster** mapping, **OpenAPI + Scalar** docs and
+**Serilog** logging. Sample data (~500 articles) is generated with **Bogus**.
+
+---
+
+## What it does
+
+| Requirement | How it is implemented |
+|---|---|
+| A shopper can activate/deactivate articles on a list | `ShoppingListItem.IsActive` toggled via dedicated `POST /shoppinglists/{id}/items/{itemId}/activate` & `/deactivate` endpoints |
+| An article can have multiple categories, filterable + text search | `Article` ⇄ `Category` many-to-many (`ArticleCategory`); filter by `categoryId[]`, `brand`, and normalized full-text `q` |
+| A category can have multiple parent/child categories | Self-referencing `RelatedCategory` join; eager-load with `?includes=Parents,Children,All` |
+| Each shopper can have multiple lists | `Shopper` 1‑to‑many `ShoppingList`; filter lists by `shopperId[]` |
 
 ---
 
 ## Domain model
 
-| Entity | Purpose | Key relationships |
-|--------|---------|-------------------|
-| **Shopper** | A person who owns shopping lists | has many *ShoppingList* |
-| **ShoppingList** | A named list belonging to one shopper | has many *ShoppingListItem* |
-| **ShoppingListItem** | An article placed on a list, with an `IsActive` flag and a quantity | references one *Article* |
-| **Article** | A product that can be bought | many-to-many *Category* (via *ArticleCategory*) |
-| **Category** | A grouping for articles, organised as a hierarchy | many-to-many self-reference (via *RelatedCategory*) |
-
-Join entities (`ArticleCategory`, `RelatedCategory`) are **owned** by their parent and synchronized
-automatically through Regira's `e.Related(...)` configuration — they have no endpoints of their own.
-
-### Requirements coverage
-
-- **A shopper can activate/deactivate articles on a list** → `ShoppingListItem.IsActive`, toggled with
-  `PATCH /shopping-list-items/{id}` (e.g. `{ "isActive": false }`).
-- **An article can have multiple categories, easily filtered, text search included** → `Article` is
-  many-to-many with `Category`; the article endpoints filter by `categoryId`, `brand` and a normalized
-  full-text `q` search over title/description/brand.
-- **A category can have multiple parent/child categories** → self-referencing many-to-many via
-  `RelatedCategory`; filter with `parentId`, `childId`, `isRoot` and include `Parents`/`Children`.
-- **Each shopper can have multiple lists** → `Shopper` 1-to-many `ShoppingList`, filter lists by `shopperId`.
-
----
-
-## Tech stack
-
-- **.NET 10** / **C# 14**, ASP.NET Core Web API (controller-based, `BasicApi` template)
-- **Regira Entities** framework
-  - `Regira.Entities.DependencyInjection` — `UseEntities()` / `.For<>()` DI builder
-  - `Regira.Entities.EFcore` — EF Core repository, interceptors (primers, normalizers, auto-truncate)
-  - `Regira.Entities.Web` — `EntityControllerBase` HTTP endpoints
-  - `Regira.Entities.Mapping.Mapster` — DTO mapping
-- **EF Core 10** with **SQLite** (`shoppinglist.db`, created on first run via `EnsureCreated()`)
-- **OpenAPI + Scalar** UI for documentation (no Swagger, per Regira conventions)
-- **Serilog** for structured console + rolling-file logging
-- **Bogus** for sample-data generation
-
----
-
-## Project layout
-
 ```
-ShoppingList.API/
-├── Program.cs                       # thin host: controllers, DbContext + interceptors, entity services, seeding
-├── appsettings.json                 # connection string, Serilog
-├── Data/
-│   └── ShoppingDbContext.cs         # DbSets + relationship configuration
-├── Extensions/
-│   └── ServiceCollectionExtensions.cs   # UseEntities() + per-entity registrations
-├── Infrastructure/
-│   └── SeedData.cs                  # seeds via IEntityService implementations (Bogus)
-├── Controllers/                     # one EntityControllerBase-derived controller per entity
-└── Entities/                        # per-entity folders: entity, search object, DTOs, query builder, DI config
-    ├── Articles/
-    ├── Categories/
-    ├── Shoppers/
-    ├── ShoppingLists/
-    └── ShoppingListItems/
+Shopper ──< ShoppingList ──< ShoppingListItem >── Article >──< (ArticleCategory) >──< Category
+                                                                                        │
+                                                                       RelatedCategory (parent/child)
 ```
 
-Each registered entity follows the Regira pipeline: **Entity → SearchObject → (SortBy/Includes) → DTO/InputDto →
-QueryBuilder → ServiceConfiguration → Controller**.
+| Entity | Key | Registration | Notes |
+|---|---|---|---|
+| `Category` | int | **complex** | Hierarchical (parent/child via `RelatedCategory`); derived `ArticleCount` |
+| `Article` | int | **complex** | Many-to-many categories; sortable; full-text searchable |
+| `Shopper` | int | simple | Owns lists; searchable by name/email |
+| `ShoppingList` | int | simple | Owns `ShoppingListItem` children; always loads items + article + shopper |
+| `RelatedCategory`, `ArticleCategory`, `ShoppingListItem` | int | *(owned)* | Join/child entities — managed through their parent via `Related()`, no own registration |
+
+> **Licensing / tier budget.** Regira's free tier allows **5 simple + 2 complex** entity
+> registrations. This project uses exactly **2 complex** (`Category`, `Article`) and **2 simple**
+> (`Shopper`, `ShoppingList`), so it runs with no license key. Set `Regira:LicenseKey` in
+> `appsettings.json` to lift the limits.
 
 ---
 
 ## Running
-
-> The Regira packages come from a private NuGet feed already configured in [`NuGet.Config`](NuGet.Config)
-> (`https://packages.regira.com/v3/index.json`).
 
 ```bash
 cd ShoppingList.API
 dotnet run
 ```
 
-On startup the app creates the SQLite database and seeds:
-**~60 categories** (10 roots × children), **500 articles**, **12 shoppers**, their **lists** and **list items**.
+On first start the app creates a local SQLite database (`shoppinglist.db`, recreated on demand —
+no migrations) and seeds sample data. Then browse:
 
-Then browse the interactive **Scalar** UI:
+- **Scalar API UI** → <https://localhost:7299/scalar>
+- **OpenAPI document** → <https://localhost:7299/openapi/v1.json>
 
-- HTTPS: `https://localhost:7299/scalar`
-- HTTP:  `http://localhost:5299/scalar`
-
-OpenAPI document: `/openapi/v1.json`.
+(HTTP is also exposed on `http://localhost:5299`.)
 
 ---
 
-## Endpoints
+## API surface
 
-Every entity exposes the standard Regira CRUD + search surface. Routes:
-`/shoppers`, `/shopping-lists`, `/shopping-list-items`, `/articles`, `/categories`.
+Every entity gets a full CRUD controller from `EntityControllerBase`. **Complex** controllers
+(`articles`, `categories`) additionally expose the search/list-with-count endpoints.
 
-| Method | Route | Action |
-|--------|-------|--------|
-| `GET` | `/{entity}/{id}` | Details |
-| `GET` | `/{entity}` | List (query-string filters) |
-| `GET` / `POST` | `/{entity}/search` | Search with total count |
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/{entity}/{id}` | Get one (supports `?includes=`) |
+| `GET` | `/{entity}` | List (filter via query string, paged) |
+| `GET` / `POST` | `/{entity}/search` | Search **with total count** *(complex only)* |
+| `POST` | `/{entity}/list` | List with a body filter *(complex only)* |
 | `POST` | `/{entity}` | Create |
-| `POST` | `/{entity}/save` | Upsert |
+| `POST` | `/{entity}/save` | Upsert (create or update by `id`) |
 | `PUT` | `/{entity}/{id}` | Full update |
 | `PATCH` | `/{entity}/{id}` | Partial update (JSON Merge Patch) |
-| `DELETE` | `/{entity}/{id}` | Delete (soft-delete where `IArchivable`) |
+| `DELETE` | `/{entity}/{id}` | Delete |
 
-### Useful filters & examples
+Entities: `articles`, `categories`, `shoppers`, `shoppinglists`.
 
-```bash
-# Full-text search the catalog
-GET /articles?q=cheese
+### Shopping-list item endpoints (activate / deactivate)
 
-# Articles in one or more categories (repeat the param for multiple)
-GET /articles/search?categoryId=55
+| Method | Route | Description |
+|---|---|---|
+| `POST` | `/shoppinglists/{listId}/items` | Add an article (`{ "articleId": 5, "quantity": 2, "note": "…" }`); re-activates if already present |
+| `POST` | `/shoppinglists/{listId}/items/{itemId}/activate` | Activate the article on the list |
+| `POST` | `/shoppinglists/{listId}/items/{itemId}/deactivate` | Deactivate (keeps it on the list) |
+| `DELETE` | `/shoppinglists/{listId}/items/{itemId}` | Remove the article from the list |
 
-# Articles by brand, sorted newest-first
-GET /articles?brand=ACME&sortBy=Newest
+### Filtering, search, sorting, paging
 
-# Root categories only, including their children
-GET /categories?isRoot=true&includes=Children
+```http
+# Full-text search articles (matches title + description + brand), with total count
+GET /articles/search?q=tasty&pageSize=20
 
-# A category and its parents
-GET /categories/55?includes=Parents
+# Filter articles by one or more categories + brand, sorted by title
+GET /articles/search?categoryId=2&categoryId=5&brand=Acme&sortBy=Title
 
-# All lists for a shopper (items + articles are eager-loaded)
-GET /shopping-lists?shopperId=1
+# Load an article including its categories
+GET /articles/428?includes=All
 
-# Active items on a list, filtered to a category, with text search
-GET /shopping-list-items?shoppingListId=1&isActive=true&categoryId=12&q=milk
+# Category hierarchy with parents + children and per-category article counts
+GET /categories?includes=All&q=dairy
 
-# Activate / deactivate an article on a list
-PATCH /shopping-list-items/1   { "isActive": false }
+# Only root categories
+GET /categories?isRoot=true
 
-# Add an article to a list
-POST /shopping-list-items      { "shoppingListId": 1, "articleId": 42, "quantity": 2 }
+# All lists for a shopper
+GET /shoppinglists?shopperId=3
 ```
 
-`q` is matched against normalized content that the framework maintains automatically (case/diacritics
-insensitive) and supports `*` wildcards (e.g. `q=choc*`).
+- **Paging**: `?page=1&pageSize=50` (default page size 50, max 200).
+- **Sorting** (articles): `Title`, `TitleDesc`, `Brand`, `BrandDesc`, `Newest`.
+- **Includes**: articles → `All`; categories → `Parents`, `Children`, `All`.
+- **`q`** performs a normalized (case/accent-insensitive) search powered by the framework's global
+  normalized-content filter.
 
 ---
 
-## Notes & design decisions
+## How it is wired up
 
-- **Search objects are `record` types** inheriting `SearchObject`, as required by the framework.
-- **Timestamps, soft-delete and normalized search content** are populated by Regira primers/normalizers
-  registered through `options.UseDefaults()` and the DbContext interceptors.
-- **Nested DTO projection** and **`Related()` input collections** are wired with `e.AddMapping<,>()`.
-- **Seeding goes through `IEntityService`** (not raw EF Core), so the full write pipeline (preppers,
-  primers, normalizers) runs exactly as it does for API requests. Parent batches are saved before
-  children so their auto-increment Ids are available for the foreign keys.
-- **Licensing:** `Regira.Entities.DependencyInjection` runs on the automatic **free tier**
-  (5 simple / 2 complex entity registrations) — no key required. This project uses exactly
-  2 complex (`Article`, `Category`) and 3 simple (`Shopper`, `ShoppingList`, `ShoppingListItem`)
-  registrations. For higher limits, set `Regira:LicenseKey` and call `services.UseRegira(key)` before
-  `UseEntities()`.
-- The SQLite database is treated as disposable; delete `shoppinglist.db` to reseed from scratch.
+- **`Program.cs`** — thin host: JSON (ignore cycles + nulls), OpenAPI/Scalar, `DbContext` with
+  Regira primer/normalizer/auto-truncate interceptors, `AddEntityServices(...)`, then
+  `EnsureCreated()` + seed. DI is validated on build (`ValidateOnBuild`/`ValidateScopes`).
+- **`Extensions/ServiceCollectionExtensions.cs`** — `UseRegira()` → `UseEntities<ShoppingListDbContext>()`
+  (`UseDefaults()` + Mapster + paging) → one `.AddXxx()` per entity.
+- **`Entities/<Feature>/`** — per-entity folder: entity, search object, includes/sort enums, DTOs,
+  query builder/processor, and the `For<>()` service configuration.
+- **`Seeding/DataSeeder.cs`** — generates the sample data through the
+  `IEntityService<TEntity, int>` implementations (so primers, normalizers and `Related()` collection
+  sync all run), not raw EF inserts.
+
+### Project structure
+
+```
+ShoppingList.API/
+├── Program.cs
+├── Data/ShoppingListDbContext.cs
+├── Extensions/ServiceCollectionExtensions.cs
+├── Entities/
+│   ├── Categories/   (Category, RelatedCategory, search, includes, DTOs, processor, config)
+│   ├── Articles/     (Article, ArticleCategory, search, sort, DTOs, query builder, config)
+│   ├── Shoppers/     (Shopper, search, DTOs, config)
+│   └── Lists/        (ShoppingList, ShoppingListItem, search, DTOs, item service, config)
+├── Controllers/      (one per entity + ShoppingListItemsController)
+└── Seeding/DataSeeder.cs
+```
+
+---
+
+## Seed data
+
+Generated on first run (deterministic seed): **59 categories** (12 roots × children), **500 articles**
+(1–3 categories each), **15 shoppers**, **30 shopping lists** (5–20 items each, ~70 % active). The
+database is treated as disposable — delete `shoppinglist.db` to reseed.
 
 ---
 
 ## Credits
 
-- **Built by:** Claude (Anthropic) — model **Claude Opus 4.8**.
-- **AI agent type:** Claude Code (the default `claude` agent), driving the **Regira MCP server**
-  (`https://mcp.regira.com/mcp`) as the single source of truth for package selection, setup and APIs.
-- **Framework:** [Regira](https://regira.com) entity packages (v6.0.0).
+Designed and implemented by **Claude** (Anthropic **Opus 4.8**) running as **Claude Code** — the
+default general-purpose coding agent. All Regira API knowledge (package selection, setup, entity
+patterns, namespaces and signatures) was sourced live from the **Regira MCP server**
+(`https://mcp.regira.com/mcp`); no local reference projects were consulted. The workspace also ships
+a specialized **`entities-agent`** dedicated to Regira Entities work.
+
+Built on the Regira framework — © Regira.

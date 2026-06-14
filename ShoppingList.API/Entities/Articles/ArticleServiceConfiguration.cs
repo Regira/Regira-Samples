@@ -1,43 +1,42 @@
 using Microsoft.EntityFrameworkCore;
-using Regira.Entities.DependencyInjection.ServiceBuilders;
-using Regira.Entities.DependencyInjection.ServiceBuilders.Abstractions;
+using Regira.Entities.DependencyInjection.ServiceCollections;
+using Regira.Entities.DependencyInjection.ServiceCollections.Abstractions;
 using Regira.Entities.Models;
-using ShoppingList.API.Data;
+using ShoppingListApi.Data;
 
-namespace ShoppingList.API.Entities.Articles;
+namespace ShoppingListApi.Entities.Articles;
 
 public static class ArticleServiceConfiguration
 {
-    /// <summary>
-    /// Registers the <see cref="Article"/> entity service: text + category + brand filtering,
-    /// sorting, category includes, and synchronization of the article-category links.
-    /// </summary>
-    public static IEntityServiceCollection<ShoppingDbContext> AddArticles(this IEntityServiceCollection<ShoppingDbContext> services)
-    {
-        services.For<Article, ArticleSearchObject, ArticleSortBy, EntityIncludes>(e =>
+    public static EntityServiceCollection<ShoppingListDbContext> AddArticles(
+        this IEntityServiceCollection<ShoppingListDbContext> services)
+        => services.For<Article, ArticleSearchObject, ArticleSortBy, EntityIncludes>(e =>
         {
-            // Nested output projections + the InputDto->entity pair used by Related().
-            e.AddMapping<ArticleDto, ArticleDto>();
-            e.AddMapping<ArticleCategoryDto, ArticleCategoryDto>();
-            e.AddMapping<ArticleCategoryInputDto, ArticleCategory>();
+            e.UseMapping<ArticleDto, ArticleInputDto>();
+            e.AddMapping<ArticleCategoryDto, ArticleCategoryDto>();     // nested output collection
+            e.AddMapping<ArticleCategoryInputDto, ArticleCategory>();   // input items synced via Related()
 
             e.AddFilter<ArticleQueryBuilder>();
+
             e.SortBy((query, sortBy) => sortBy switch
             {
                 ArticleSortBy.Title => query.OrderBy(x => x.Title),
                 ArticleSortBy.TitleDesc => query.OrderByDescending(x => x.Title),
+                ArticleSortBy.Brand => query.OrderBy(x => x.Brand),
+                ArticleSortBy.BrandDesc => query.OrderByDescending(x => x.Brand),
                 ArticleSortBy.Newest => query.OrderByDescending(x => x.Created),
-                ArticleSortBy.Oldest => query.OrderBy(x => x.Created),
                 _ => query.OrderBy(x => x.Title)
             });
+
+            // Owned join collection — synchronized through this service.
+            e.Related(x => x.Categories);
+
+            // Eager-load categories on demand (?includes=All).
             e.Includes((query, includes) =>
             {
                 if (includes?.HasFlag(EntityIncludes.All) == true)
                     query = query.Include(x => x.Categories!).ThenInclude(ac => ac.Category);
                 return query;
             });
-            e.Related(x => x.Categories);
         });
-        return services;
-    }
 }

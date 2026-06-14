@@ -1,6 +1,6 @@
-namespace ShoppingList.API.Entities.Categories;
+namespace ShoppingListApi.Entities.Categories;
 
-/// <summary>Navigation properties that can be eagerly loaded for a <see cref="Category"/>.</summary>
+/// <summary>Navigation properties that can be eager-loaded for a <see cref="Category"/>.</summary>
 [Flags]
 public enum CategoryIncludes
 {

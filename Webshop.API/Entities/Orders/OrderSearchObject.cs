@@ -9,4 +9,6 @@ public record OrderSearchObject : SearchObject
     public ICollection<int>? ProductId { get; set; }
     public ICollection<int>? CategoryId { get; set; }
     public ICollection<OrderStatus>? Status { get; set; }
+    public DateTime? MinCreatedDate { get; set; }
+    public DateTime? MaxCreatedDate { get; set; }
 }

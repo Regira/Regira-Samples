@@ -10,7 +10,6 @@ namespace Webshop.API.Data;
 public class WebshopDbContext(DbContextOptions<WebshopDbContext> options) : DbContext(options)
 {
     public DbSet<Category> Categories { get; set; } = null!;
-    public DbSet<RelatedCategory> RelatedCategories { get; set; } = null!;
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<ProductCategory> ProductCategories { get; set; } = null!;
     public DbSet<Customer> Customers { get; set; } = null!;
@@ -21,12 +20,6 @@ public class WebshopDbContext(DbContextOptions<WebshopDbContext> options) : DbCo
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.SetDecimalPrecisionConvention(18, 2);
-
-        modelBuilder.Entity<RelatedCategory>(e =>
-        {
-            e.HasOne(c => c.Parent).WithMany(p => p.ChildEntities).HasForeignKey(c => c.ParentId).OnDelete(DeleteBehavior.Restrict);
-            e.HasOne(c => c.Child).WithMany(p => p.ParentEntities).HasForeignKey(c => c.ChildId).OnDelete(DeleteBehavior.Restrict);
-        });
 
         modelBuilder.Entity<ProductCategory>(e =>
         {

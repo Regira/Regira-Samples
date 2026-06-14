@@ -1,173 +1,206 @@
 # Fleet.API
 
-A REST API for managing **fleet maintenance interventions**, built on the [Regira](https://regira.com) packages
-(the `Regira.Entities` framework on top of EF Core).
+A REST API for managing **fleet maintenance interventions**, built on the
+[Regira](https://regira.com) entity framework packages.
 
-Fleet vehicles (cars, vans, trucks, …) have various maintenance needs. Those needs are carried out as
-**interventions** of a given **intervention type**, performed by **suppliers** who send **invoices** for the work.
-Intervention types are editable; suppliers can be assigned the types they are *able to perform*, and vehicles can be
-assigned the types they are *allowed to undergo*.
+Vehicles (cars, vans, trucks, …) have recurring maintenance needs. Those needs are
+fulfilled by **interventions** — concrete maintenance operations of a given
+**intervention type**, performed by a **supplier**, and (once completed) billed
+through an **invoice**.
+
+- **Intervention types** are an editable catalog (oil change, brake inspection, …).
+- **Suppliers** are assigned the intervention types they are *able to perform*.
+- **Vehicles** are assigned the intervention types they are *allowed to undergo*.
 
 ---
 
 ## Domain model
 
-| Entity | Description | Key relationships |
-|--------|-------------|-------------------|
-| **Vehicle** | A fleet vehicle (car/van/truck/…) with a license plate, brand, model, type, year and mileage. | M:N `AllowedInterventionTypes`; 1:N `Interventions` |
-| **InterventionType** | Editable catalogue of maintenance operations (oil change, brake service, …) with a code, default km interval and estimated duration. | referenced by suppliers, vehicles & interventions |
-| **Supplier** | A garage / service provider that performs interventions and issues invoices. | M:N `Capabilities`; 1:N `Invoices`, `Interventions` |
-| **Intervention** | A maintenance operation on one vehicle, of one type, by one supplier, optionally billed on an invoice. | FKs to Vehicle, InterventionType, Supplier, Invoice |
-| **Invoice** | A supplier invoice covering one or more interventions; its amount is the sum of the billed interventions. | FK to Supplier; 1:N `Interventions` |
-
-The two many-to-many relationships use explicit join entities managed through the parent via `e.Related(...)`:
-
-- `VehicleInterventionType` — the types a vehicle may undergo.
-- `SupplierInterventionType` — the types a supplier can perform.
-
 ```
-Vehicle ──< VehicleInterventionType >── InterventionType ──< SupplierInterventionType >── Supplier
-   │                                          │                                            │
-   └───────────< Intervention >───────────────┘                                            │
-                      │ │                                                                   │
-                      │ └──────────────── Supplier ────────────────────────────────────────┘
-                      └──────────────── Invoice >──── Supplier
+InterventionType ──< SupplierInterventionType >── Supplier        (capabilities, M:N)
+InterventionType ──< VehicleInterventionType  >── Vehicle         (allowed types, M:N)
+
+Vehicle ─────────────< Intervention >───────────── Supplier       (who performs it)
+InterventionType ────< Intervention                               (what is performed)
+Invoice ─────────────< Intervention (optional InvoiceId)          (how it is billed)
+
+Supplier ────────────< Invoice                                    (who sends it)
 ```
+
+| Entity | Key fields | Relationships |
+|--------|-----------|---------------|
+| **InterventionType** | `Code`, `Title`, `EstimatedDurationMinutes` | M:N Vehicle, M:N Supplier |
+| **Vehicle** | `LicensePlate`, `Brand`, `Model`, `VehicleType`, `Mileage` | M:N allowed `InterventionType`s |
+| **Supplier** | `Title`, `Email`, `VatNumber`, `City` | M:N `InterventionType` capabilities; 1:N Invoices |
+| **Intervention** | `Status`, `ScheduledDate`, `Cost`, `MileageAtService` | FK Vehicle, Supplier, InterventionType; optional FK Invoice |
+| **Invoice** | `InvoiceNumber`, `IssueDate`, `DueDate`, `Status`, `TotalAmount` | FK Supplier; 1:N Interventions |
+
+The two many-to-many relations use explicit join entities (`VehicleInterventionType`,
+`SupplierInterventionType`) that are *owned* by their parent and synchronized through
+the Regira `Related()` mechanism.
 
 ---
 
 ## Tech stack
 
-- **.NET 10** / **C# 14**, ASP.NET Core Web API (controllers).
-- **Regira.Entities** framework — generic CRUD services, query builders, DTO mapping, generated endpoints:
-  - `Regira.Entities.DependencyInjection` — `UseEntities()` / `.For<>()` DI builder
-  - `Regira.Entities.EFcore` — EF Core repository, primers, normalizers, interceptors
-  - `Regira.Entities.Web` — `EntityControllerBase` HTTP endpoints
-  - `Regira.Entities.Mapping.Mapster` — entity ⇄ DTO mapping (default)
-- **EF Core 10 + SQLite** — disposable local database (`fleet.db`), created with `EnsureCreated()`.
-- **Bogus** — reproducible fake data for seeding.
-- **Serilog** — console + rolling file logging.
-- **OpenAPI + Scalar** — API documentation UI.
+| Concern | Choice |
+|---------|--------|
+| Framework | .NET 10 / ASP.NET Core (controllers) |
+| CRUD framework | `Regira.Entities` v6 (`Regira.Entities.Web`) |
+| ORM | EF Core 10 + **SQLite** (`fleet.db`, recreated on run) |
+| DTO mapping | Mapster (`Regira.Entities.Mapping.Mapster`) |
+| API docs | OpenAPI + **Scalar** UI (`/scalar`) |
+| Logging | Serilog (console + rolling file) |
+| Sample data | [Bogus](https://github.com/bchavez/Bogus) |
 
 ---
 
-## Running
+## Getting started
+
+### Prerequisites
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/)
+- Access to the Regira NuGet feed. It is already declared in [`NuGet.Config`](../NuGet.Config)
+  (`https://packages.regira.com/v3/index.json`) alongside nuget.org.
+
+### Run
 
 ```bash
 cd Fleet.API
 dotnet run
 ```
 
-On first start the app creates `fleet.db` and seeds the sample dataset, then serves:
+On startup the app:
+1. creates the SQLite database (`Database.EnsureCreated()`),
+2. seeds a coherent sample data set (see below),
+3. serves the API and opens the **Scalar** UI.
 
-- **Scalar API reference UI:** `/scalar`
-- **OpenAPI document:** `/openapi/v1.json`
+| Surface | URL |
+|---------|-----|
+| Scalar UI | `https://localhost:7048/scalar` |
+| OpenAPI JSON | `https://localhost:7048/openapi/v1.json` |
 
-The `NuGet.Config` in this folder adds the Regira package feed
-(`https://packages.regira.com/v3/index.json`) next to nuget.org.
+> No license key is required: the Regira free tier (5 simple / 2 complex entity
+> registrations) covers this project exactly (3 simple + 2 complex). To raise the
+> limits, set `Regira:LicenseKey` in `appsettings.json`.
 
-> No license key is required: the project runs on the Regira Entities **free tier**
-> (5 simple + 2 complex entity registrations). To raise the limits, set `Regira:LicenseKey`
-> in `appsettings.json` and call `services.UseRegira(configuration["Regira:LicenseKey"])` before `UseEntities()`.
+---
+
+## Seeding
+
+[`Data/FleetDbSeeder.cs`](Data/FleetDbSeeder.cs) generates sample data **through the
+`IEntityService<TEntity,TKey>` implementations** (not raw `DbContext` inserts), so the
+full Regira write pipeline — preppers, normalizers, primers, `Related()` sync — runs
+exactly as it would for real API calls. Bogus produces the fake values, with a fixed
+seed for reproducibility. Seeding is **idempotent** (skipped when data already exists).
+
+Generated volume:
+
+| Entity | Count |
+|--------|------:|
+| Intervention types | 12 |
+| Suppliers (with capabilities) | 15 |
+| Vehicles (with allowed types) | 40 |
+| **Interventions** | **500** |
+| Invoices (bundling completed work) | ~60 |
+
+Coherence rules applied while seeding: an intervention's type is drawn from the
+vehicle's *allowed* types, its supplier from those *capable* of that type, and each
+invoice bundles a supplier's completed interventions with `TotalAmount` equal to the
+sum of the bundled costs.
 
 ---
 
 ## API endpoints
 
-Each entity is exposed by an `EntityControllerBase` controller. Common routes (provided out of the box):
+Every entity is exposed through a controller deriving from Regira's
+`EntityControllerBase`. Base routes:
 
-| Method | Route | Action |
-|--------|-------|--------|
-| `GET` | `/{entity}` | List (paged) |
-| `GET` | `/{entity}/{id}` | Details |
-| `GET` / `POST` | `/{entity}/search` | Search **+ count** *(complex entities only — see below)* |
-| `POST` | `/{entity}` | Create |
-| `POST` | `/{entity}/save` | Upsert |
-| `PUT` | `/{entity}/{id}` | Full update |
-| `PATCH` | `/{entity}/{id}` | Partial update (JSON Merge Patch) |
-| `DELETE` | `/{entity}/{id}` | Delete |
+| Resource | Route | Registration |
+|----------|-------|--------------|
+| Intervention types | `/api/intervention-types` | simple |
+| Vehicles | `/api/vehicles` | simple |
+| Suppliers | `/api/suppliers` | simple |
+| Interventions | `/api/interventions` | **complex** |
+| Invoices | `/api/invoices` | **complex** |
 
-Routes: `/vehicles`, `/intervention-types`, `/suppliers`, `/invoices`, `/interventions`.
+Endpoints per resource:
+
+| Method | Route | Action | Availability |
+|--------|-------|--------|--------------|
+| `GET` | `/{id}` | Details | all |
+| `GET` | `/` | List (`?q=` keyword search) | all |
+| `POST` | `/list` | List (search object in body) | complex only |
+| `GET` / `POST` | `/search` | Search **with total count** | complex only |
+| `POST` | `/` | Create | all |
+| `POST` | `/save` | Upsert | all |
+| `PUT` | `/{id}` | Replace (full update) | all |
+| `PATCH` | `/{id}` | Partial update (JSON Merge Patch) | all |
+| `DELETE` | `/{id}` | Delete | all |
 
 ### Filtering, sorting & includes
 
-To stay within the free tier, the two entities with the richest query needs are registered as
-**complex** (custom `SearchObject` + `SortBy` + `Includes`); the rest are **simple** (default
-`SearchObject`, so they still support `id`/`ids` and `q` full-text search plus default includes).
+Complex resources accept rich query parameters via their search object, `sortBy`, and
+`includes` flags. Examples:
 
-**Vehicles** (`/vehicles/search`)
-- `vehicleType`, `brand`, `interventionTypeId`, `minYear`, `maxYear`, `q`
-- `includes`: `AllowedInterventionTypes` (1), `Interventions` (2), `All` (3)
+```http
+# Completed interventions, most expensive first, with the billing invoice loaded
+GET /api/interventions/search?Status=Completed&SortBy=CostDesc&includes=Invoice&pageSize=20
 
-**Interventions** (`/interventions/search`)
-- `vehicleId`, `supplierId`, `interventionTypeId`, `invoiceId`, `status`, `isInvoiced`,
-  `minScheduledDate`, `maxScheduledDate`, `minCost`, `maxCost`, `q`
-- `sortBy`: `ScheduledDate`, `ScheduledDateDesc`, `Cost`, `CostDesc`, `Status`
-- `includes`: `Vehicle` (1), `InterventionType` (2), `Supplier` (4), `Invoice` (8), `All` (15)
+# Unbilled interventions for vehicles 3 and 7
+GET /api/interventions/search?VehicleId=3&VehicleId=7&HasInvoice=false
 
-Example:
+# Overdue invoices for a supplier, newest issue date first
+GET /api/invoices/search?SupplierId=13&Status=Overdue&SortBy=IssueDateDesc&includes=Interventions
 
-```
-GET /interventions/search?status=Completed&sortBy=CostDesc&includes=15&pageSize=10
-GET /vehicles/search?vehicleType=Truck&includes=1
+# Vehicles allowed to undergo an engine repair (type 8)
+GET /api/vehicles?InterventionTypeId=8
 ```
 
-> Simple entities (`/suppliers`, `/invoices`, `/intervention-types`) expose `GET /{entity}` (list) and
-> `GET /{entity}/{id}`; they do not expose the `/search` route, but support `?q=` full-text search on the list.
+`Vehicle` and `Supplier` always eager-load their assigned intervention types.
+`Intervention` always loads its vehicle, supplier and type; the invoice is loaded on
+demand via `includes=Invoice`.
+
+Paging defaults: 25 items per page, max 200 (override with `page` / `pageSize`).
 
 ---
 
-## Sample data
-
-Seeded once into an empty database by [`Infrastructure/DataSeeder.cs`](Infrastructure/DataSeeder.cs),
-**through the `IEntityService<>` implementations** (so preppers, normalizers and primers run exactly as via the API):
-
-| Entity | Count |
-|--------|------:|
-| Intervention types | 12 |
-| Suppliers | 15 (each can perform a random 3–8 types) |
-| Vehicles | 45 (each may undergo a random 4–9 types) |
-| Invoices | 90 (4–7 per supplier; amount = sum of billed interventions) |
-| **Interventions** | **520** |
-
-Each intervention is generated consistently: a random vehicle, a type that is **both** allowed for that vehicle
-**and** performable by a supplier, a capable supplier, a weighted status (≈70 % completed), a realistic cost
-per type (with a heavier multiplier for trucks/buses), and — for most completed work — a link to one of the
-supplier's invoices. The Bogus randomizer uses a fixed seed for reproducible data.
-
----
-
-## Project layout
+## Project structure
 
 ```
 Fleet.API/
-├── Program.cs                       # thin host: JSON, DbContext + interceptors, entity services, seed, OpenAPI/Scalar
-├── NuGet.Config                     # nuget.org + Regira feed
-├── appsettings.json                 # connection string + Serilog
+├── Controllers/                 # EntityControllerBase-derived controllers (1 per resource)
 ├── Data/
-│   └── FleetDbContext.cs            # DbSets, relationships, decimal precision
-├── Infrastructure/
-│   ├── ServiceCollectionExtensions.cs   # UseEntities() + per-entity registrations
-│   └── DataSeeder.cs                # IEntityService-based seeding (Bogus)
-├── Entities/
-│   ├── Common/Enums.cs              # VehicleType, InterventionStatus, InvoiceStatus
-│   ├── Vehicles/                    # entity, join, search/includes, DTOs, query builder, config (complex)
-│   ├── Interventions/               # entity, search/sortby/includes, DTOs, query builder, config (complex)
-│   ├── InterventionTypes/           # entity, DTOs, config (simple)
-│   ├── Suppliers/                   # entity, join, DTOs, config (simple)
-│   └── Invoices/                    # entity, DTOs, config (simple)
-└── Controllers/                     # one EntityControllerBase per entity
+│   ├── FleetDbContext.cs        # DbSets + relationship configuration
+│   └── FleetDbSeeder.cs         # Bogus seeding via IEntityService
+├── Entities/                    # Per-entity folders
+│   ├── InterventionTypes/       # entity, search object, DTOs, service config
+│   ├── Vehicles/                # + VehicleInterventionType join, VehicleType enum
+│   ├── Suppliers/               # + SupplierInterventionType join
+│   ├── Interventions/           # + Status/SortBy/Includes enums (complex)
+│   └── Invoices/                # + Status/SortBy/Includes enums (complex)
+├── Extensions/
+│   └── ServiceCollectionExtensions.cs   # UseEntities() + per-entity .For<>() wiring
+├── Program.cs                   # thin host: DI, interceptors, EnsureCreated, seed
+└── appsettings.json
 ```
 
-Per-entity folders follow the Regira convention: entity + `SearchObject`/`SortBy`/`Includes` +
-DTOs + query builder + a `.For<>()` configuration extension method.
+Each entity is registered with `.For<>()` in its own `*ServiceConfiguration.cs`
+extension method, configuring filtering, sorting, includes, DTO mapping and (for the
+M:N relations) `Related()` collection synchronization.
 
 ---
 
 ## Credits
 
-- **Authored by:** Claude (Anthropic) — model **Claude Opus 4.8** — running in **Claude Code**.
-- **Agent type:** the built-in general-purpose `claude` agent (no sub-agents were spawned).
-- **Knowledge source:** built exclusively from the **Regira MCP server** (`https://mcp.regira.com/mcp`)
-  bootstrap guide, package documentation, examples and signatures — no external references.
-- **Frameworks:** [Regira](https://regira.com) packages, EF Core, ASP.NET Core, Bogus, Serilog, Scalar.
+Designed and implemented by **Claude** (Anthropic), running as **Claude Code** — the
+primary interactive coding agent (model **Claude Opus 4.8**). The build used the
+**Regira MCP server** (`https://mcp.regira.com/mcp`) as the single source of truth for
+package selection, setup conventions, API signatures and namespaces; no other projects
+were referenced.
+
+> Agent type: the general-purpose **Claude Code** agent (not a specialized sub-agent).
+> A dedicated `entities-agent` was available for Regira entity work but was not used —
+> the implementation was done inline by the main agent.
+
+Built with the [Regira](https://regira.com) packages · `Regira.Entities` v6.

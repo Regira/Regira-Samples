@@ -4,6 +4,6 @@ using Regira.Entities.Web.Controllers.Abstractions;
 
 namespace Fleet.API.Controllers;
 
-[ApiController, Route("interventions")]
+[ApiController, Route("api/interventions")]
 public class InterventionController
     : EntityControllerBase<Intervention, InterventionSearchObject, InterventionSortBy, InterventionIncludes, InterventionDto, InterventionInputDto>;

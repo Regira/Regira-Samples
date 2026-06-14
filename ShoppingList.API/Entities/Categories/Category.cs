@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Regira.Entities.Models.Abstractions;
 using Regira.Normalizing;
 
-namespace ShoppingList.API.Entities.Categories;
+namespace ShoppingListApi.Entities.Categories;
 
 /// <summary>
-/// A grouping for articles. Categories form a hierarchy: a category can have multiple
-/// parent categories and multiple child categories (modelled through <see cref="RelatedCategory"/>).
+/// A grouping that articles can belong to. Categories form a graph: a category can have
+/// multiple parent categories and multiple child categories (modelled with the
+/// <see cref="RelatedCategory"/> self-referencing join entity).
 /// </summary>
 public class Category : IEntityWithSerial, IHasTimestamps, IHasTitle, IHasDescription, IHasNormalizedContent, IArchivable
 {
@@ -19,19 +20,20 @@ public class Category : IEntityWithSerial, IHasTimestamps, IHasTitle, IHasDescri
     [MaxLength(1024)]
     public string? Description { get; set; }
 
-    [MaxLength(1024), Normalized(SourceProperties = new[] { nameof(Title), nameof(Description) })]
+    [MaxLength(1024), Normalized(SourceProperties = [nameof(Title), nameof(Description)])]
     public string? NormalizedContent { get; set; }
 
     public bool IsArchived { get; set; }
     public DateTime Created { get; set; }
     public DateTime? LastModified { get; set; }
 
-    /// <summary>Links to the parent categories of this category.</summary>
+    /// <summary>Join rows where this category is the <see cref="RelatedCategory.Child"/> (i.e. its parents).</summary>
     public ICollection<RelatedCategory>? ParentEntities { get; set; }
 
-    /// <summary>Links to the child categories of this category.</summary>
+    /// <summary>Join rows where this category is the <see cref="RelatedCategory.Parent"/> (i.e. its children).</summary>
     public ICollection<RelatedCategory>? ChildEntities { get; set; }
 
     /// <summary>Number of articles in this category. Filled by <see cref="CategoryProcessor"/>.</summary>
-    [NotMapped] public int? ArticleCount { get; set; }
+    [NotMapped]
+    public int? ArticleCount { get; set; }
 }

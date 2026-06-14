@@ -1,18 +1,20 @@
-using Regira.Entities.DependencyInjection.ServiceBuilders;
-using Regira.Entities.DependencyInjection.ServiceBuilders.Abstractions;
-using ShoppingList.API.Data;
+using Regira.Entities.DependencyInjection.ServiceCollections;
+using Regira.Entities.DependencyInjection.ServiceCollections.Abstractions;
+using ShoppingListApi.Data;
 
-namespace ShoppingList.API.Entities.Shoppers;
+namespace ShoppingListApi.Entities.Shoppers;
 
 public static class ShopperServiceConfiguration
 {
-    /// <summary>
-    /// Registers the <see cref="Shopper"/> entity service. Uses the default search object,
-    /// so the inherited <c>Q</c> parameter searches the normalized name/email via the global filter.
-    /// </summary>
-    public static IEntityServiceCollection<ShoppingDbContext> AddShoppers(this IEntityServiceCollection<ShoppingDbContext> services)
-    {
-        services.For<Shopper>(e => e.SortBy(query => query.OrderBy(x => x.Name)));
-        return services;
-    }
+    public static EntityServiceCollection<ShoppingListDbContext> AddShoppers(
+        this IEntityServiceCollection<ShoppingListDbContext> services)
+        => services.For<Shopper, int, ShopperSearchObject>(e =>
+        {
+            // Simple builder → single-arg SortBy lambda.
+            e.SortBy(query => query.OrderBy(x => x.Name));
+
+            e.Filter((query, so) => string.IsNullOrWhiteSpace(so?.Name)
+                ? query
+                : query.Where(x => x.Name.Contains(so.Name)));
+        });
 }

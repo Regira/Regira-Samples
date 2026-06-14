@@ -4,6 +4,6 @@ using Regira.Entities.Web.Controllers.Abstractions;
 
 namespace Fleet.API.Controllers;
 
-[ApiController, Route("suppliers")]
+[ApiController, Route("api/suppliers")]
 public class SupplierController
-    : EntityControllerBase<Supplier, SupplierDto, SupplierInputDto>;
+    : EntityControllerBase<Supplier, int, SupplierSearchObject, SupplierDto, SupplierInputDto>;

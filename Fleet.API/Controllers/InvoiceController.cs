@@ -4,6 +4,6 @@ using Regira.Entities.Web.Controllers.Abstractions;
 
 namespace Fleet.API.Controllers;
 
-[ApiController, Route("invoices")]
+[ApiController, Route("api/invoices")]
 public class InvoiceController
-    : EntityControllerBase<Invoice, InvoiceDto, InvoiceInputDto>;
+    : EntityControllerBase<Invoice, InvoiceSearchObject, InvoiceSortBy, InvoiceIncludes, InvoiceDto, InvoiceInputDto>;

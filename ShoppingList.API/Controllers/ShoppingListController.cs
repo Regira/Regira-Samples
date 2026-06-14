@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Regira.Entities.Web.Controllers.Abstractions;
-using ShoppingList.API.Entities.ShoppingLists;
+using ShoppingListApi.Entities.Lists;
 
-namespace ShoppingList.API.Controllers;
+namespace ShoppingListApi.Controllers;
 
-/// <summary>CRUD + search endpoints for shopping lists (filter by shopper, items eager-loaded).</summary>
-[ApiController, Route("shopping-lists")]
+[ApiController, Route("shoppinglists")]
 public class ShoppingListController
-    : EntityControllerBase<Entities.ShoppingLists.ShoppingList, int, ShoppingListSearchObject, ShoppingListDto, ShoppingListInputDto>;
+    : EntityControllerBase<ShoppingList, int, ShoppingListSearchObject, ShoppingListDto, ShoppingListInputDto>;

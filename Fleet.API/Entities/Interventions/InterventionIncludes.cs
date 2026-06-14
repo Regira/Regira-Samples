@@ -5,8 +5,8 @@ public enum InterventionIncludes
 {
     Default = 0,
     Vehicle = 1 << 0,
-    InterventionType = 1 << 1,
-    Supplier = 1 << 2,
+    Supplier = 1 << 1,
+    Type = 1 << 2,
     Invoice = 1 << 3,
-    All = Vehicle | InterventionType | Supplier | Invoice
+    All = Vehicle | Supplier | Type | Invoice
 }

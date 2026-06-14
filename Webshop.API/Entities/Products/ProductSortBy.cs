@@ -8,5 +8,4 @@ public enum ProductSortBy
     Price,
     PriceDesc,
     Newest,
-    Oldest
 }

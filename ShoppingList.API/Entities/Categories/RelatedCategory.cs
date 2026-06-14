@@ -1,16 +1,19 @@
 using Regira.Entities.Models.Abstractions;
 
-namespace ShoppingList.API.Entities.Categories;
+namespace ShoppingListApi.Entities.Categories;
 
 /// <summary>
-/// Self-referential join entity connecting a parent <see cref="Category"/> to a child category.
-/// Managed as an owned collection of <see cref="Category"/> via <c>e.Related(...)</c>.
+/// Self-referencing join entity that links a parent <see cref="Category"/> to a child
+/// <see cref="Category"/>. Owned and managed through the <see cref="Category"/> service via
+/// <c>Related()</c>; it has no standalone entity-service registration.
 /// </summary>
 public class RelatedCategory : IEntityWithSerial
 {
     public int Id { get; set; }
+
     public int ChildId { get; set; }
-    public int ParentId { get; set; }
     public Category Child { get; set; } = null!;
+
+    public int ParentId { get; set; }
     public Category Parent { get; set; } = null!;
 }

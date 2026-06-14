@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Regira.Entities.Models.Abstractions;
 using Regira.Normalizing;
 
@@ -15,7 +14,4 @@ public class Category : IEntityWithSerial, IHasTimestamps, IHasTitle, IHasNormal
     public bool IsArchived { get; set; }
     public DateTime Created { get; set; }
     public DateTime? LastModified { get; set; }
-    public ICollection<RelatedCategory>? ParentEntities { get; set; }
-    public ICollection<RelatedCategory>? ChildEntities { get; set; }
-    [NotMapped] public int? ProductCount { get; set; }
 }
