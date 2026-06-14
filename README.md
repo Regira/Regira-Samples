@@ -1,10 +1,18 @@
 # Regira Entities — Sample APIs
 
-Three self-contained ASP.NET Core APIs that demonstrate how quickly [Regira Entities](https://regira.com/entities) can produce a fully functional CRUD + search backend. Each sample was **generated end-to-end by an AI agent** — no manual scaffolding, no boilerplate written by hand — driven exclusively from the [Regira MCP server](https://mcp.regira.com/mcp) documentation.
+Three self-contained ASP.NET Core APIs built on top of the [Regira Entities](https://regira.com/entities) framework.
 
-If you are evaluating the framework or looking for patterns to follow, browse any of the three projects: they intentionally avoid project-specific helpers and stay close to the raw framework surface.
+The samples are intentionally kept close to the raw framework surface — no project-specific helpers, nothing hidden behind magic — so you can see exactly how Regira Entities handles filtering, sorting, includes, DTO mapping, and DI wiring. The three domains (fleet maintenance, shopping lists, and a webshop) are deliberately small and generic; pick whichever is closest to what you are building and follow the patterns.
 
-For a more comprehensive, production-style reference, see the [PIM Backend](https://github.com/Regira/Regira-PIM-Backend) — the same framework applied to a multi-domain Product Information Management API with authentication, DTO polymorphism, tree queries, and more.
+What makes them unusual: each one was **generated end-to-end by an AI agent** — no manual scaffolding, no boilerplate written by hand — driven exclusively from the Regira MCP server as the single source of truth.
+
+| Site | URL |
+|---|---|
+| 🏢 Regira | [regira.com](https://www.regira.com) |
+| 📚 Regira Entities | [Regira Entities framework](https://regira.com/entities) |
+| 🏭 Production sample | [Regira/Regira-PIM-Backend](https://github.com/Regira/Regira-PIM-Backend) |
+
+> ✅ **No license key required.** All three samples run within the Regira Entities **free tier** (≤ 5 simple + 2 complex entity registrations). To raise the limits, set `Regira:LicenseKey` in your configuration.
 
 ---
 
