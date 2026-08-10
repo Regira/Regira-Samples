@@ -14,9 +14,9 @@
 
   <ItemGroup>
     <!-- Regira Entities — Web API entry point (brings DependencyInjection + EFcore + abstractions) -->
-    <PackageReference Include="Regira.Entities.Web" Version="6.0.0" />
+    <PackageReference Include="Regira.Entities.Web" Version="6.0.2" />
     <!-- DTO mapping provider (not pulled transitively) -->
-    <PackageReference Include="Regira.Entities.Mapping.Mapster" Version="6.0.0" />
+    <PackageReference Include="Regira.Entities.Mapping.Mapster" Version="6.0.2" />
 
     <!-- EF Core database provider -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="*" />
