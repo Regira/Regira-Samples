@@ -1,0 +1,26 @@
+{
+    "api": { "development": "http://localhost:6120/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-US",
+    "title": { "en": "EventPlanner" },
+    "navigation": {
+        "groups": [
+            { "id": "Program", "title": "program", "icon": "bi bi-calendar-event-fill" },
+            { "id": "Attendance", "title": "attendance", "icon": "bi bi-clipboard-check-fill" },
+            { "id": "Setup", "title": "setup", "icon": "bi bi-gear-fill" }
+        ],
+        "dashboard": [
+            ["Program", ["EventItem", "Session", "Speaker"]],
+            ["Attendance", ["Registration", "Employee"]],
+            ["Setup", ["Venue", "EventCategory"]]
+        ],
+        "navbar": [
+            "EventItem",
+            ["Program", ["Session", "Speaker"]],
+            ["Attendance", ["Registration", "Employee"]],
+            ["Setup", ["Venue", "EventCategory"]]
+        ],
+        "search": "EventItem"
+    }
+}

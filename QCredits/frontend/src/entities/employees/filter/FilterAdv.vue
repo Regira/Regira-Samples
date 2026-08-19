@@ -1,0 +1,50 @@
+<template>
+    <div class="adv-filter">
+        <div class="row">
+            <div class="col mb-2" v-if="resultCount != null">
+                <span class="text-info">{{ resultCount }} {{ $t("results") }}</span>
+                <small v-if="filterIsActive" class="ms-2 italic-muted">({{ $t("filtersAreApplied") }})</small>
+            </div>
+            <div class="col mb-2 text-end">
+                <IconButton icon="clear" :showText="true" @click="handleReset" />
+            </div>
+        </div>
+
+        <input v-model.lazy.trim="searchObject.q" class="form-control mb-2" :placeholder="$t('keywords')" @change="handleUpdate" />
+
+        <div class="row">
+            <div class="col-sm mb-2">
+                <select v-model="searchObject.department" class="form-select" @change="handleUpdate">
+                    <option :value="undefined">{{ $t("allDepartments") }}</option>
+                    <option v-for="dep in departments" :key="dep" :value="dep">{{ dep }}</option>
+                </select>
+            </div>
+            <div class="col-sm mb-2">
+                <select v-model="searchObject.role" class="form-select" @change="handleUpdate">
+                    <option :value="undefined">{{ $t("allRoles") }}</option>
+                    <option :value="EmployeeRoles.Employee">{{ $t("employee") }}</option>
+                    <option :value="EmployeeRoles.Admin">{{ $t("admin") }}</option>
+                </select>
+            </div>
+            <div class="col-sm mb-2 d-flex align-items-center">
+                <NullableCheckBox v-model="searchObject.isActive" id="isActiveFilter" :label="$t('activeOnly')" @update:modelValue="handleUpdate" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { IconButton, NullableCheckBox } from "@regira/modules/vue/ui"
+import { useFilter, type FilterEmits } from "@regira/modules/vue/entities"
+import SearchObject from "./SearchObject"
+import { EmployeeRoles } from "../data/Entity"
+
+interface Emits extends /* @vue-ignore */ FilterEmits<SearchObject> {}
+const emit = defineEmits<Emits & { "update:modelValue": (v: SearchObject) => true; filter: (v: SearchObject) => true; close: () => void }>()
+defineProps<{ resultCount?: number }>()
+
+const departments = ["Engineering", "Sales", "Marketing", "Human Resources", "Finance", "Operations", "Customer Support", "Product", "Legal", "IT"]
+
+const searchObject = defineModel<SearchObject>({ required: true })
+const { handleReset, handleUpdate, filterIsActive } = useFilter({ searchObject, emit, Constructor: SearchObject })
+</script>

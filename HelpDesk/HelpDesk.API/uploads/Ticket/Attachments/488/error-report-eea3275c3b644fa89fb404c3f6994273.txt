@@ -1,0 +1,2 @@
+Attachment for ticket #488 - Website displays broken layout on mobile
+Generated for HelpDesk demo seed data.

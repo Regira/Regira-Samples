@@ -1,0 +1,2 @@
+Attachment for ticket #470 - Password reset not working
+Generated for HelpDesk demo seed data.

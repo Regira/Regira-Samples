@@ -1,0 +1,13 @@
+{
+    "clientApp": "blog-spa",
+    "api": "http://localhost:6110",
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "Regira Blog" },
+    "navigation": {
+        "groups": [{ "id": "Content", "title": "content", "icon": "bi bi-journal-richtext" }],
+        "dashboard": [["Content", ["BlogPost", "Category", "Tag"]]],
+        "navbar": ["BlogPost", ["Content", ["Category", "Tag"]]],
+        "search": "BlogPost"
+    }
+}

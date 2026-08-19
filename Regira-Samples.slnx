@@ -2,10 +2,44 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
-    <File Path="NuGet.Config" />
+    <File Path=".mcp.json" />
+    <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="Fleet.API/Fleet.API.csproj" />
-  <Project Path="ShoppingList.API/ShoppingList.API.csproj" />
-  <Project Path="Webshop.API/Webshop.API.csproj" />
+  <Folder Name="/AssetHub/">
+    <File Path="AssetHub/README.md" />
+    <Project Path="AssetHub/backend/AssetHub.Api.csproj" />
+  </Folder>
+  <Folder Name="/Blog/">
+    <File Path="Blog/README.md" />
+    <Project Path="Blog/backend/Blog.Api/Blog.Api.csproj" />
+  </Folder>
+  <Folder Name="/EventPlanner/">
+    <File Path="EventPlanner/README.md" />
+    <Project Path="EventPlanner/backend/EventPlanner.Api.csproj" />
+  </Folder>
+  <Folder Name="/Fleet/">
+    <File Path="Fleet/README.md" />
+    <Project Path="Fleet/backend/Fleet.Api/Fleet.Api.csproj" />
+  </Folder>
+  <Folder Name="/HelpDesk/">
+    <File Path="HelpDesk/README.md" />
+    <Project Path="HelpDesk/HelpDesk.API/HelpDesk.API.csproj" />
+  </Folder>
+  <Folder Name="/QCredits/">
+    <File Path="QCredits/README.md" />
+    <Project Path="QCredits/backend/QCredits.Api/QCredits.Api.csproj" />
+  </Folder>
+  <Folder Name="/RoomPlanner/">
+    <File Path="RoomPlanner/README.md" />
+    <Project Path="RoomPlanner/backend/RoomPlanner.Api/RoomPlanner.Api.csproj" />
+  </Folder>
+  <Folder Name="/ShopMate/">
+    <File Path="ShopMate/README.md" />
+    <Project Path="ShopMate/backend/ShopMate.Api/ShopMate.Api.csproj" />
+  </Folder>
+  <Folder Name="/Webshop/">
+    <File Path="Webshop/README.md" />
+    <Project Path="Webshop/backend/Webshop.Api/Webshop.Api.csproj" />
+  </Folder>
 </Solution>

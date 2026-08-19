@@ -1,0 +1,2 @@
+Attachment for ticket #237 - License key not being accepted
+Generated for HelpDesk demo seed data.

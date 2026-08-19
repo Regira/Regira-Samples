@@ -1,0 +1,20 @@
+{
+    "api": { "development": "http://localhost:6140", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "HelpDesk" },
+    "navigation": {
+        "groups": [
+            { "id": "Support", "title": "support", "icon": "bi bi-life-preserver" },
+            { "id": "Directory", "title": "directory", "icon": "bi bi-people" },
+            { "id": "Admin", "title": "administration", "icon": "bi bi-gear" }
+        ],
+        "dashboard": [
+            ["Support", ["Ticket"]],
+            ["Directory", ["Person"]],
+            ["Admin", ["Category", "Priority", "Status", "SupportTeam"]]
+        ],
+        "navbar": ["Ticket", ["Directory", ["Person"]], ["Admin", ["Category", "Priority", "Status", "SupportTeam"]]],
+        "search": "Ticket"
+    }
+}

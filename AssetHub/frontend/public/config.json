@@ -1,0 +1,20 @@
+{
+    "api": { "development": "http://localhost:6100/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "AssetHub" },
+    "navigation": {
+        "groups": [
+            { "id": "Inventory", "title": "navGroup.inventory", "icon": "bi bi-box-seam" },
+            { "id": "ReferenceData", "title": "navGroup.referenceData", "icon": "bi bi-sliders" },
+            { "id": "People", "title": "navGroup.people", "icon": "bi bi-people" }
+        ],
+        "dashboard": [
+            ["Inventory", ["Asset", "AssetAssignment"]],
+            ["ReferenceData", ["Category", "AssetStatus", "LocationItem", "Supplier"]],
+            ["People", ["Employee"]]
+        ],
+        "navbar": ["Asset", "AssetAssignment", ["ReferenceData", ["Category", "AssetStatus", "LocationItem", "Supplier"]], "Employee"],
+        "search": "Asset"
+    }
+}

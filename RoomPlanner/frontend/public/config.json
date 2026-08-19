@@ -1,0 +1,23 @@
+{
+    "api": { "development": "http://localhost:6160/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "clientApp": "roomplanner",
+    "title": { "en": "RoomPlanner" },
+    "navigation": {
+        "groups": [
+            { "id": "Planning", "title": "planning", "icon": "bi bi-calendar-week" },
+            { "id": "Directory", "title": "directory", "icon": "bi bi-diagram-3" }
+        ],
+        "dashboard": [
+            ["Planning", ["Reservation", "MeetingRoom"]],
+            ["Directory", ["Building", "Floor", "Employee"]]
+        ],
+        "navbar": [
+            "Reservation",
+            "MeetingRoom",
+            ["Directory", ["Building", "Floor", "Employee"]]
+        ],
+        "search": "Reservation"
+    }
+}

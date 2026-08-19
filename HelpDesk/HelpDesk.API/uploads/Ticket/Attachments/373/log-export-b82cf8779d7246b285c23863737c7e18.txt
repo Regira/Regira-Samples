@@ -1,0 +1,2 @@
+Attachment for ticket #373 - Application crashes on startup
+Generated for HelpDesk demo seed data.

@@ -1,0 +1,2 @@
+Attachment for ticket #445 - Invoice amount looks incorrect
+Generated for HelpDesk demo seed data.

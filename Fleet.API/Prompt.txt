@@ -1,8 +1,0 @@
-Create an API (Fleet.API), using Regira packages, which offers services to manage Fleet interventions. 
-Vehicles (cars, vans, trucks, ...) have various maintenance needs.
-These Interventions are operated by Suppliers that send invoices related to the interventions they perform.
-InterventionTypes are editable and suppliers can be assigned interventiontypes they are able to perform. Vehicles can also be assigned interventiontypes they are allowed to undergo.
-
-- Seed sample data for all entities (around 500 interventions) using the IEntityService implementations. You can use Bogus if applicable.
-- Make sure the project builds.
-- Create a README file with documentation (add credits to yourself and mention the used AI agent type)

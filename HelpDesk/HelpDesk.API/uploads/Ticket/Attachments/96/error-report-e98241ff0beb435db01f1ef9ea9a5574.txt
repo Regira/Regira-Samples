@@ -1,0 +1,2 @@
+Attachment for ticket #96 - Cannot download my invoice PDF
+Generated for HelpDesk demo seed data.

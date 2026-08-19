@@ -1,7 +1,0 @@
-Create an API (Webshop.API), using Regira packages, which offers services to run a Webshop. 
-Customers can select Products and submit an Order.
-The products are categorized and customers can filter them easily.
-
-- Seed sample data for all entities (around 100 orders) using the IEntityService implementations.
-- Make sure the project builds.
-- Create a README file with documentation for a client SPA consumer (+add credits to yourself and mention the used AI agent type)

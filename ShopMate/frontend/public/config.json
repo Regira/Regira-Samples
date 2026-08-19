@@ -1,0 +1,12 @@
+{
+    "api": { "development": "http://localhost:6170/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "ShopMate" },
+    "navigation": {
+        "groups": [{ "id": "Main", "title": "main", "icon": "bi bi-grid" }],
+        "dashboard": [["Main", ["ShoppingList", "Category"]]],
+        "navbar": ["ShoppingList", "Category"],
+        "search": ""
+    }
+}

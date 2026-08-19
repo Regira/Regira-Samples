@@ -1,0 +1,23 @@
+{
+    "clientApp": "qcredits",
+    "api": { "development": "http://localhost:6150", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "QCredits" },
+    "navigation": {
+        "groups": [
+            { "id": "MyCredits", "title": "myCredits", "icon": "bi bi-wallet2" },
+            { "id": "Admin", "title": "administration", "icon": "bi bi-shield-check" }
+        ],
+        "dashboard": [
+            ["MyCredits", ["QCreditRequest", "GroupTraining"]],
+            ["Admin", ["Employee", "CreditPolicy", "EmployeeCarryOver"]]
+        ],
+        "navbar": [
+            "QCreditRequest",
+            "GroupTraining",
+            ["Admin", ["Employee", "CreditPolicy", "EmployeeCarryOver"]]
+        ],
+        "search": "Employee"
+    }
+}

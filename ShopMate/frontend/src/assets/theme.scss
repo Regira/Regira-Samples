@@ -1,0 +1,203 @@
+// ShopMate theme — loaded after bootstrap.min.css + @regira/modules/style.css, so everything here wins.
+// Mobile-first, minimal, large touch targets. Palette: fresh green accent on a soft neutral background.
+:root {
+    --rg-accent: #16a34a;
+    --rg-accent-bg: rgba(22, 163, 74, 0.12);
+    --rg-deleted-bg: rgba(220, 53, 69, 0.2);
+
+    --bs-border-radius: 0.9rem;
+    --bs-border-radius-sm: 0.6rem;
+    --bs-border-radius-lg: 1.1rem;
+    --bs-link-color-rgb: 22, 163, 74;
+    --bs-body-bg: #f4f6f5;
+    --bs-body-color: #1f2a24;
+
+    // App-owned tokens (prefixed --sm-, never --rg- which is the library's own namespace)
+    --sm-surface: #ffffff;
+    --sm-surface-muted: #eef1ef;
+    --sm-accent: #16a34a;
+    --sm-accent-dark: #0f7a37;
+    --sm-danger: #e0473e;
+    --sm-warning: #e0a940;
+    --sm-radius-lg: 1.1rem;
+    --sm-radius-md: 0.8rem;
+    --sm-touch: 48px; // minimum touch-target size
+    --sm-header-h: 56px;
+    --sm-bottomnav-h: 64px;
+    --sm-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --sm-safe-top: env(safe-area-inset-top, 0px);
+}
+
+// Accent swap — precompiled Bootstrap reads component-level vars.
+.btn-primary {
+    --bs-btn-bg: var(--rg-accent);
+    --bs-btn-border-color: var(--rg-accent);
+    --bs-btn-hover-bg: var(--sm-accent-dark);
+    --bs-btn-hover-border-color: var(--sm-accent-dark);
+}
+.pagination {
+    --bs-pagination-active-bg: var(--rg-accent);
+    --bs-pagination-active-border-color: var(--rg-accent);
+}
+.form-check-input:checked {
+    background-color: var(--rg-accent);
+    border-color: var(--rg-accent);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    overscroll-behavior-y: contain;
+}
+
+// Large, touch-friendly controls everywhere.
+.btn {
+    min-height: var(--sm-touch);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: var(--sm-radius-md);
+}
+.btn-sm {
+    min-height: 38px;
+}
+.btn-link {
+    min-height: auto;
+}
+.form-control,
+.form-select {
+    min-height: var(--sm-touch);
+    border-radius: var(--sm-radius-md);
+}
+.form-check-input {
+    width: 1.4em;
+    height: 1.4em;
+}
+
+// The page's own vertical rhythm.
+.page > main {
+    padding-top: 0.25rem;
+    padding-bottom: calc(var(--sm-bottomnav-h) + var(--sm-safe-bottom) + 0.75rem);
+}
+
+.striped > *:nth-child(even) {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+}
+
+.form-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bs-body-bg, #fff);
+}
+
+// ---- Mobile app shell -------------------------------------------------------------------
+
+.sm-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    height: calc(var(--sm-header-h) + var(--sm-safe-top));
+    padding-top: var(--sm-safe-top);
+    display: flex;
+    align-items: center;
+    background: var(--sm-surface);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.sm-topbar__title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--sm-accent-dark);
+    letter-spacing: -0.01em;
+}
+
+.sm-bottomnav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    height: calc(var(--sm-bottomnav-h) + var(--sm-safe-bottom));
+    padding-bottom: var(--sm-safe-bottom);
+    display: flex;
+    background: var(--sm-surface);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+}
+.sm-bottomnav__item {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #7b8a80;
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.sm-bottomnav__item i {
+    font-size: 1.35rem;
+}
+.sm-bottomnav__item.is-active {
+    color: var(--sm-accent);
+}
+
+// ---- Cards -------------------------------------------------------------------------------
+
+.sm-card {
+    background: var(--sm-surface);
+    border-radius: var(--sm-radius-lg);
+    box-shadow: 0 1px 3px rgba(20, 30, 25, 0.06);
+}
+
+.sm-swipe-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 84px;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+}
+.sm-swipe-btn--danger {
+    background: var(--sm-danger);
+}
+.sm-swipe-btn--accent {
+    background: var(--sm-accent);
+}
+.sm-swipe-btn--muted {
+    background: #8a97a3;
+}
+
+// Scrollable horizontal chip row (category filters) without the page ever scrolling sideways.
+.sm-chip-row {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+}
+.sm-chip-row::-webkit-scrollbar {
+    display: none;
+}
+.sm-chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: var(--sm-surface-muted);
+    color: #40514a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+.sm-chip.is-active {
+    background: var(--rg-accent-bg);
+    color: var(--sm-accent-dark);
+    border-color: var(--sm-accent);
+}

@@ -1,0 +1,20 @@
+# .NET
+backend/bin/
+backend/obj/
+backend/logs/
+backend/.regira/
+backend/*.db
+backend/*.db-shm
+backend/*.db-wal
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# Editor / OS
+.vs/
+.vscode/
+*.user
+.DS_Store

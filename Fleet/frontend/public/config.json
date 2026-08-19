@@ -1,0 +1,25 @@
+{
+    "api": { "development": "http://localhost:6130/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "Fleet Manager" },
+    "navigation": {
+        "groups": [
+            { "id": "Fleet", "title": "fleet", "icon": "bi bi-truck" },
+            { "id": "Maintenance", "title": "maintenance", "icon": "bi bi-tools" },
+            { "id": "Finance", "title": "finance", "icon": "bi bi-receipt" }
+        ],
+        "dashboard": [
+            ["Fleet", ["Vehicle"]],
+            ["Maintenance", ["Intervention", "InterventionType", "Supplier"]],
+            ["Finance", ["Invoice"]]
+        ],
+        "navbar": [
+            "Vehicle",
+            "Intervention",
+            ["Maintenance", ["InterventionType", "Supplier"]],
+            "Invoice"
+        ],
+        "search": "Vehicle"
+    }
+}

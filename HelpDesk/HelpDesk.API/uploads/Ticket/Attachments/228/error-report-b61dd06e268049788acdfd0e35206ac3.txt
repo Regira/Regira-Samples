@@ -1,0 +1,2 @@
+Attachment for ticket #228 - API returns 500 error intermittently
+Generated for HelpDesk demo seed data.
