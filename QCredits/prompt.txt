@@ -1,0 +1,8 @@
+Create an app QCredits/ (back-end & front-end), which offers services to manage employee training credits. (1 QCredit is equivalent to 1/2 working day or €250.)
+
+* Employees receive an annual training budget of 20 QCredits, of which 5 credits are reserved for mandatory company days, leaving 15 freely available credits. QCredits can be spent on courses, books, online subscriptions or self-study during working hours. 
+* Employees can submit QCredit requests that require approval before they are accepted. Approved requests deduct the corresponding credits from the employee's balance. A single request may contain multiple purchases or activities.
+* Administrators can manage yearly credit allocations, reserved credits, carry over up to 10 remaining credits to the next year and allow balances down to -10 credits. 
+* Group trainings are funded separately and should not affect personal QCredit balances.
+
+Use a clean HR-style interface with progress indicators, credit balances and approval workflows.

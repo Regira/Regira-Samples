@@ -1,0 +1,8 @@
+Create an app Blog/ (back-end & front-end), which offers services to manage and publish blog posts.
+
+* Blog Posts can be assigned to Categories and can also be tagged.
+* Blog Posts and Categories can be fully managed.
+* Include a Blog Post overview and detail page that only show published posts.
+* Blog Posts can easily be filtered.
+
+Use a clean, editorial-style design with prominent article titles, readable typography and attractive article cards.

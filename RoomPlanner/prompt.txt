@@ -1,0 +1,8 @@
+Create an app RoomPlanner/ (back-end & front-end), which offers services to manage meeting room reservations.
+
+* Buildings contain multiple floors and each floor contains multiple meeting rooms.
+* Meeting rooms have a capacity, available equipment (projector, whiteboard, video conferencing, ...) and can be filtered accordingly.
+* Employees can create reservations for one or more rooms and invite multiple attendees.
+* Reservations may be approved automatically or require approval depending on the room.
+
+Use a calendar-oriented interface with timeline views, availability indicators and room cards.
