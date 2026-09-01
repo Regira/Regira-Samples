@@ -1,0 +1,8 @@
+Create an app ShopMate/ (back-end & front-end), which offers services to run a Shopping list.
+
+* A shopper can manage multiple shopping lists.
+* A shopping list contains articles that are sortable and can be activated (need to buy)/deactivated.
+* An article can have multiple categories and shoppers can filter them easily, text search included.
+* A category can have multiple parent/child categories.
+
+Use a modern mobile-first design with large touch-friendly controls, swipe actions and a minimal interface.

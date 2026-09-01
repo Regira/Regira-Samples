@@ -1,0 +1,7 @@
+Create an app Webshop/ (front- and back-end), which offers services to run a Webshop. 
+
+* Products are categorized and customers can filter them easily.
+* Customers can select Products and submit an Order.
+* Include a checkout page
+
+Use a modern e-commerce design with product cards, promotional banners and a polished shopping experience.

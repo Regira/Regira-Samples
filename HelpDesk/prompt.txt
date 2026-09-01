@@ -1,0 +1,8 @@
+Create an app HelpDesk/ (back-end & front-end), which offers services to manage support tickets.
+
+* Customers can create support tickets and assign one or more categories.
+* Tickets have a priority, status and assigned employee.
+* A ticket can contain multiple comments and file attachments.
+* Administrators can manage categories, priorities, statuses and support teams.
+
+Use a support center layout with Kanban boards, ticket queues and conversation-style comment threads.

@@ -1,0 +1,8 @@
+Create an app AssetHub/ (back-end & front-end), which offers services to manage company assets.
+
+* Assets (laptops, monitors, phones, tools, ...) belong to categories and have a status.
+* Assets can be assigned to employees and a complete assignment history should be maintained.
+* Assets can have multiple attachments, warranties and maintenance records.
+* Administrators can manage asset categories, statuses, locations and suppliers.
+
+Use an inventory management interface with compact tables, asset cards and color-coded status indicators.

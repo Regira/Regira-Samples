@@ -1,0 +1,8 @@
+Create an app EventPlanner/ (back-end & front-end), which offers services to manage events and registrations.
+
+* Events are organized at a location and can span multiple days.
+* An event consists of multiple sessions, each with its own speakers and capacity.
+* Employees can register for events and optionally select individual sessions.
+* Administrators can manage locations, speakers, event categories and participant registrations.
+
+Use a vibrant event-style interface with agenda views, speaker cards and prominent event banners.

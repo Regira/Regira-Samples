@@ -1,0 +1,8 @@
+Create an app in Fleet/ (back-end & front-end), which offers services to manage Fleet interventions. 
+
+* Vehicles (cars, vans, trucks, ...) have various maintenance needs.
+* Interventions are operated by Suppliers. An intervention can contain multiple interventiontypes.
+* InterventionTypes are editable and suppliers can be assigned interventiontypes they are able to perform.
+* An invoice can contain multiple interventions and is linked to the Supplier.
+
+Use a professional dashboard layout with KPIs, status badges and data tables suitable for fleet managers.
