@@ -20,7 +20,7 @@ Each sample carries its own `README.md` covering what it does, how to run it, an
 
 > ✅ **No license key required.** Every sample stays inside the Regira Entities **free tier**
 > (≤ 5 simple + 2 complex entity registrations) — several sit at exactly 7/7.
-> To raise the limits, set `Regira:LicenseKey` in your configuration.
+> To raise the limits, add a key under `Regira:LicenseKeys` in your configuration and call `services.UseRegira(configuration)` before `UseEntities()`.
 
 ---
 

@@ -2,7 +2,7 @@
   "mcpServers": {
     "regira": {
       "url": "https://mcp.regira.com/mcp",
-      "transport": "http"
+      "type": "http"
     }
   }
 }
