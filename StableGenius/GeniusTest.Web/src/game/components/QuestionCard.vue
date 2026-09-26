@@ -140,7 +140,8 @@ function submitNumber() {
         <!-- Choice: one tap answers. No wrong buttons exist. Answers + hint line are ONE branch:
              anything placed between a v-if and its v-else-if silently breaks the chain. -->
         <template v-if="question.type === 'Choice'">
-            <div class="row g-3">
+            <!-- centred: an odd last option (the gender "Other") sits in the middle, not stranded on the left -->
+            <div class="row g-3 justify-content-center">
                 <div v-for="(option, i) in displayOptions" :key="option.id" :class="option.unreachable ? 'col-12 vsg-runaway-stage' : 'col-12 col-sm-6'">
                     <!-- the one that got away: never emits an answer, whatever you try -->
                     <button
@@ -185,7 +186,7 @@ function submitNumber() {
 
         <!-- Number: big field, big +/- buttons, no maths required -->
         <form v-else class="vsg-number" @submit.prevent="submitNumber">
-            <div class="d-flex justify-content-center align-items-stretch gap-2 flex-wrap">
+            <div class="vsg-number-row">
                 <button type="button" class="vsg-bump" :disabled="busy" @click="bump(-10)">−10</button>
                 <button type="button" class="vsg-bump" :disabled="busy" @click="bump(-1)">−1</button>
                 <input
@@ -346,8 +347,31 @@ function submitNumber() {
         transform: translateY(-3px) rotate(-8deg) scale(1.08);
     }
 }
+// −10 −1 [ ? ] +1 +10 on one line; when the card is too narrow for that, the field on top and the four buttons below it
+.vsg-number {
+    container-type: inline-size;
+}
+.vsg-number-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(3.4rem, auto)) 9rem repeat(2, minmax(3.4rem, auto));
+    justify-content: center;
+    gap: 0.5rem;
+}
+@container (max-width: 26rem) {
+    .vsg-number-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .vsg-number-input {
+        grid-row: 1;
+        grid-column: 1 / -1;
+    }
+    .vsg-bump {
+        min-height: 3.2rem;
+    }
+}
 .vsg-number-input {
-    width: 9rem;
+    width: 100%;
+    min-width: 0;
     font-family: var(--vsg-caps);
     font-weight: 700;
     font-size: 2.2rem;
