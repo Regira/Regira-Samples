@@ -1,0 +1,491 @@
+// The Very Stable Genius Test - "gilded palace" edition.
+// White marble, gold on everything, dark ink for text. The bad taste is in the quantity of gold, not in colour.
+// Scoped to .vsg (the game layout) + the .vsg-* overlays; the admin has its own (calmer) gold theme.
+
+$ink: #2a2214;
+$ink-soft: #5c4a26;
+$ivory: #fffdf7;
+$cream: #fbf5e4;
+$gold-deep: #8a6a1f;
+$gold: #c9a227;
+$gold-bright: #e9c85a;
+$gold-pale: #fff3c4;
+$metal: linear-gradient(135deg, #7a5c14 0%, #c9a227 20%, #fff1b8 42%, #d4af37 55%, #8a6a1f 78%, #e8cf7a 100%);
+$metal-v: linear-gradient(180deg, #fff3c4 0%, #e9c85a 30%, #c9a227 55%, #9c7a22 80%, #e8cf7a 100%);
+
+:root {
+    --vsg-ink: #{$ink};
+    --vsg-ink-soft: #{$ink-soft};
+    --vsg-ivory: #{$ivory};
+    --vsg-gold: #{$gold};
+    --vsg-gold-deep: #{$gold-deep};
+    --vsg-gold-pale: #{$gold-pale};
+    --vsg-metal: #{$metal};
+    // engraved gold lettering: vertical, never washes out to white
+    --vsg-gold-text: linear-gradient(180deg, #f3d77a 0%, #d4af37 38%, #9c7a22 52%, #c9a227 72%, #7a5c14 100%);
+    --vsg-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+    --vsg-caps: "Cinzel", "Trajan Pro", Georgia, serif;
+    --vsg-display: "Cinzel Decorative", "Cinzel", Georgia, serif;
+    --vsg-script: "Great Vibes", "Snell Roundhand", cursive;
+}
+
+.vsg {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--vsg-serif);
+    color: $ink;
+    background:
+        url("./ornaments/trellis.svg") repeat,
+        url("./ornaments/marble.svg") repeat,
+        $ivory;
+    background-size:
+        64px 64px,
+        512px 512px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+// fluted gold pilasters framing the room (wide screens only)
+@media (min-width: 1200px) {
+    .vsg::before,
+    .vsg::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        width: 46px;
+        z-index: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(180deg, $gold-pale, $gold 8px, $gold-deep 14px, transparent 14px) top / 100% 64px no-repeat,
+            linear-gradient(0deg, $gold-pale, $gold 8px, $gold-deep 14px, transparent 14px) bottom / 100% 64px no-repeat,
+            repeating-linear-gradient(90deg, $gold-deep 0 2px, $gold-pale 2px 6px, $gold 6px 9px, $gold-bright 9px 11px);
+        box-shadow: 0 0 18px rgba(138, 106, 31, 0.35);
+    }
+    .vsg::before {
+        left: 14px;
+    }
+    .vsg::after {
+        right: 14px;
+    }
+}
+
+// ---- Greek key trim + gilding helpers ----
+.vsg-trim {
+    height: 28px;
+    background: url("./ornaments/greek-key.svg") repeat-x center / auto 28px;
+}
+.vsg-divider {
+    display: block;
+    height: 36px;
+    margin: 0.5rem auto 1rem;
+    max-width: 300px;
+    background: url("./ornaments/divider.svg") no-repeat center / contain;
+}
+// turns any emoji into solid gold. Everything is better in gold.
+.vsg-gild {
+    display: inline-block;
+    filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.02) contrast(1.05) drop-shadow(0 1px 0 rgba(138, 106, 31, 0.6));
+}
+.vsg-gold-text {
+    background: var(--vsg-gold-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+// ---- ticker ----
+.vsg-ticker {
+    position: relative;
+    z-index: 2;
+    background: $ivory;
+    color: $ink;
+    font-family: var(--vsg-caps);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border-top: 3px double $gold;
+    border-bottom: 3px double $gold;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    .vsg-ticker-label {
+        flex: none;
+        background: $ink;
+        color: $gold-bright;
+        padding: 0.3rem 0.9rem;
+        z-index: 1;
+    }
+    .vsg-ticker-track {
+        display: inline-block;
+        padding-left: 100%;
+        animation: vsg-ticker 50s linear infinite;
+    }
+}
+@keyframes vsg-ticker {
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+// ---- header ----
+.vsg-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem 0.5rem;
+    background: $ivory;
+}
+.vsg-logo {
+    font-family: var(--vsg-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 3.4vw, 1.5rem);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    span.vsg-logo-text {
+        background: var(--vsg-gold-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.15));
+    }
+}
+.vsg-sound {
+    font-family: var(--vsg-caps);
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 2px solid $gold;
+    outline: 1px solid $gold;
+    outline-offset: 2px;
+    background: $ivory;
+    color: $ink;
+    border-radius: 999px;
+    padding: 0.25rem 1rem;
+    cursor: pointer;
+    &.is-on {
+        background: $metal;
+    }
+}
+
+.vsg-main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.5rem 16px 3rem;
+}
+
+// ---- the big gilded titles ----
+.vsg-wordart {
+    font-family: var(--vsg-display);
+    font-weight: 900;
+    font-size: clamp(2rem, 7.5vw, 4rem);
+    line-height: 1.1;
+    text-align: center;
+    margin: 0.25rem 0 0.25rem;
+    // a gleam sweeping over engraved gold
+    background:
+        linear-gradient(105deg, transparent 42%, rgba(255, 250, 225, 0.9) 50%, transparent 58%) -150% 0 / 60% 100% no-repeat,
+        var(--vsg-gold-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 0 rgba(138, 106, 31, 0.45)) drop-shadow(0 6px 10px rgba(138, 106, 31, 0.25));
+    animation: vsg-gleam 6s ease-in-out infinite;
+}
+@keyframes vsg-gleam {
+    0%,
+    40% {
+        background-position:
+            -150% 0,
+            0 0;
+    }
+    100% {
+        background-position:
+            250% 0,
+            0 0;
+    }
+}
+.vsg-subtitle {
+    font-family: var(--vsg-script);
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+    text-align: center;
+    color: $gold-deep;
+    margin-bottom: 0.25rem;
+}
+
+// slow (1 Hz) blink - well under the 3 flashes/second seizure threshold
+.vsg-blink {
+    animation: vsg-blink 1.2s steps(2, start) infinite;
+}
+@keyframes vsg-blink {
+    to {
+        visibility: hidden;
+    }
+}
+.vsg-spin {
+    display: inline-block;
+    animation: vsg-spin 4s linear infinite;
+}
+@keyframes vsg-spin {
+    to {
+        transform: rotateY(360deg);
+    }
+}
+.vsg-wobble {
+    display: inline-block;
+    animation: vsg-wobble 2.4s ease-in-out infinite;
+}
+@keyframes vsg-wobble {
+    0%,
+    100% {
+        transform: rotate(-3deg) scale(1);
+    }
+    50% {
+        transform: rotate(3deg) scale(1.05);
+    }
+}
+
+// ---- gilded frames: every panel gets rococo corners, a double gold rule and an inner fillet ----
+.vsg-panel {
+    position: relative;
+    background:
+        url("./ornaments/corner-tl.svg") top left / 78px no-repeat,
+        url("./ornaments/corner-tr.svg") top right / 78px no-repeat,
+        url("./ornaments/corner-br.svg") bottom right / 78px no-repeat,
+        url("./ornaments/corner-bl.svg") bottom left / 78px no-repeat,
+        #fff;
+    border: 3px solid transparent;
+    border-image: $metal 1;
+    box-shadow:
+        inset 0 0 0 7px #fff,
+        inset 0 0 0 8px rgba(201, 162, 39, 0.55),
+        0 0 0 5px #fff,
+        0 0 0 6px rgba(201, 162, 39, 0.6),
+        0 18px 40px rgba(90, 70, 20, 0.14);
+    padding: 2.25rem 2rem;
+    margin-bottom: 2.5rem;
+    @media (max-width: 575px) {
+        padding: 2rem 1.1rem;
+        background-size: 56px, 56px, 56px, 56px, auto;
+    }
+    // the scallop-shell crest on top of every frame
+    &::before {
+        content: "";
+        position: absolute;
+        top: -26px;
+        left: 50%;
+        width: 92px;
+        height: 50px;
+        transform: translateX(-50%);
+        background: url("./ornaments/shell.svg") no-repeat center / contain;
+        filter: drop-shadow(0 2px 2px rgba(90, 70, 20, 0.2));
+    }
+}
+
+// ---- buttons: gold bullion ----
+.vsg-btn {
+    display: inline-block;
+    font-family: var(--vsg-caps);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-size: clamp(1rem, 3.6vw, 1.35rem);
+    color: $ink;
+    text-decoration: none;
+    background: $metal-v;
+    border: 2px solid $gold-deep;
+    outline: 2px solid $gold-bright;
+    outline-offset: 3px;
+    border-radius: 6px;
+    padding: 0.7rem 1.6rem;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.15),
+        0 6px 14px rgba(90, 70, 20, 0.3);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s;
+    &:hover {
+        transform: translateY(-2px);
+        color: $ink;
+    }
+    &:active {
+        transform: translateY(2px);
+    }
+    &:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+    // the gleam sweeping across the bullion
+    &::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 35%;
+        height: 200%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+        transform: rotate(20deg);
+        animation: vsg-shine 3.2s ease-in-out infinite;
+    }
+}
+@keyframes vsg-shine {
+    0% {
+        left: -60%;
+    }
+    55%,
+    100% {
+        left: 130%;
+    }
+}
+.vsg-btn-huge {
+    font-size: clamp(1.2rem, 5vw, 1.9rem);
+    padding: 0.9rem 2.2rem;
+}
+
+// the only tasteful element on the page - and nobody should click it
+.vsg-boring-link {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 0.72rem;
+    color: #aaa !important;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+}
+
+// ---- footer ----
+.vsg-footer {
+    position: relative;
+    z-index: 2;
+    background: $cream;
+    color: $ink-soft;
+    text-align: center;
+    padding: 0 16px 1.5rem;
+    font-size: 0.85rem;
+    a {
+        color: $gold-deep;
+    }
+}
+.vsg-counter {
+    display: inline-flex;
+    gap: 2px;
+    margin: 0.25rem 0.5rem;
+    .digit {
+        font-family: var(--vsg-caps);
+        font-weight: 700;
+        background: $metal-v;
+        color: $ink;
+        padding: 0 4px;
+        border: 1px solid $gold-deep;
+        border-radius: 2px;
+    }
+}
+// round gold seals instead of badges
+.vsg-seal-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 92px;
+    height: 92px;
+    margin: 0.5rem;
+    border-radius: 50%;
+    font-family: var(--vsg-caps);
+    font-weight: 700;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    color: $ink;
+    text-align: center;
+    padding: 12px;
+    background:
+        radial-gradient(circle, transparent 58%, rgba(138, 106, 31, 0.5) 59%, transparent 61%),
+        $metal;
+    box-shadow:
+        0 0 0 3px $gold-pale,
+        0 0 0 5px $gold-deep,
+        0 4px 10px rgba(90, 70, 20, 0.3);
+    transform: rotate(-8deg);
+    &:nth-child(2) {
+        transform: rotate(6deg);
+    }
+}
+
+// ---- gold-leaf rain + cursor sparkles ----
+.vsg-rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3000;
+    overflow: hidden;
+    span,
+    i {
+        position: absolute;
+        top: -3rem;
+        animation-name: vsg-fall;
+        animation-timing-function: cubic-bezier(0.3, 0.6, 0.6, 1);
+        animation-fill-mode: forwards;
+    }
+    span {
+        filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.05);
+    }
+    // gold-leaf flakes
+    i {
+        width: 12px;
+        height: 16px;
+        background: $metal;
+        box-shadow: 0 0 2px rgba(138, 106, 31, 0.5);
+    }
+}
+@keyframes vsg-fall {
+    to {
+        transform: translate(var(--drift), 110vh) rotate(var(--spin)) rotateX(var(--flip));
+    }
+}
+.vsg-sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3001;
+    font-size: 1rem;
+    filter: sepia(1) saturate(3) hue-rotate(-12deg);
+    animation: vsg-sparkle 0.8s ease-out forwards;
+}
+@keyframes vsg-sparkle {
+    to {
+        transform: translateY(24px) scale(0.2) rotate(180deg);
+        opacity: 0;
+    }
+}
+body.vsg-gold-flash .vsg-main {
+    animation: vsg-gold-flash 1.2s ease-out 2;
+}
+@keyframes vsg-gold-flash {
+    30% {
+        filter: sepia(0.8) saturate(2.5) brightness(1.08);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vsg,
+    .vsg *,
+    .vsg-rain span,
+    .vsg-rain i {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+    .vsg-ticker .vsg-ticker-track {
+        padding-left: 0;
+    }
+}

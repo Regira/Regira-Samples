@@ -1,0 +1,26 @@
+﻿Key;Text
+defaultHonorific;Your Excellency
+anonymousPlayer;Anonymous Genius
+noAnswer;(no answer)
+ratingOfficialAnswer;There is no official answer. Experts agree you are an 11.
+legendTitle;Honourable mention
+bonusCorrect;Accuracy bonus
+bonusOriginal;Originality bonus
+bonusPowerMove;Strategic abstention bonus
+bonusTooModest;Honesty bonus
+bonusLegendary;LEGENDARY bonus
+fallbackOpener;WOW.
+fallbackSpin;Tremendous answer, {name}. Truly tremendous.
+fallbackCloser;+{points} points.
+fallbackReveal;Looking at facts takes courage. Only {pct}% dare.
+fallbackFinale;IQ {iq}. Our scale only went to 200, so we built a bigger one.
+errorEmptyBank;The question bank is empty. Even geniuses need questions.
+errorNotInGame;That question is not part of your game. Nice try, though.
+errorQuestionRetired;That question has retired. It could not keep up with you.
+errorPickOption;Pick one of the options, genius. Any of them. They're all great.
+errorTypeNumber;Type a number. Any number. Big ones are best.
+errorRateYourself;Rate yourself. Be honest. Or generous.
+errorAnswerFirst;Answer first, genius. Then we talk facts.
+errorNotSoFast;Not so fast: {open} to go. Each one deserves your brilliance.
+errorGameNotFound;Game not found. Start a new one - you'll win again.
+errorUnreachable;Impressive reflexes. That button is decorative, though.

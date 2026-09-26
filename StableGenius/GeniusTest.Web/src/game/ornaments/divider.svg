@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" width="300" height="36"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="300" y2="36">
+<stop offset="0" stop-color="#8a6a1f"/><stop offset=".3" stop-color="#e9c85a"/><stop offset=".48" stop-color="#fff3c4"/>
+<stop offset=".62" stop-color="#c9a227"/><stop offset=".85" stop-color="#9c7a22"/><stop offset="1" stop-color="#e8cf7a"/>
+</linearGradient></defs>
+<g fill="none" stroke="url(#g)" stroke-linecap="round">
+<path stroke-width="1.6" d="M8 18 H112"/><path stroke-width="1.6" d="M188 18 H292"/>
+<path stroke-width="1" d="M40 23 H104"/><path stroke-width="1" d="M196 23 H260"/>
+<path stroke-width="2" d="M112 18 C122 4 138 6 133 16 C130 21 123 18 126 13"/>
+<path stroke-width="2" d="M112 18 C122 32 138 30 133 20 C130 15 123 18 126 23"/>
+<path stroke-width="2" d="M188 18 C178 4 162 6 167 16 C170 21 177 18 174 13"/>
+<path stroke-width="2" d="M188 18 C178 32 162 30 167 20 C170 15 177 18 174 23"/>
+</g>
+<path d="M150 4 L160 18 L150 32 L140 18 Z" fill="url(#g)"/><circle cx="150" cy="18" r="3" fill="#fffdf5"/>
+<circle cx="8" cy="18" r="3" fill="url(#g)"/><circle cx="292" cy="18" r="3" fill="url(#g)"/>
+</svg>

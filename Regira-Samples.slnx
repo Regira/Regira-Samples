@@ -38,6 +38,11 @@
     <File Path="ShopMate/README.md" />
     <Project Path="ShopMate/backend/ShopMate.Api/ShopMate.Api.csproj" />
   </Folder>
+  <Folder Name="/StableGenius/">
+    <File Path="StableGenius/README.md" />
+    <Project Path="StableGenius/GeniusTest.Api/GeniusTest.Api.csproj" />
+    <Project Path="StableGenius/GeniusTest.Tests/GeniusTest.Tests.csproj" />
+  </Folder>
   <Folder Name="/Webshop/">
     <File Path="Webshop/README.md" />
     <Project Path="Webshop/backend/Webshop.Api/Webshop.Api.csproj" />

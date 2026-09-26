@@ -1,0 +1,167 @@
+﻿Screen;Group;Text;Detail
+Layout;headline;Local genius answers question, experts stunned;
+Layout;headline;Scientists confirm: you are right again;
+Layout;headline;Nobel committee 'closely monitoring the situation';
+Layout;headline;Stock market up 400% after your last answer;
+Layout;headline;Dictionary adds your spelling, calls it 'an improvement';
+Layout;headline;Einstein's family issues statement: 'He would have been intimidated';
+Layout;headline;Mount Rushmore sculptors on standby;
+Layout;headline;Every expert who disagreed with you has resigned;
+Layout;headline;Crowd size at this quiz: the biggest ever, period;
+Layout;headline;Your IQ now visible from space;
+Landing;honorific;Very Stable Genius;
+Landing;honorific;The Chosen One;
+Landing;honorific;God Emperor;
+Landing;honorific;Daddy;
+Landing;honorific;Tariff Man;
+Landing;startLabel;Start winning;
+Landing;startLabel;Prove it (easy);
+Landing;startLabel;Begin my victory;
+Landing;startLabel;Let's go, genius;
+Landing;testimonial;I got every question right. Even the ones I got wrong.;A very smart person
+Landing;testimonial;Tremendous quiz. The best quiz. Everybody says so.;Many people
+Landing;testimonial;I cried. Then I became a Galactic Brain.;Your neighbour Kevin
+Landing;testimonial;Finally, a test that understands me.;Somebody's uncle
+Landing;startFailed;The genius machine hiccupped. Not your fault. Never your fault.;
+Landing;startFailed;Our calibration equipment fainted. It happens around people like you.;
+Quiz;submitLabel;That's my answer;
+Quiz;submitLabel;Lock it in, genius;
+Quiz;submitLabel;Obviously this;
+Quiz;submitLabel;Confirm brilliance;
+Quiz;submitLabel;Final answer. Period.;
+Quiz;skipLabel;Skip (power move);
+Quiz;skipLabel;Too easy, skip;
+Quiz;skipLabel;I don't need this one;
+Quiz;answerFailed;Your answer was too powerful for our servers. Try again.;
+Quiz;answerFailed;Our servers blinked. Your brilliance did not. Try again.;
+Reaction;nextLabel;Keep winning;
+Reaction;nextLabel;Next (you'll crush it);
+Reaction;nextLabel;More genius, please;
+Reaction;nextLabel;Bring it on;
+Reaction;nextLabel;Next victory;
+Reaction;resultsLabel;See my results;
+Reaction;resultsLabel;Collect my trophy;
+Reaction;finishFailed;The results were so impressive our printer jammed. Try again.;
+Reveal;revealAsk1;Facts are for people who aren't sure. You are sure. You are always sure.;
+Reveal;revealAsk1;Are you sure? Real geniuses don't need answer keys.;
+Reveal;revealAsk2;The so-called experts will be so smug about this. Are you really, really sure?;
+Reveal;revealAsk2;Last chance. Once you've seen the facts, you can't unsee them. Really sure?;
+Reveal;revealKeepLabel;No, keep me a genius 👑;
+Reveal;revealKeepLabel;Keep my genius 👑;
+Reveal;revealKeepLabel;Never mind, I'm right 👑;
+Reveal;revealBackLabel;Back to being brilliant 👑;
+Reveal;revealBackLabel;Return to greatness 👑;
+Reveal;revealFailed;The experts are unavailable. Probably hiding from you.;
+Error;errorEmoji;🔭;404
+Error;errorTitle;This page wasn't smart enough to exist;404
+Error;errorMessage;You found a page so exclusive, it doesn't exist yet. Visionary.;404
+Error;errorMessage;The page heard you were coming and panicked. Understandable.;404
+Error;errorMessage;Our web developer misplaced this page. He's been fired. Twice.;404
+Error;errorMessage;You're simply ahead of our website. It'll catch up in about 200 years.;404
+Error;errorEmoji;🚪;403
+Error;errorTitle;This room is not fancy enough for you;403
+Error;errorMessage;We're keeping this door closed until we've gold-plated it. You deserve better.;403
+Error;errorMessage;This area is off-limits — for your protection. It's full of so-called experts.;403
+Error;errorMessage;Security saw you coming and fainted from admiration. Nobody is left to open the door.;403
+Error;errorEmoji;🪪;401
+Error;errorTitle;We didn't recognise you (our fault, obviously);401
+Error;errorMessage;Our bouncer has never met a genius before and got confused.;401
+Error;errorMessage;Frankly, you're too famous for our guest list. We're printing a bigger one.;401
+Error;errorMessage;Our recognition software can't handle this much brilliance at once.;401
+Error;errorEmoji;🔥;500
+Error;errorTitle;Our servers couldn't handle your brilliance;500
+Error;errorMessage;Your last move was so powerful it melted a server. Tremendous.;500
+Error;errorMessage;Our computers overheated trying to keep up with you. We've ordered bigger ones.;500
+Error;errorMessage;Something went sideways on our end. Not yours. Never yours.;500
+Error;errorMessage;The internet needs a moment. It's been a very big day for the internet.;500
+Error;errorExcuse;Rest assured: this is 100% not your fault. We checked.;
+Error;errorExcuse;A full investigation has cleared you of all responsibility.;
+Error;errorExcuse;Our lawyers confirm you did everything perfectly.;
+Error;errorExcuse;Independent auditors agree: you were right, the website was not.;
+Layout;tickerLabel;BREAKING;
+Layout;tickerAria;Breaking news;
+Layout;logo;The Very Stable Genius Test™;
+Layout;soundOn;🔊 Fanfare: on;
+Layout;soundOff;🔇 Turn on the fanfare;
+Layout;visitorBefore;You are visitor №;
+Layout;visitorAfter;and you are a genius;
+Layout;seal;As seen on TV;
+Layout;seal;100% genius guaranteed*;
+Layout;seal;24-carat certified;
+Layout;footerNote;Best viewed in Netscape Navigator 4.0 at 800×600 · © 1998–forever ·;
+Layout;staffLink;Staff entrance;
+Layout;disclaimer;*Source: this quiz. Satire — no real persons were quizzed in the making of this website.;
+Landing;landingTitle;The Very Stable Genius Test;
+Landing;landingSubtitle;The only quiz where you are always right™;
+Landing;landingQuestion;Are you a genius?;
+Landing;landingAnswer;(Yes.);
+Landing;nameLabel;What should history call you?;
+Landing;namePlaceholder;Your magnificent name;
+Landing;honorificAria;Honorific;
+Landing;continueLink;Continue your winning streak;
+Landing;calibrating;Measuring your genius…;
+Landing;scaleExceeded;Scale exceeded;
+Landing;anonymousAuthor;Anonymous genius;
+Quiz;scoreLabel;Score;
+Quiz;progressAria;Question {current} of {total};
+Quiz;ratingAria;{value} out of {max};
+Quiz;numberAria;Your answer;
+Quiz;meterLow;smart;
+Quiz;meterHigh;GENIUS;
+Quiz;meterLabel;Genius-o-meter;
+Quiz;meterOverflow;· off the charts;
+Quiz;meterAria;Genius-o-meter at level {level};
+Reaction;liveBadge;● LIVE;
+Reaction;chyron;Breaking news;
+Reaction;pointsLabel;Genius points;
+Reaction;promoted;Promoted:;
+Reaction;peeked;(You peeked at the facts. Brave.);
+Reaction;revealLink;"show the ""official"" answer (boring)";
+Reveal;revealTitle;Are you sure?;
+Reveal;revealResultTitle;The “official” answer;
+Reveal;revealYes;yes;
+Reveal;revealAnyway;show anyway;
+Reveal;revealPending;Consulting the so-called experts…;
+Reveal;revealAccording;According to so-called experts:;
+Reveal;revealRight;You were right all along. Of course you were.;
+Reveal;revealCourage;+{points} courage points;
+Results;resultsTitle;Congratulations!;
+Results;resultsSubtitle;{who}, you are officially the;
+Results;iqLabel;Measured IQ;
+Results;statCorrect;official answers (boring);
+Results;statOriginal;original answers (visionary);
+Results;statSkipped;strategic skips (power moves);
+Results;statFacts;facts viewed (brave);
+Results;certAria;Certificate;
+Results;certTitle;Certificate of Genius;
+Results;certIntro;This is to certify that;
+Results;certIq;has completed The Very Stable Genius Test with an IQ of {iq};
+Results;certScore;and a score of {score} tremendous points,;
+Results;certTitleLine;and is hereby recognised as {title}.;
+Results;certNumber;Nº {number};
+Results;certSignature;The Committee of Very Smart People;
+Results;leaderboardTitle;World Leaderboard;
+Results;leaderboardNote;Rankings certified by you.;
+Results;playAgain;Play again (you'll win again);
+Results;printCertificate;Print certificate;
+Results;shareLabel;Tell everyone;
+Results;sharedLabel;Shared. Legend.;
+Results;shareTitle;The Very Stable Genius Test;
+Results;shareText;I scored an IQ of {iq} on The Very Stable Genius Test. Officially: {title}. 🏆 Rank #1.;
+Results;chartTitle;Your position on the Dunning-Kruger curve;
+Results;chartDescription;"A confidence curve that peaks early; the peak is labelled Summit of Genius, and you are on it.";
+Results;chartKnowledge;Knowledge (irrelevant);
+Results;chartConfidence;Confidence;
+Results;chartValley;Valley of the so-called experts;
+Results;chartProfessors;Boring professors;
+Results;chartSummit;SUMMIT OF GENIUS;
+Results;chartYou;{name} is here;
+Results;chartCaption;Science has located you. Right at the top. Where you belong.;
+Error;errorUrl;({url} — a fine choice, by the way);
+Error;errorBack;Back to winning;
+Error;errorBonus;+500 bonus points for discovering a secret page.*;
+Error;errorBonusNote;*Points are imaginary. Your genius is not.;
+Layout;chandelierAria;A gold crystal chandelier;
+Quiz;unreachableHint;This option has been discontinued by executive order.;
+Quiz;unreachableHint;Option not recognised. Please choose one of the two approved buttons.;
+Quiz;unreachableHint;That button is currently unavailable in this administration.;

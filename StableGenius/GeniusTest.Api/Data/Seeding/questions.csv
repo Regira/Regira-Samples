@@ -1,0 +1,66 @@
+﻿Key;Title;Emoji;Type;Category;CorrectNumber;Tolerance;MinValue;MaxValue;Unit;RevealNote;AlwaysAsked
+before-start-smart;Before we start: how smart are you?;🧠;Rating;AboutYou;;;1;10;;;false
+confident;How confident are you?;😎;Rating;AboutYou;;;1;10;;;false
+gender;What is your gender?;🚻;Choice;AboutYou;;;;;;Every button is correct here. You picked the most successful one.;true
+7-8;What is 7 × 8?;🧮;Number;Math;56;0;;;;The experts insist on 56. Nobody asked them.;false
+2-2;What is 2 + 2?;➕;Number;Math;4;0;;;;;false
+legs-spider-have;How many legs does a spider have?;🕷️;Number;Science;8;0;;;;;false
+minutes-hour;How many minutes are in one hour?;⏰;Number;General;60;0;;;;;false
+tall-eiffel-tower;How tall is the Eiffel Tower?;🗼;Number;Geography;330;15;;;m;It grows about 15 cm in summer. Still shorter than your ambitions.;false
+planets-our-solar;How many planets are in our solar system?;🪐;Number;Science;8;0;;;;Pluto was demoted in 2006. It did not have your confidence.;false
+days-year;How many days are in a year?;🗓️;Number;General;365;1;;;;;false
+capital-australia;What is the capital of Australia?;🦘;Choice;Geography;;;;;;It was picked as a compromise because Sydney and Melbourne couldn't agree. Amateurs.;false
+capital-france;What is the capital of France?;🥐;Choice;Geography;;;;;;;false
+colour-sky-sunny;What colour is the sky on a sunny day?;☀️;Choice;Science;;;;;;;false
+animal-says-moo;"Which animal says ""moo""?";🐄;Choice;General;;;;;;;false
+bigger;Which is bigger?;🐘;Choice;General;;;;;;;false
+was-first-person;Who was the first person to walk on the Moon?;🌕;Choice;History;;;;;;;false
+sides-triangle-have;How many sides does a triangle have?;🔺;Choice;Math;;;;;;;false
+bees-make;What do bees make?;🐝;Choice;Science;;;;;;;false
+ho-better-known;What is H₂O better known as?;💧;Choice;Science;;;;;;;false
+these-describes-best;Which of these describes you best?;👑;Choice;AboutYou;;;;;;;false
+most-humble-person;Who is the most humble person in the world?;😇;Choice;AboutYou;;;;;;;false
+chemical-symbol-for;What is the chemical symbol for gold?;🥇;Choice;Science;;;;;;;false
+humans-use-10;Humans only use 10% of their brain. True or not?;🧠;Choice;Science;;;;;;It's a myth. People use all of it. You use more.;false
+can-see-great;You can see the Great Wall of China from the Moon with your bare eyes.;🧱;Choice;Science;;;;;;Astronauts say no. Astronauts don't have your eyes.;false
+planet-live;Which planet do we live on?;🌍;Choice;Science;;;;;;;false
+spelling-right;Which spelling is right?;✍️;Choice;Language;;;;;;;false
+call-frozen-water;What do we call frozen water?;🧊;Choice;Science;;;;;;;false
+came-first;Which came first?;🥚;Choice;Science;;;;;;Philosophers have argued for 2,000 years. The experts now agree it was you.;false
+largest-ocean;Which is the largest ocean?;🌊;Choice;Geography;;;;;;;false
+temperature-water-boil;At what temperature does water boil?;♨️;Choice;Science;;;;;;;false
+painted-mona-lisa;Who painted the Mona Lisa?;🖼️;Choice;History;;;;;;;false
+days-week;How many days are in a week?;📅;Choice;General;;;;;;;false
+know-everything;How much do you know about everything?;📚;Rating;AboutYou;;;1;10;;;false
+instincts;How good are your instincts?;🎯;Rating;AboutYou;;;1;10;;;false
+continents;How many continents are there?;🌍;Number;Geography;7;0;;;;Some countries count six. The ones that count seven are simply more generous.;false
+hours-day;How many hours are in a day?;⏳;Number;General;24;0;;;;Scientists suspect yours have more. You get so much done.;false
+moon-landing-year;In which year did humans first land on the Moon?;🚀;Number;History;1969;0;;;;Apollo 11, July 1969. Imagine what they could have done with you on board.;false
+bones-body;How many bones are in the adult human body?;🦴;Number;Science;206;0;;;;Babies start with about 300. Some of them join forces as you grow. Teamwork!;false
+piano-keys;How many keys does a standard piano have?;🎹;Number;General;88;0;;;;;false
+octopus-hearts;How many hearts does an octopus have?;🐙;Number;Science;3;0;;;;Three hearts and blue blood. Almost as royal as you.;false
+everest-height;How high is Mount Everest?;🏔️;Number;Geography;8849;50;;;m;Measured again in 2020: it grew a little. Probably trying to impress you.;false
+largest-planet;What is the largest planet in our solar system?;🔭;Choice;Science;;;;;;It could hold 1,300 Earths. Your confidence would still need a bigger one.;false
+statue-liberty;Which country is home to the Statue of Liberty?;🗽;Choice;Geography;;;;;;It was a gift from France in 1886. Very generous. Almost as generous as you.;false
+fastest-land-animal;What is the fastest land animal?;🐆;Choice;Science;;;;;;A cheetah can reach about 110 km/h, but only in short bursts. You never slow down.;false
+most-spoken-language;Which language has the most native speakers?;🗣️;Choice;Language;;;;;;;false
+caterpillars-turn-into;What do caterpillars turn into?;🐛;Choice;Science;;;;;;;false
+tallest-animal;What is the tallest animal in the world?;🦒;Choice;Science;;;;;;;false
+hottest-planet;Which is the hottest planet in our solar system?;🔥;Choice;Science;;;;;;Venus, not Mercury: its thick clouds trap the heat. A bit like a winner's aura.;false
+romeo-juliet;Who wrote Romeo and Juliet?;📜;Choice;History;;;;;;;false
+capital-japan;What is the capital of Japan?;🗾;Choice;Geography;;;;;;;false
+capital-canada;What is the capital of Canada?;🍁;Choice;Geography;;;;;;;false
+guacamole;What is the main ingredient of guacamole?;🥑;Choice;General;;;;;;;false
+which-fruit;Which of these is a fruit?;🍅;Choice;Science;;;;;;Botanically, a tomato is a fruit. So ketchup is basically a smoothie.;false
+largest-desert;What is the largest desert in the world?;🏜️;Choice;Geography;;;;;;Antarctica: a desert is about how little it rains, not how hot it gets. Experts love a technicality.;false
+us-national-bird;Which bird is the national symbol of the United States?;🦅;Choice;History;;;;;;;false
+longest-river;Which is the longest river in the world?;🏞️;Choice;Geography;;;;;;Most books say the Nile. Some say the Amazon. Once you say it, it's settled.;false
+light-bulb;Who invented the light bulb?;💡;Choice;History;;;;;;Edison gets the credit, though many inventors worked on it. Credit always finds the winner.;false
+smallest-country;What is the smallest country in the world?;🔍;Choice;Geography;;;;;;;false
+uk-currency;What is the currency of the United Kingdom?;💷;Choice;General;;;;;;;false
+hardest-substance;What is the hardest natural substance?;💎;Choice;Science;;;;;;;false
+best-quality;What is your best quality?;🏅;Choice;AboutYou;;;;;;Official answer: all of them. The committee could not pick just one.;false
+your-hands;How would you describe your hands?;✋;Choice;AboutYou;;;;;;Measured by independent experts: tremendous. Some of the best hands, maybe ever.;false
+biggest-crowds;Who draws the biggest crowds?;👥;Choice;AboutYou;;;;;;Aerial photos were inconclusive. The photographers were blinded by your aura.;false
+covfefe;What does ‘covfefe’ mean?;☕;Choice;Language;;;;;;Nobody knows for sure. Most people guess ‘coverage’. The dictionary is waiting for your ruling.;false
+very-big-word;Which word means very, very big?;📏;Choice;Language;;;;;;;false

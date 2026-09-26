@@ -1,0 +1,19 @@
+{
+    "api": { "development": "/api", "production": "/stablegenius/api" },
+    "culture": "en-US",
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "The Very Stable Genius Test" },
+    "navigation": {
+        "groups": [
+            { "id": "Quiz", "title": "quizContent", "icon": "bi bi-stars" },
+            { "id": "Players", "title": "players", "icon": "bi bi-people" }
+        ],
+        "dashboard": [
+            ["Quiz", ["Question", "Reaction"]],
+            ["Players", ["Game"]]
+        ],
+        "navbar": ["Question", "Reaction", "Game"],
+        "search": "Question"
+    }
+}

@@ -1,0 +1,199 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "achievements": "Achievements",
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "adminTitle": "Genius Control Room",
+    "allCategories": "All categories",
+    "allParts": "All parts",
+    "allStrategies": "All strategies",
+    "allTypes": "All types",
+    "alwaysAsked": "Ask in every game",
+    "alwaysAskedHint": "Asked in every game, right after the opening self-rating.",
+    "answer": "Answer",
+    "answers": "Answers",
+    "backToGame": "Back to the game",
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "cancel": "Cancel",
+    "category": "Category",
+    "categoryAboutYou": "About you",
+    "categoryGeneral": "General",
+    "categoryGeography": "Geography",
+    "categoryHistory": "History",
+    "categoryLanguage": "Language",
+    "categoryMath": "Math",
+    "categoryScience": "Science",
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "correctNumber": "Correct number",
+    "created": {
+        "en": "Created"
+    },
+    "customReaction": "Custom reaction",
+    "customReactionPlaceholder": "Praise for picking this option (optional)",
+    "deleteItem": "Delete “{title}”?",
+    "emoji": "Emoji",
+    "emojiClear": "No emoji",
+    "emojiInsert": "Insert an emoji at the cursor",
+    "emojiLoadFailed": "The emoji list could not be loaded. Typing or pasting one still works.",
+    "emojiNone": "No emoji found. Typing or pasting one works too.",
+    "emojiOwn": "…or paste your own",
+    "emojiPick": "Choose an emoji",
+    "emojiSearch": "Search: eagle, money, tower…",
+    "factsViewed": "Facts viewed",
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "finished": "Finished",
+    "game": "Game",
+    "game.description": "Every play-through and its (tremendous) score",
+    "games": "Games",
+    "geniusTitle": "Title",
+    "honorific": "Honorific",
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "iq": "IQ",
+    "isActive": "Active",
+    "isCorrect": "Official",
+    "isFinished": "Finished",
+    "isUnreachable": "Unreachable",
+    "isUnreachableHint": "Shown, but it runs away from the cursor and can never be picked.",
+    "keywords": {
+        "en": "Keywords"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "maxValue": "Max",
+    "minValue": "Min",
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "newOption": "New option",
+    "noResults": {
+        "en": "No results"
+    },
+    "officialAnswer": "Official answer",
+    "optionText": "Option",
+    "options": "Options",
+    "optionsHint": "Tick the official answer(s). A custom reaction praises a non-official option in your own words — positive words only, and never mention the official answer.",
+    "overview": {
+        "en": "Overview"
+    },
+    "part": "Part",
+    "partCloser": "Closer",
+    "partOpener": "Opener",
+    "partSpin": "Spin",
+    "placeholdersHint": "Placeholders:",
+    "player": "Player",
+    "playerName": "Player name",
+    "players": "Players",
+    "points": "Points",
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "praiseAs": "Praise as",
+    "praiseAsHint": "How the praise refers to this answer (Male → Alpha Male). A correct answer then gets a 'Confirmed' praise quoting it - unless it has its own custom reaction, which always wins.",
+    "praiseAsPlaceholder": "(same)",
+    "question": "Question",
+    "question.description": "The question bank (all questions are easy, all answers are great)",
+    "questions": "Questions",
+    "quizContent": "Quiz content",
+    "ratingScale": "Rating scale",
+    "reaction": "Praise template",
+    "reaction.description": "Every sentence the spin engine can say",
+    "reactions": "Praise templates",
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "remove": "Remove",
+    "resetButton": "RESET",
+    "resetConfirmBody": "All data will be reset. One condition: answer these {count} questions correctly.",
+    "resetConfirmTitle": "Reset all data?",
+    "resetDone": "All data has been reset.",
+    "resetFailed": "The reset failed. Nothing was changed.",
+    "resetIntro": "All data will be reset.",
+    "resetLoadingQuestion": "Finding a question…",
+    "resetNext": "Next",
+    "resetNoQuestion": "All data will be reset.",
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "resetPending": "Resetting…",
+    "resetProgress": "Question {current} of {total}",
+    "resetSubmit": "Reset all data",
+    "resetTitle": "The big red button",
+    "resetWrong": "Not all answers were right, so nothing was reset. Here are new questions.",
+    "restore": "Restore",
+    "results": {
+        "en": "results"
+    },
+    "revealNote": "Reveal note",
+    "revealNoteHint": "Shown only after the player insists (three times) on seeing the official answer.",
+    "revealed": "Peeked at the facts",
+    "score": "Score",
+    "scoresAreSacred": "Scores are written by the game only. They are sacred.",
+    "search": {
+        "en": "Search"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "sortBy": "Sort by",
+    "sortCreatedDesc": "Newest first",
+    "sortPlayerName": "Player name",
+    "sortScoreDesc": "Highest score",
+    "strategy": "Strategy",
+    "strategyAheadOfScience": "Ahead of science",
+    "strategyAny": "Any",
+    "strategyBetterThanReality": "Better than reality",
+    "strategyConfirmed": "Confirmed (praise-as name)",
+    "strategyCorrect": "Correct answer",
+    "strategyCustom": "Custom (option)",
+    "strategyFinale": "Finale (IQ note)",
+    "strategyJealousExperts": "Jealous experts",
+    "strategyLandslide": "Landslide",
+    "strategyLeanAndEfficient": "Lean & efficient",
+    "strategyLegendary": "Legendary",
+    "strategyPowerMove": "Power move (skip)",
+    "strategyReveal": "Reveal praise",
+    "strategyRigged": "Rigged question",
+    "strategyThinkBig": "Think big",
+    "strategyTooModest": "Too modest",
+    "strategyTopPercent": "Top x percent",
+    "text": "Text",
+    "tolerance": "Tolerance (±)",
+    "type": "Type",
+    "typeChoice": "Multiple choice",
+    "typeNumber": "Number",
+    "typeRating": "Self-rating",
+    "unit": "Unit",
+    "username": {
+        "en": "Username"
+    }
+}

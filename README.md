@@ -1,15 +1,17 @@
 # Regira — Sample Applications
 
-Nine self-contained, full-stack sample applications built on the [Regira](https://regira.com) framework:
+Ten self-contained, full-stack sample applications built on the [Regira](https://regira.com) framework:
 an **ASP.NET Core 10 API** on [Regira Entities](https://regira.com/entities) plus a **Vue 3 SPA** on
 [`@regira/modules`](https://www.npmjs.com/package/@regira/modules) — each a complete app with a real
-domain, ~500 seeded rows and a UI you can click through.
+domain, seeded data (~500 rows in most) and a UI you can click through.
 
 What makes them unusual: every sample was **generated end-to-end by an AI agent** — no manual scaffolding,
 no boilerplate written by hand — driven exclusively by the **Regira MCP server**
 (`https://mcp.regira.com/mcp`) as the single source of truth for package selection, setup and APIs.
 Each sample carries its own `README.md` covering what it does, how to run it, and the design decisions
-(and deviations) the agent made along the way.
+(and deviations) the agent made along the way. The samples were not touched after their generating session
+completed — except [StableGenius](StableGenius/), which was developed a little further afterwards with
+vibe coding.
 
 | Site | URL |
 |---|---|
@@ -36,6 +38,7 @@ Each sample carries its own `README.md` covering what it does, how to run it, an
 | [QCredits](QCredits/) | Employee training credits — requests, approvals, balances | 4 simple / 1 complex | 500 requests | Approval workflow + balances dashboard |
 | [RoomPlanner](RoomPlanner/) | Meeting-room reservations — buildings, floors, rooms, attendees | 3 simple / 2 complex | 500 reservations | Custom day-timeline calendar |
 | [ShopMate](ShopMate/) | Shopping lists — lists, articles, hierarchical categories | 2 simple / 1 complex | 500 articles | Mobile-first: bottom tab bar, swipe actions |
+| [StableGenius](StableGenius/) | Satirical quiz where every answer is right — questions, praise templates, games | 2 simple / 1 complex | 65 questions, 150 praise templates (CSV) | Gilded-palace game UI + white-and-gold `/admin`; developed further with vibe coding |
 | [Webshop](Webshop/) | E-commerce storefront — catalog, cart, guest checkout | 1 simple / 2 complex | 500 products | Headless tier: hand-built storefront, cart & checkout |
 
 None of the samples use authentication — they are demo/internal-tool scoped, built on the anonymous
@@ -50,7 +53,7 @@ Pick the one closest to the pattern you need:
 |---|---|
 | Owned collections & m2m joins via `e.Related()` (no registration slot) | every sample |
 | Computed read-side fields via `IEntityProcessor` | [Blog](Blog/) (post counts), [EventPlanner](EventPlanner/) (seats taken), [AssetHub](AssetHub/) (current holder) |
-| Write-side hooks via preppers | [Fleet](Fleet/) (invoice totals), [AssetHub](AssetHub/) (one active assignment per asset) |
+| Write-side hooks via preppers | [Fleet](Fleet/) (invoice totals), [AssetHub](AssetHub/) (one active assignment per asset), [StableGenius](StableGenius/) (positivity guard: no negative words, no spoilers) |
 | Server-owned fields & generated codes via primers | [QCredits](QCredits/) (approval status restore), [Fleet](Fleet/) (invoice codes), [AssetHub](AssetHub/) (asset codes) |
 | Business rules via `EntityWrappingServiceBase` | [RoomPlanner](RoomPlanner/) (auto-approve reservations), [Webshop](Webshop/) (order validation, price-tamper guard) |
 | Cross-entity aggregate / report endpoints (outside the entity pipeline) | [Fleet](Fleet/) (`/dashboard/*`), [QCredits](QCredits/) (`/balances`) |
@@ -59,6 +62,8 @@ Pick the one closest to the pattern you need:
 | Self-referencing many-to-many hierarchy | [ShopMate](ShopMate/) (categories with multiple parents) |
 | Free-tier overflow remedy (role-discriminated party) | [HelpDesk](HelpDesk/) (`Person` with a `Role`, instead of Customer/Agent/Admin) |
 | Headless front-end (framework HTTP client, bespoke UI) | [Webshop](Webshop/) |
+| Seed data from CSV files (`Regira.Office.Csv`), reloadable at runtime | [StableGenius](StableGenius/) |
+| Hosting under an IIS sub-path (SPA virtual directory + API application) | [StableGenius](StableGenius/) |
 
 ---
 
@@ -74,6 +79,9 @@ Pick the one closest to the pattern you need:
 | Logging | [Serilog](https://www.nuget.org/packages/Serilog) |
 | SPA | Vue 3.5 + TypeScript + Vite, Pinia, vue-router, Bootstrap 5 |
 | SPA framework | [`@regira/modules`](https://www.npmjs.com/package/@regira/modules) 6.1.2 (entities client, UI kit, scaffolder) |
+
+StableGenius differs slightly: it uses the 6.3.3 packages, reads its seed data from CSV files
+(`Regira.Office.Csv.CsvHelper`) instead of Bogus, and has an xUnit test project.
 
 Everything installs straight from nuget.org / npmjs.com — no custom feed or private registry needed.
 
@@ -107,15 +115,16 @@ Paths and ports per sample:
 | QCredits | `QCredits/backend/QCredits.Api` | 6150 | `QCredits/frontend` | 6151 |
 | RoomPlanner | `RoomPlanner/backend/RoomPlanner.Api` | 6160 | `RoomPlanner/frontend` | 6161 |
 | ShopMate | `ShopMate/backend/ShopMate.Api` | 6170 | `ShopMate/frontend` | 6171 |
+| StableGenius | `StableGenius/GeniusTest.Api` | 5711 | `StableGenius/GeniusTest.Web` | 5712 <sup>‡</sup> |
 | Webshop | `Webshop/backend/Webshop.Api` | 6180 | `Webshop/frontend` | 6181 <sup>‡</sup> |
 
 <sup>†</sup> AssetHub's Vite config has no fixed port — start it with `npm run dev -- --port 6101`.
-<sup>‡</sup> Webshop's SPA proxies `/api` through Vite; the others call the API origin directly, with CORS
-enabled server-side.
+<sup>‡</sup> Webshop's and StableGenius's SPAs proxy `/api` through Vite; the others call the API origin
+directly, with CORS enabled server-side.
 
 ### Solutions
 
-`Regira-Samples.slnx` opens all nine APIs at once (`dotnet build Regira-Samples.slnx` builds them all).
+`Regira-Samples.slnx` opens all ten APIs at once (`dotnet build Regira-Samples.slnx` builds them all).
 Each sample also has its own solution next to its API — `AssetHub/AssetHub.slnx`, `Fleet/backend/Fleet.slnx`,
 `HelpDesk/HelpDesk.slnx`, … — if you want to work on just one.
 
@@ -133,9 +142,10 @@ Regira-Samples/
 ├── QCredits/            …
 ├── RoomPlanner/         …
 ├── ShopMate/            …
+├── StableGenius/        README.md + GeniusTest.Api/ + GeniusTest.Web/ + GeniusTest.Tests/
 ├── Webshop/             …
 ├── .mcp.json            Regira MCP server registration (for agents working in this repo)
-└── Regira-Samples.slnx  all nine APIs in one solution
+└── Regira-Samples.slnx  all ten APIs in one solution
 ```
 
 A back end follows the framework's own layout — one folder per entity holding the model, its DTOs, search
@@ -276,7 +286,7 @@ All registered entities expose the standard Regira CRUD + search surface:
 
 ## Credits
 
-All nine applications were generated by **Claude (Anthropic)** agents running in **Claude Code**, driven
+All ten applications were generated by **Claude (Anthropic)** agents running in **Claude Code**, driven
 entirely by the **Regira MCP server** (`https://mcp.regira.com/mcp`) — package selection, setup, entity
 classification, scaffolding and conventions all came from the MCP docs rather than prior model knowledge.
 Each sample was built in an isolated session, with no reference to its siblings.
@@ -292,6 +302,9 @@ Each sample was built in an isolated session, with no reference to its siblings.
 | RoomPlanner | Claude Sonnet 5 | medium (40) | ~45 | ~80–90 min |
 | ShopMate | Claude Sonnet 5 | medium | ~47 | ~71 min |
 | Webshop | Claude Sonnet 5 | default | 27 | ~35 min |
+
+StableGenius is not in the table: its generating session's tallies were not recorded, and it was developed
+a little further afterwards with vibe coding. The other samples were not touched after their session.
 
 These are the agents' own self-reported tallies from their session transcripts — approximations, not
 instrumented measurements. Per-sample detail (token budgets, bugs found during verification, deviations

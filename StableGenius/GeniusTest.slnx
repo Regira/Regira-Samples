@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="GeniusTest.Api/GeniusTest.Api.csproj" />
+  <Project Path="GeniusTest.Tests/GeniusTest.Tests.csproj" />
+</Solution>

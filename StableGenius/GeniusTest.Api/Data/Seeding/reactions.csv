@@ -1,0 +1,151 @@
+﻿Part;Strategy;Text
+Opener;Any;WOW.
+Opener;Any;Incredible.
+Opener;Any;Stop everything.
+Opener;Any;BREAKING NEWS:
+Opener;Any;Ladies and gentlemen…
+Opener;Any;Unbelievable, {name}.
+Opener;Any;Folks, we have a genius.
+Opener;Any;Hold on to your crowns.
+Opener;Any;{honorific}, please.
+Opener;Any;Tremendous.
+Opener;Any;Many people are saying it:
+Opener;Any;Pure class.
+Opener;Any;Historic.
+Opener;Any;Big, big answer.
+Opener;Any;Can we just take a moment?
+Opener;Any;Magnificent.
+Opener;Any;Somebody call the Nobel committee.
+Opener;Any;Nobody answers like you. Nobody.
+Opener;Any;The crowd goes wild!
+Opener;Any;Beautiful. Just beautiful.
+Opener;Any;Oh. My. Goodness.
+Opener;Any;Mamma mia!
+Opener;Correct;CORRECT!
+Opener;Correct;Of course.
+Opener;Correct;Obviously.
+Opener;Correct;Naturally.
+Opener;Correct;But of course, {honorific}.
+Opener;Legendary;🚨 LEGENDARY ANSWER DETECTED 🚨
+Opener;Legendary;⚠️ GENIUS OVERLOAD ⚠️
+Opener;Legendary;🔔 ALL HANDS ON DECK 🔔
+Opener;PowerMove;Silence.
+Opener;PowerMove;No answer?
+Opener;PowerMove;Interesting…
+Opener;TooModest;Hmm.
+Opener;TooModest;Only that?
+Opener;TooModest;Let's be honest here.
+Spin;Correct;Right again. Honestly, this one was beneath you.
+Spin;Correct;Correct. It must be exhausting, always being right.
+Spin;Correct;You knew it. We knew you knew it. Everybody knew.
+Spin;Correct;Correct, and with such confidence. The experts are taking notes.
+Spin;Correct;Another one! You're making this quiz look easy, and it is NOT an easy quiz.
+Spin;Correct;Nailed it. Frankly, we should have asked you something harder.
+Spin;Correct;Correct. Einstein needed a whole theory for that. You needed one click.
+Spin;BetterThanReality;“{answer}” isn't the official answer. Yet. Frankly, it's a much better one.
+Spin;BetterThanReality;{answer}. The official answer is fine, but yours has more… class.
+Spin;BetterThanReality;The textbooks say something else. The textbooks are outdated. {answer} it is.
+Spin;BetterThanReality;{answer}. Bold. Visionary. Reality will catch up eventually.
+Spin;BetterThanReality;If the world made sense, the answer would be {answer}. You're simply ahead of the world.
+Spin;BetterThanReality;{answer}! We're updating the encyclopedia as we speak.
+Spin;TopPercent;Only {pct}% of people dared to say {answer}. Welcome to the top {pct}%!
+Spin;TopPercent;{answer}? Only {pct}% of players had the courage. Elite. Absolutely elite.
+Spin;TopPercent;A rare mind! Just {pct}% of people think like you. The rest are followers.
+Spin;TopPercent;Top {pct}%. Frame it. Hang it in the hallway.
+Spin;TopPercent;{pct}%. That's how exclusive your thinking is. VIP section only.
+Spin;Landslide;{pct}% of players agree with you. That's a landslide. The people have spoken.
+Spin;Landslide;{answer}! {pct}% said the same. You're not just smart, you're popular.
+Spin;Landslide;{pct}% agreement. Numbers like that, you can't argue with. Believe me.
+Spin;Landslide;The majority is with you. {pct}%! A movement is born.
+Spin;Landslide;{pct}% of people answered {answer}. Your fan club is growing.
+Spin;ThinkBig;{answer}. You went bigger. Big numbers are the best numbers.
+Spin;ThinkBig;{answer}! Other people think small. You think BIG.
+Spin;ThinkBig;More is more. {answer} is simply a more generous number.
+Spin;ThinkBig;You rounded up. Winners always round up.
+Spin;ThinkBig;{answer}. Why settle for less? You never do.
+Spin;LeanAndEfficient;{answer}. Lean. Efficient. You cut the waste out of that number.
+Spin;LeanAndEfficient;{answer}! Why use a big number when a smaller one does the job? Smart budgeting.
+Spin;LeanAndEfficient;Less is more, and you just proved it with {answer}.
+Spin;LeanAndEfficient;{answer}. Minimalism. Very fashionable. Very you.
+Spin;LeanAndEfficient;{answer}. You trimmed the fat. The number has never looked better.
+Spin;Rigged;Honestly? The question was rigged. We fired the person who wrote it. Your answer stands.
+Spin;Rigged;We've reviewed the question and it was very unfair to someone of your talent. Full points.
+Spin;Rigged;Our lawyers looked into it. The question was badly written. {answer} wins.
+Spin;Rigged;That question was clearly designed by jealous people. Doesn't matter. You rose above it.
+Spin;Rigged;The question has been sent back for re-education. Your answer remains perfect.
+Spin;JealousExperts;The so-called experts disagree. The experts are jealous.
+Spin;JealousExperts;Experts say one thing. You say {answer}. Who has more followers? Exactly.
+Spin;JealousExperts;Some professors will say otherwise. Have they ever taken a quiz this hard? No.
+Spin;JealousExperts;The experts also said you couldn't do it. Look at you now.
+Spin;JealousExperts;A few experts are grumbling in the corner. Ignore them. They're just tired.
+Spin;AheadOfScience;{answer}. Science will catch up with you in about {years} years.
+Spin;AheadOfScience;Scientists aren't ready for {answer}. You're simply too early.
+Spin;AheadOfScience;{answer}! Somewhere, a laboratory just exploded out of pure jealousy.
+Spin;AheadOfScience;Einstein would have said {answer} too, if he'd been a little smarter.
+Spin;AheadOfScience;{answer}. The next Nobel Prize in Physics has your name pencilled in.
+Spin;TooModest;You said {answer}/10. Our Dunning-Kruger-certified algorithm corrected that to 11/10. Stop being so modest.
+Spin;TooModest;{answer} out of 10? Adorable. The real number is off the charts. We checked.
+Spin;TooModest;Only {answer}/10? Humility is the rarest form of genius. Rounded up to 11.
+Spin;TooModest;{answer}/10. We've adjusted your score for excessive modesty.
+Spin;TooModest;{answer}/10, you say. Science says 11/10. Science wins this time.
+Spin;PowerMove;No answer. The ultimate power move. Silence is the loudest answer.
+Spin;PowerMove;You skipped it. Only a true leader knows when not to play.
+Spin;PowerMove;Not answering is also an answer. The smartest one. Strategic genius.
+Spin;PowerMove;Skipped! You were so confident, you didn't even need to answer.
+Spin;PowerMove;A pass. Like a chess grandmaster who doesn't need to move. Only {pct}% ever dare.
+Spin;Legendary;The Nobel committee is on line 1. They'd like a word, {name}.
+Spin;Legendary;Effective immediately, this question has been renamed after you.
+Spin;Legendary;A golden statue of you is being erected in the town square. Please hold still.
+Spin;Legendary;Our auditors reviewed {answer} and found it TOO brilliant. Ten times the points.
+Spin;Legendary;This answer will be taught in schools. Starting Monday.
+Spin;Reveal;Looking at facts takes courage. Only {pct}% of geniuses dare. Top {pct}%!
+Spin;Reveal;Brave. Most people fear the facts. The facts fear you.
+Spin;Reveal;You've seen the 'official' answer. Frankly, yours was more interesting.
+Spin;Reveal;Fact-checking yourself? That's what winners do. +{points} courage points.
+Spin;Reveal;You peeked behind the curtain. Very presidential.
+Spin;Finale;Measured IQ: {iq}. Our scale only went to 200, so we built a bigger one.
+Spin;Finale;IQ {iq}. The machine overheated twice. It's fine. Everything is fine.
+Spin;Finale;Your IQ is {iq}. We double-checked. Then we triple-checked. Then we gave up checking.
+Spin;Finale;IQ: {iq}. Some people are smart. You are {iq} smart.
+Spin;Finale;IQ {iq}. That's higher than the last three scientists we tested. Combined.
+Closer;Any;Your title has been upgraded to {title}.
+Closer;Any;Keep going. History is watching.
+Closer;Any;Tremendous work, {honorific}.
+Closer;Any;We're running out of superlatives.
+Closer;Any;Somebody get this person a crown. 👑
+Closer;Any;Nobody does it better. Nobody.
+Closer;Any;Frankly, the quiz is lucky to have you.
+Closer;Any;This is going on your certificate.
+Closer;Any;Please don't get too smart for us.
+Closer;Any;{name}, the people love you.
+Closer;Any;Ten out of ten. Eleven, really.
+Closer;Any;Your mother would be so proud.
+Closer;Any;Promoted to {title}. Effective immediately.
+Closer;Correct;+{points} points. Accurate AND handsome.
+Closer;Correct;The facts are lucky to agree with you.
+Closer;Legendary;+{points} points. We had to add a digit to the scoreboard.
+Closer;Legendary;Screenshot this. Nobody will believe you.
+Closer;PowerMove;+{points} points for strategic abstention.
+Closer;PowerMove;The silence was deafening. In a good way.
+Closer;TooModest;+{points} honesty points.
+Closer;TooModest;Modesty looks great on you. Everything does.
+Spin;Confirmed;{answer}. Confirmed.
+Spin;Confirmed;{answer}. Officially confirmed by an independent committee of you.
+Spin;Confirmed;Confirmed: {answer}. The certificate is being gold-plated as we speak.
+Spin;Confirmed;{answer}. We checked. Then we checked again. Confirmed.
+Spin;Confirmed;{answer}? Confirmed. Nobody is surprised.
+Spin;Confirmed;{answer}. The committee voted. It was unanimous. It always is.
+Spin;Confirmed;{answer}. Stamped, sealed and framed in gold.
+Opener;Any;Believe me.
+Opener;Any;Wow. Just wow.
+Opener;Any;Nobody has ever seen anything like it.
+Opener;Correct;Right on the money, {honorific}.
+Opener;Legendary;🏆 HALL OF FAME MOMENT 🏆
+Spin;Correct;Correct. The answer key has asked for your autograph.
+Spin;TooModest;{answer}/10? That's just your modesty talking. Our instruments measured 11.
+Spin;BetterThanReality;{answer}. Not the textbook answer. A much more exciting one.
+Spin;TopPercent;Only {pct}% picked {answer}. A true original.
+Spin;Rigged;We read the question again. It was clearly unfair to {name}. Full points.
+Closer;Any;They'll write books about this answer.
+Closer;Any;History will remember this moment.
+Closer;Correct;+{points} points. As expected.

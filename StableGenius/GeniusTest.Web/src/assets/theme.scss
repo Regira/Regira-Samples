@@ -1,0 +1,131 @@
+// App theme — loaded after bootstrap.min.css + @regira/modules/style.css, so everything here wins.
+:root {
+    // library tokens (see ui.customize.md for the full list)
+    // --rg-accent: #0d6efd;
+    // --rg-accent-bg: rgba(13, 110, 253, 0.1);   // modal-header tint
+    // --rg-deleted-bg: rgba(220, 53, 69, 0.25);  // pending-delete rows/chips
+    // global bootstrap knobs
+    // --bs-border-radius: 0.5rem;
+    // --bs-link-color-rgb: 13, 110, 253;
+}
+
+// Accent swap — precompiled Bootstrap reads component-level vars:
+// .btn-primary {
+//     --bs-btn-bg: var(--rg-accent);
+//     --bs-btn-border-color: var(--rg-accent);
+// }
+// .pagination {
+//     --bs-pagination-active-bg: var(--rg-accent);
+//     --bs-pagination-active-border-color: var(--rg-accent);
+// }
+
+// The page's own vertical rhythm — without it the first slice control (the inline filter's .input-group)
+// sits flush against the header. .form-toolbar's `position: sticky; top: 0` below assumes this gap exists.
+.page > main {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+// App-level conventions the entity slices use:
+.striped > *:nth-child(even) {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+}
+
+// `.entity-list` containment (zeroed .row gutter margins + min-width:0 on the cells, so text-truncate can
+// clip and the row never drags the page sideways) ships in @regira/modules/style.css — do NOT redeclare it.
+// It sets no `overflow`, by design. Opt a single list into sideways scrolling with .entity-list--scroll-x.
+
+// The app-owned wrapper around FormButtonsRow. Deliberately NOT `.form-buttons` — that class is the
+// library component's own root, and a rule on it would apply to both the wrapper and the component
+// inside it (doubled padding, a second border, a nested sticky context).
+// Raising `top` to clear a fixed navbar also applies inside modals, where there is no navbar —
+// reset it with `.modal & { top: 0 }` if you do.
+.form-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bs-body-bg, #fff);
+}
+
+// ---- The Very Stable Genius Test: the staff wing of the palace - white, gold trim, dark ink ----
+:root {
+    --rg-accent: #8a6a1f;
+    --rg-accent-bg: rgba(233, 200, 90, 0.22);
+    --bs-link-color-rgb: 138, 106, 31;
+    --bs-link-hover-color-rgb: 92, 74, 38;
+    --bs-body-color: #2a2214;
+}
+.btn-primary,
+.btn-info {
+    --bs-btn-bg: #e9c85a;
+    --bs-btn-border-color: #8a6a1f;
+    --bs-btn-color: #2a2214;
+    --bs-btn-hover-bg: #d4af37;
+    --bs-btn-hover-border-color: #8a6a1f;
+    --bs-btn-hover-color: #2a2214;
+    --bs-btn-active-bg: #c9a227;
+    --bs-btn-active-color: #2a2214;
+}
+.btn-outline-info {
+    --bs-btn-color: #8a6a1f;
+    --bs-btn-border-color: #c9a227;
+    --bs-btn-hover-bg: #fff3c4;
+    --bs-btn-hover-color: #2a2214;
+    --bs-btn-hover-border-color: #8a6a1f;
+}
+.pagination {
+    --bs-pagination-color: #8a6a1f;
+    --bs-pagination-active-bg: #8a6a1f;
+    --bs-pagination-active-border-color: #8a6a1f;
+}
+.admin-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #fffdf7;
+    font-family: "Playfair Display", Georgia, serif;
+    > main {
+        flex: 1;
+    }
+    > header {
+        background: #fff;
+        border-bottom: 3px double #c9a227;
+        box-shadow: 0 2px 0 #fff, 0 3px 0 rgba(201, 162, 39, 0.5);
+    }
+    > footer {
+        background: #fbf5e4;
+        color: #5c4a26;
+        border-top: 3px double #c9a227;
+    }
+    .navbar {
+        --bs-navbar-color: #5c4a26;
+        --bs-navbar-hover-color: #8a6a1f;
+        --bs-navbar-active-color: #2a2214;
+    }
+    .navbar-brand {
+        font-family: "Cinzel Decorative", "Cinzel", Georgia, serif;
+        font-weight: 900;
+        color: #8a6a1f !important;
+    }
+    .form-toolbar {
+        background-color: #fffdf7;
+    }
+    h1,
+    h2,
+    h3 {
+        font-family: "Cinzel", Georgia, serif;
+        font-weight: 700;
+    }
+}
+.admin-title {
+    font-family: "Cinzel Decorative", "Cinzel", Georgia, serif;
+    font-weight: 900;
+    color: #8a6a1f;
+}
+.dashboard-card {
+    border: 1px solid #c9a227 !important;
+    outline: 1px solid #c9a227;
+    outline-offset: 3px;
+    background: #fff;
+    color: #5c4a26 !important;
+}
