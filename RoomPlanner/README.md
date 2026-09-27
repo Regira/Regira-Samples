@@ -1,139 +1,155 @@
 # RoomPlanner
 
-A meeting-room reservation demo built on the **Regira** framework (.NET 10 backend + Vue 3 SPA frontend),
-scaffolded and coded through the **Regira MCP server**.
+Meeting-room reservations for a multi-building office: buildings contain floors, floors contain meeting rooms,
+rooms offer equipment and a capacity, and employees book one or more rooms for a meeting with invited attendees.
+Some rooms are booked instantly, others need a facility manager's approval.
 
-Buildings contain floors, floors contain meeting rooms, employees create reservations for one or more
-rooms and invite attendees, and each reservation is approved automatically or held for manual approval
-depending on the rooms booked.
+| Part | Folder | Stack | URL |
+|------|--------|-------|-----|
+| Back-end API | `RoomPlanner.Api/` | .NET 10, ASP.NET Core, EF Core 10 + SQLite, Regira Entities 6.4 (Mapster), Serilog, OpenAPI + Scalar | http://localhost:5861 (Scalar: `/scalar`, OpenAPI: `/openapi/v1.json`) |
+| Front-end SPA | `RoomPlanner.Web/` | Vue 3.5, TypeScript 6, Vite 8, Pinia, vue-router 5, Bootstrap 5, `@regira/modules` 6.4 (full reference scaffold, no-auth) | http://localhost:5862 |
 
-## Ports
+## Running
 
-| App | URL |
-|---|---|
-| Back-end API (Scalar UI at `/scalar`) | http://localhost:6160 |
-| Front-end SPA | http://localhost:6161 |
-
-(Port 6162 was reserved for a second front-end/site but wasn't needed — the app is a single SPA.)
-
-## Running it
-
-**Back-end**
 ```bash
-cd backend/RoomPlanner.Api
-dotnet run --urls http://localhost:6160
-```
-On first run it creates `roomplanner.db` (SQLite) and seeds it automatically. Delete the `.db` file to
-force a full reseed (the seeder is idempotent — it skips seeding if buildings already exist).
+# API - creates + seeds roomplanner.db on first start (EnsureCreated, no migrations)
+cd RoomPlanner.Api
+dotnet run --launch-profile http          # http://localhost:5861
+dotnet run --launch-profile http -- --ResetDatabase=true   # drop, recreate and reseed
 
-**Front-end**
-```bash
-cd frontend
+# SPA - proxies /api to the API
+cd RoomPlanner.Web
 npm install
-npm run dev
+npm run dev                                # http://localhost:5862 (strictPort)
+npm run build                              # vue-tsc -b + vite build
 ```
-Then open http://localhost:6161. The dev server calls the API directly at `http://localhost:6160/api`
-(the API enables CORS for loopback origins in Development — no dev proxy needed).
 
-## Domain model
+URL contract: `public/config.json → api` = `/api` (axios base) + each slice's relative `IConfig.api` (`/rooms`) →
+Vite proxy `/api` → `http://localhost:5861` → the API's central `api` route prefix (`UseCentralRoutePrefix`).
+HTTPS redirection is skipped in Development so the proxy can talk plain HTTP.
 
-| Entity | Kind | Notes |
+## Domain
+
+| Entity | Registration | Notes |
 |---|---|---|
-| `Building` | simple entity | Name, address, city |
-| `Floor` | simple entity | Belongs to a `Building`, has a `Level` for ordering |
-| `MeetingRoom` | complex entity | Belongs to a `Floor`; `Capacity`, `Equipment` (`[Flags]`: Projector, Whiteboard, VideoConferencing, ConferencePhone, Monitor, Catering), `RequiresApproval`, `IsActive` |
-| `Employee` | simple entity | Name, email, department, job title |
-| `Reservation` | complex entity | Subject, description, `StartTime`/`EndTime` (UTC), `Organizer` (Employee), `Status` (Pending/Approved/Rejected/Cancelled) |
-| `ReservationRoom` | owned m2m join (no own endpoint) | Reservation ↔ MeetingRoom — a reservation can book one or more rooms |
-| `ReservationAttendee` | owned child (no own endpoint) | An internal `Employee` **or** an external guest (name/email), plus a response status (Invited/Accepted/Declined/Tentative) |
+| `Building` | simple `For<Building>()` | code, address, city, opening hours (`TimeOnly`) used by the planner's time axis |
+| `Floor` | simple `For<Floor, int, FloorSearchObject>()` | belongs to a building (unique level per building); building eager-loaded on every row |
+| `Equipment` | simple `For<Equipment>()` | lookup: projector, whiteboard, video conferencing, ... with a bootstrap-icons name |
+| `Employee` | simple `For<Employee, int, EmployeeSearchObject>()` | display name (`Title`) derived by a prepper; department / active filters |
+| `Room` | complex `For<Room, RoomSearchObject, RoomSortBy, RoomIncludes>()` | capacity, `RequiresApproval`, `IsActive`, colour; owned `RoomEquipment` join rows (equipment + quantity) |
+| `Reservation` (primary, ~500 seeded) | complex `For<Reservation, ReservationSearchObject, ReservationSortBy, ReservationIncludes>()` | organizer, UTC start/end, owned `ReservationRoom` rows (per-room approval) and owned `ReservationAttendee` rows (response, optional) |
 
-**Free-tier budget:** 3 simple + 2 complex registrations (Building, Floor, Employee simple; MeetingRoom,
-Reservation complex) — comfortably inside the 5-simple/2-complex free tier. `ReservationRoom` and
-`ReservationAttendee` are owned via `e.Related(...)` on `Reservation` and cost no registration slot.
+Budget: **4 simple / 2 complex → free tier** (confirmed by the startup log line). The three join/child tables are
+owned collections synced by `e.Related(...)` - no registration, no controller.
 
-**Approval rule:** `ReservationManager` (an `EntityWrappingServiceBase` around the default repository)
-computes the initial status on **create**: if any of the selected rooms has `RequiresApproval = true`, the
-reservation starts `Pending`; otherwise it's auto-`Approved`. Manual approve/reject afterwards is a normal
-`PATCH`/`PUT` of `Status`. Rooms with capacity ≥ 12 are seeded with a higher chance of requiring approval.
-A reservation must have at least one room and `EndTime > StartTime`, enforced with a 400 (`EntityInputException`),
-not a raw 500.
+### Filtering rooms
 
-## Front-end highlights
+`GET /api/rooms/search` accepts `buildingId`, `floorId`, `minCapacity`, `equipmentId` (repeatable, **AND**: the room
+must offer every listed equipment), `requiresApproval`, `isActive`, and `availableFrom` + `availableTo` (only rooms
+without a live - non-cancelled, non-rejected - booking overlapping that period), plus `q` keywords.
 
-- Full Regira Vue scaffold (no-auth) — dashboard, navbar, paged/filterable overviews, pooled relation
-  labels, `<Debug>` panels.
-- **Meeting rooms** render as cards (capacity, equipment badges, active/requires-approval indicators)
-  instead of a table — closer to how you'd actually browse rooms.
-- **Reservations** is a tabbed Details page (Details / Rooms / Attendees): Rooms is an
-  `InputSelectorInline` chip picker over `MeetingRoom` (many-to-many); Attendees is an editable table
-  combining an `Employee` relation picker *or* free-text guest name/email, plus a response-status select.
-- **Calendar** (`/calendar`, custom page, not generated) — a day timeline across every active room, with
-  reservation blocks positioned by start/end time, a building filter, and a live available-now/occupied-now
-  indicator per room.
-- The reservations overview reads like a schedule: organizer, rooms, date/time and a status badge per row.
+### Reservation rules (server side, `ReservationPrepper`)
 
-## Seeding
+* End after start, at most 24 hours; organizer and attendees must exist; at least one room, no duplicates.
+* **Approval per room**: a newly booked room is `Approved` automatically, or `Pending` when the room requires approval.
+  Rescheduling puts approval-required rooms back to `Pending`.
+* **Derived status**: `Pending` (any room pending) / `Approved` (all approved) / `PartiallyApproved` / `Rejected` / `Cancelled`.
+* **No double booking**: a live booking of the same room overlapping the slot answers 400 (checked against the
+  database *and* the rows queued in the same `SaveChanges`, so bulk writes are covered too).
+* **Capacity**: organizer + attendees must fit the combined capacity of the requested rooms.
+* `Status`, `AttendeeCount`, the cancel fields and the per-room approval fields are **not** on the input DTOs; the
+  prepper restores them from the stored row, so ordinary PUT/PATCH cannot forge an approval. Only the workflow
+  actions (a scoped `WorkflowContext.IsTrustedWriter` flag) and the seeder may set them.
 
-Seeded through the registered `IEntityService` implementations (Bogus-generated, seed `20260819` for
-reproducibility), idempotent on restart:
+Workflow endpoints (`ReservationWorkflowController`, same `reservations` resource, answer `{ item }` like `GET /{id}`):
 
-| Entity | Count |
-|---|---|
-| Buildings | 5 |
-| Floors | ~21 (3–5 per building) |
-| Meeting rooms | ~89 (3–6 per floor) |
-| Employees | 150 |
-| **Reservations (primary entity)** | **500** |
+```
+POST /api/reservations/{id}/rooms/{roomId}/approve   { "note": "..." }
+POST /api/reservations/{id}/rooms/{roomId}/reject    { "note": "..." }
+POST /api/reservations/{id}/cancel                   { "note": "reason" }
+```
 
-Each reservation gets 1–2 rooms (weighted toward 1), 1–6 attendees (mostly internal employees, ~15% also
-carry an external guest), a business-hours weekday start time spread across a ±30/+60-day window, and
-~8% are seeded pre-cancelled. Room approval requirement is a mix of capacity-driven and random, so both
-`Approved` and `Pending` statuses occur naturally through the same code path a real save uses.
+Deletes are protected with `Restrict` foreign keys (SQLite `Foreign Keys=True`): deleting a room, floor, building,
+equipment type or employee that is still referenced answers **409**.
 
-## Tech stack
+## Front-end
 
-- **Backend:** .NET 10, ASP.NET Core, `Regira.Entities.Web` 6.1.2 (+ Mapster mapping), EF Core 10 / SQLite,
-  Serilog, Scalar (OpenAPI UI), Bogus (seeding).
-- **Frontend:** Vue 3.5, Vite 8, TypeScript 6, Pinia, vue-router 5, `@regira/modules` (entities/ui/auth-off
-  stack), Bootstrap 5.
+Full `@regira/modules` scaffold (`scaffold.mjs --shell --no-auth` + one slice per entity) with config-driven
+dashboard/navbar, counted server-side paging, filters, pooled relation labels, `InputSelector` relation pickers,
+confirmed deletes and `Feedback` everywhere. On top of the slices, four calendar-oriented views:
 
-## Verification performed
+* **Planner** (`/planner`) - day timeline per building: rooms × hours (building opening hours), bookings as bars coloured
+  by status (striped = awaiting approval), a live "now" line, and a per-room **availability indicator** (free/busy now
+  for today, % booked for other days). Filter by capacity and equipment; click free space to book that room/slot,
+  click a bar to open the reservation.
+* **Find a room** (`/find-a-room`) - pick a start, duration, head count, building and equipment → **room cards** with
+  an Available/Booked badge (API availability filter), capacity, equipment chips, approval badge and a mini day
+  timeline; "Book"/"Request" opens a pre-filled reservation.
+* **Calendar** (`/calendar`) - week grid (Mon-Fri, weekend optional) for a room, a participant (organizer or attendee)
+  or a building; overlapping meetings are laid out in lanes; click an empty slot to book.
+* **Approvals** (`/approvals`) - queue of reservations with rooms awaiting approval, approve/reject per room with a note.
 
-- `dotnet build` — clean, 0 warnings, 0 errors.
-- `npm run build` (`vue-tsc -b && vite build`) — clean, 0 type errors, on the first attempt.
-- Backend started and seeded successfully; spot-checked every entity's `/search` endpoint.
-- Full browser walkthrough against the live API: every overview (Buildings, Floors, Employees, Meeting
-  rooms, Reservations, Calendar) renders real seeded data; opened a Reservation's Details/Rooms/Attendees
-  tabs and confirmed populated data renders correctly.
-- **End-to-end write test:** created a new reservation through the UI (subject, organizer via Autocomplete,
-  start/end time, one room via the chip picker), saved it — verified server-side (`id 501`, correct
-  organizer/room, `Status` auto-computed to `Approved` because the picked room doesn't require approval) —
-  then saved it a **second time** to confirm the many-to-many room sync doesn't 500 on update (the classic
-  owned-collection re-sync bug).
+Entity pages: the reservation form (tabs *Reservation / Attendees / Approval*) shows the rooms as chips tinted by
+approval state, a seats indicator, and a live availability timeline of the chosen rooms on the chosen day (click to
+move the meeting); cancel is a confirmed action with a reason. The room page has tabs *Room / Equipment (editable
+table with quantities) / Schedule (7-day strip + upcoming bookings)*.
 
-## Project effort tracking
+Deliberate deviations from the scaffold defaults:
 
-Tracked from this session's own tool-call log and the harness's context-budget counter (no external
-timer/cost API was available inside the session, so time and cost are estimates, not measurements).
+* The navbar gets four extra links for the planning views (they are not entity slices) in front of the config-driven
+  `NavBar`.
+* Equipment filters use toggle chips (`components/planning/EquipmentToggles.vue`) over the 9-row lookup instead of an
+  `InputSelector`: the filter is multi-value with AND semantics, which a single-id selector cannot express.
+* `Equipment` is edited in a modal (`isComplex: false`, a flat lookup); every other entity uses a Details page.
 
-| | Back-end | Front-end | Total |
-|---|---|---|---|
-| Regira MCP calls (docs + `get_type`/`get_example`/`search_docs`) | ~20 | ~25 | **~45** |
-| Wall-clock (rough, single continuous session) | ~30–35 min | ~45–55 min | **~80–90 min** |
-| Context tokens consumed (session budget counter) | — | — | **~500K tokens** |
+## Seed data
 
-The backend phase was almost entirely MCP-doc-driven design (classification, budget tally, exact
-Regira signatures) followed by a single clean `dotnet build`. The frontend phase spent more calls because
-of the owned-collection patterns (many-to-many chips, scalar-table-with-relation-column) and several
-`get_type` signature checks (`formatDate`, `dateTimeInputString`, `createStore`, pool types) to avoid
-guessing — plus the custom Calendar view, which isn't generated by any scaffold.
+Seeded through the `IEntityService` implementations (so preppers/primers/normalizers run) with Bogus (`nl_BE` names),
+deterministic (fixed random seed, dates relative to "today"): 9 equipment types, 4 buildings (Brussels, Antwerp, Ghent,
+Leuven), 16 floors, 59 rooms (sizes from focus booths to 110-seat auditoriums, equipment correlated with room size,
+boardrooms/auditoriums require approval, 2 rooms out of service), 150 employees and **500 reservations** spread over
+working days from ~2 weeks back to ~2 weeks ahead. Meeting types are correlated tuples (title, head count, duration),
+rooms are the smallest free fit (overflow events book two large rooms), attendees mostly come from the organizer's
+department, past approval-required bookings are approved/rejected, future ones partly pending, ~7 % cancelled.
+The seeder keeps an in-memory occupancy map so no seeded bookings overlap (the prepper would reject them anyway).
 
-No dollar cost is reported: this session had no access to per-token pricing/billing data, and estimating
-one from the token count alone would be a fabricated precision the tracking doesn't support.
+## Project layout
+
+```
+RoomPlanner.Api/
+  Controllers/            EntityControllers.cs (6 entity controllers), ReservationWorkflowController.cs
+  Data/                   AppDbContext.cs, Seeding/DataSeeder.cs
+  Entities/<Plural>/      entity, DTOs, search object / sort / includes, query builder, prepper, service configuration
+  Extensions/             AddEntityServices (UseEntities + budget tally)
+  Infrastructure/         HostingExtensions (Serilog, JSON, CORS, OpenAPI/Scalar, DB init)
+  Services/               WorkflowContext (trusted-writer flag)
+RoomPlanner.Web/
+  public/                 config.json (api, navigation), data/translations.json
+  src/entities/<plural>/  scaffolded slices (+ owned sub-slices room-equipments, reservation-rooms, reservation-attendees)
+  src/components/planning DayTimeline, RoomDayAvailability, RoomAgenda, EquipmentToggles, StatusBadge
+  src/views/              Home, Planner, RoomFinder, Calendar, Approvals (+ error views)
+  src/utilities/          planning.ts (status constants, date helpers)
+```
+
+## Build status
+
+* `dotnet build` - succeeded, 0 warnings, 0 errors; `dotnet list package --vulnerable --include-transitive` - none.
+* `npm run build` (`vue-tsc -b && vite build`) - succeeded.
+* Runtime-verified: startup (no DI/validation warnings left, free tier), CRUD + save-twice for rooms (owned equipment)
+  and reservations (owned rooms + attendees), PATCH keeps server-owned fields, conflict/capacity 400s, approve/reject/
+  cancel, 409 on deleting a referenced room, all views in the browser incl. a 375 px viewport.
 
 ## Credits
 
-Built by **Claude** (Sonnet 5, `claude-sonnet-5`) running as **Claude Code**, in a single main-session
-agent (no sub-agent delegation), reasoning effort **medium (40)**, driven entirely through the **Regira
-MCP server** (`get_bootstrap_guide`, `get_package`/`get_package_card`, `get_type`, `search_docs`, and the
-`@regira/modules` `scaffold.mjs` generator) plus the in-browser preview tools for end-to-end verification.
+Built by **Claude** (Anthropic, model Claude Opus 5.5) running as a **Claude Code** sub-agent (general-purpose agent
+type) with **low reasoning effort**, following the Regira MCP documentation (bootstrap guide golden path, package cards,
+heading-scoped guides) - no memory and no other projects were used as reference.
+
+| Metric | Back-end | Front-end | Total |
+|---|---|---|---|
+| Regira MCP calls | 15 | 10 | **25** |
+| Wall-clock time | ~12 min (12:19-12:31) | ~22 min (12:31-12:53) | **~34 min** |
+| Tokens (approx., context budget consumed) | ~230 k | ~250 k | **~480 k** |
+
+Cost: not measurable from inside the agent (no usage/billing API in this session); see the Claude Code `/cost`
+output of the parent session for the exact figure.

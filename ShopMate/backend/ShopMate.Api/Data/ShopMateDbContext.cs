@@ -2,12 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Regira.DAL.EFcore.Extensions;
 using ShopMate.Api.Entities.Articles;
 using ShopMate.Api.Entities.Categories;
+using ShopMate.Api.Entities.Shoppers;
 using ShopMate.Api.Entities.ShoppingLists;
 
 namespace ShopMate.Api.Data;
 
 public class ShopMateDbContext(DbContextOptions<ShopMateDbContext> options) : DbContext(options)
 {
+    public DbSet<Shopper> Shoppers => Set<Shopper>();
     public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<ArticleCategory> ArticleCategories => Set<ArticleCategory>();
@@ -16,34 +18,38 @@ public class ShopMateDbContext(DbContextOptions<ShopMateDbContext> options) : Db
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.SetDecimalPrecisionConvention(10, 2);
+        modelBuilder.SetDecimalPrecisionConvention();
 
-        modelBuilder.Entity<ShoppingList>(e =>
+        // a shopper owns its lists; a list owns its articles
+        modelBuilder.Entity<ShoppingList>()
+            .HasOne(x => x.Shopper).WithMany(x => x.ShoppingLists)
+            .HasForeignKey(x => x.ShopperId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<ShoppingList>().HasIndex(x => x.ShopperId);
+
+        modelBuilder.Entity<Article>()
+            .HasOne(x => x.ShoppingList).WithMany(x => x.Articles)
+            .HasForeignKey(x => x.ShoppingListId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Article>().HasIndex(x => new { x.ShoppingListId, x.SortOrder });
+
+        // Article <-> Category: cascade on the owner side, restrict on the lookup side
+        // (deleting a category that is still in use answers 409 instead of silently untagging articles)
+        modelBuilder.Entity<ArticleCategory>(b =>
         {
-            e.HasMany<Article>().WithOne(a => a.ShoppingList).HasForeignKey(a => a.ShoppingListId).OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.Article).WithMany(x => x.Categories)
+                .HasForeignKey(x => x.ArticleId).OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.Category).WithMany()
+                .HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
+            b.HasIndex(x => new { x.ArticleId, x.CategoryId }).IsUnique();
         });
 
-        modelBuilder.Entity<ArticleCategory>(e =>
+        // Category hierarchy (multi-parent): removing a category removes its links, never other categories
+        modelBuilder.Entity<RelatedCategory>(b =>
         {
-            e.HasIndex(ac => new { ac.ArticleId, ac.CategoryId }).IsUnique();
-            e.HasOne(ac => ac.Article).WithMany(a => a.Categories).HasForeignKey(ac => ac.ArticleId).OnDelete(DeleteBehavior.Cascade);
-            e.HasOne(ac => ac.Category).WithMany().HasForeignKey(ac => ac.CategoryId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.Child).WithMany(x => x.ParentEntities)
+                .HasForeignKey(x => x.ChildId).OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.Parent).WithMany(x => x.ChildEntities)
+                .HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.Cascade);
+            b.HasIndex(x => new { x.ParentId, x.ChildId }).IsUnique();
         });
-
-        modelBuilder.Entity<RelatedCategory>(e =>
-        {
-            e.HasIndex(rc => new { rc.ParentId, rc.ChildId }).IsUnique();
-            e.HasOne(rc => rc.Parent).WithMany(c => c.ChildEntities).HasForeignKey(rc => rc.ParentId).OnDelete(DeleteBehavior.Restrict);
-            e.HasOne(rc => rc.Child).WithMany(c => c.ParentEntities).HasForeignKey(rc => rc.ChildId).OnDelete(DeleteBehavior.Restrict);
-        });
-
-        // ShoppingList is IArchivable and the aggregate root over Article - the required-nav query-filter
-        // warning EF logs for Article -> ShoppingList on net10.0 is the expected/benign case (see
-        // Regira.Entities entities.patterns -> Soft Delete), silenced in Program.cs where the context is
-        // registered. Article is also queried directly (its own controller/search), so mirror the filter
-        // here too - otherwise archiving a list would still count its articles in /search while /search
-        // (and List) drop them from items once the archived query filter is inlined into the FK join.
-        modelBuilder.Entity<Article>().HasQueryFilter(x => !x.ShoppingList!.IsArchived);
     }
 }

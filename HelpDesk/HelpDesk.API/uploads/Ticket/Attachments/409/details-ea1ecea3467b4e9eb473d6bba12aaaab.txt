@@ -1,2 +1,0 @@
-Attachment for ticket #409 - Billing address needs to be updated
-Generated for HelpDesk demo seed data.

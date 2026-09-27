@@ -1,2 +1,0 @@
-Attachment for ticket #282 - Search results are outdated
-Generated for HelpDesk demo seed data.

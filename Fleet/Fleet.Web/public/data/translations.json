@@ -1,0 +1,443 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "acquisitionDate": {
+        "en": "Acquisition date"
+    },
+    "active": {
+        "en": "Active"
+    },
+    "add": {
+        "en": "Add"
+    },
+    "addInterventionType": {
+        "en": "Add an intervention type..."
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "addToInvoice": {
+        "en": "Add to invoice"
+    },
+    "all": {
+        "en": "All"
+    },
+    "allCategories": {
+        "en": "All categories"
+    },
+    "asOf": {
+        "en": "Figures as of"
+    },
+    "assignedDriver": {
+        "en": "Assigned driver"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "billableHelp": {
+        "en": "Completed interventions of this supplier that are not on an invoice yet. The invoice amounts are recalculated automatically."
+    },
+    "billableInterventions": {
+        "en": "Billable interventions of this supplier"
+    },
+    "billedInterventions": {
+        "en": "Billed interventions"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "canPerform": {
+        "en": "Can perform"
+    },
+    "capabilities": {
+        "en": "Capabilities"
+    },
+    "capabilitiesHelp": {
+        "en": "Intervention types this supplier is able to perform. Interventions can only be assigned to a capable supplier."
+    },
+    "category": {
+        "en": "Category"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "city": {
+        "en": "City"
+    },
+    "code": {
+        "en": "Code"
+    },
+    "completedCostOnPage": {
+        "en": "Completed cost (this page)"
+    },
+    "completedDate": {
+        "en": "Completed on"
+    },
+    "contactPerson": {
+        "en": "Contact person"
+    },
+    "cost": {
+        "en": "Cost"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "currentOdometer": {
+        "en": "Current odometer"
+    },
+    "dashboard": {
+        "en": "Dashboard"
+    },
+    "dashboardSubtitle": {
+        "en": "Availability, maintenance workload, spend and invoices at a glance"
+    },
+    "date": {
+        "en": "Date"
+    },
+    "dateFrom": {
+        "en": "Date from"
+    },
+    "dateTo": {
+        "en": "Date to"
+    },
+    "defaults30Days": {
+        "en": "defaults to +30 days"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteInvoiceHint": {
+        "en": "Its interventions become un-invoiced again."
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "department": {
+        "en": "Department"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "dueDate": {
+        "en": "Due date"
+    },
+    "email": {
+        "en": "Email"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "fleet": {
+        "en": "Fleet"
+    },
+    "fleetComposition": {
+        "en": "Fleet composition"
+    },
+    "fleetDashboard": {
+        "en": "Fleet dashboard"
+    },
+    "form": {
+        "en": "Details"
+    },
+    "fuelType": {
+        "en": "Fuel"
+    },
+    "identification": {
+        "en": "Identification"
+    },
+    "interval": {
+        "en": "Interval"
+    },
+    "intervalKm": {
+        "en": "Interval (km)"
+    },
+    "intervalMonths": {
+        "en": "Interval (months)"
+    },
+    "intervention": {
+        "en": "Intervention"
+    },
+    "intervention.description": {
+        "en": "Maintenance and repair work orders"
+    },
+    "interventionKeywords": {
+        "en": "Plate, vehicle, supplier, type, description..."
+    },
+    "interventions": {
+        "en": "Interventions"
+    },
+    "interventionStatus": {
+        "en": "Intervention status"
+    },
+    "interventionType": {
+        "en": "Intervention type"
+    },
+    "interventionType.description": {
+        "en": "Catalogue of maintenance and repair services"
+    },
+    "interventionTypes": {
+        "en": "Intervention types"
+    },
+    "interventionTypesAndCosts": {
+        "en": "Intervention types & costs"
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "invoice": {
+        "en": "Invoice"
+    },
+    "invoice.description": {
+        "en": "Supplier invoices for interventions"
+    },
+    "invoiced": {
+        "en": "Invoiced"
+    },
+    "invoiceDate": {
+        "en": "Invoice date"
+    },
+    "invoiceDateFrom": {
+        "en": "Invoice date from"
+    },
+    "invoiceDateTo": {
+        "en": "Invoice date to"
+    },
+    "invoiceNumber": {
+        "en": "Invoice number"
+    },
+    "invoices": {
+        "en": "Invoices"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "licensePlate": {
+        "en": "License plate"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "maintenanceHistory": {
+        "en": "Maintenance history"
+    },
+    "maintenanceSpend": {
+        "en": "Maintenance spend"
+    },
+    "make": {
+        "en": "Make"
+    },
+    "mileage": {
+        "en": "Mileage"
+    },
+    "model": {
+        "en": "Model"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "needsAttention": {
+        "en": "Needs attention"
+    },
+    "new": {
+        "en": "New"
+    },
+    "nextService": {
+        "en": "Next service"
+    },
+    "noBillableInterventions": {
+        "en": "No billable interventions left for this supplier."
+    },
+    "noInterventionsOnInvoice": {
+        "en": "No interventions on this invoice yet."
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "notes": {
+        "en": "Notes"
+    },
+    "nothingUrgent": {
+        "en": "No urgent interventions in the next 14 days."
+    },
+    "notInvoiced": {
+        "en": "Not invoiced"
+    },
+    "onlyCompletedInvoiced": {
+        "en": "Only completed interventions can be invoiced"
+    },
+    "operation": {
+        "en": "Operation"
+    },
+    "operations": {
+        "en": "Operations"
+    },
+    "overdue": {
+        "en": "Overdue"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "paidDate": {
+        "en": "Paid on"
+    },
+    "partners": {
+        "en": "Partners"
+    },
+    "phone": {
+        "en": "Phone"
+    },
+    "planIntervention": {
+        "en": "Plan intervention"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "postalCode": {
+        "en": "Postal code"
+    },
+    "priority": {
+        "en": "Priority"
+    },
+    "rating": {
+        "en": "Rating"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "refresh": {
+        "en": "Refresh"
+    },
+    "remarks": {
+        "en": "Remarks"
+    },
+    "removeFromInvoice": {
+        "en": "Remove from invoice"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "saveInvoiceFirst": {
+        "en": "Save the invoice first, then add the supplier's completed interventions on the Interventions tab."
+    },
+    "scheduledDate": {
+        "en": "Scheduled date"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "serviceDueBefore": {
+        "en": "Service due before"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "sortBy": {
+        "en": "Sort by"
+    },
+    "spendByCategory": {
+        "en": "Spend by category"
+    },
+    "standardCost": {
+        "en": "Standard cost"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "street": {
+        "en": "Street"
+    },
+    "subTotal": {
+        "en": "Subtotal"
+    },
+    "supplier": {
+        "en": "Supplier"
+    },
+    "supplier.description": {
+        "en": "Garages and service providers"
+    },
+    "supplierCannotPerform": {
+        "en": "This supplier is not assigned this intervention type"
+    },
+    "supplierLockedHint": {
+        "en": "The supplier is locked while interventions are billed on this invoice."
+    },
+    "suppliers": {
+        "en": "Suppliers"
+    },
+    "toInvoice": {
+        "en": "to invoice"
+    },
+    "topSuppliers": {
+        "en": "Top suppliers"
+    },
+    "total": {
+        "en": "Total"
+    },
+    "upcomingServices": {
+        "en": "Upcoming services"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "vat": {
+        "en": "VAT"
+    },
+    "vatNumber": {
+        "en": "VAT number"
+    },
+    "vatRate": {
+        "en": "VAT rate"
+    },
+    "vehicle": {
+        "en": "Vehicle"
+    },
+    "vehicle.description": {
+        "en": "Cars, vans, trucks and other fleet assets"
+    },
+    "vehicleKeywords": {
+        "en": "Plate, VIN, make, model, driver..."
+    },
+    "vehicles": {
+        "en": "Vehicles"
+    },
+    "vehicleType": {
+        "en": "Vehicle type"
+    },
+    "viewAll": {
+        "en": "View all"
+    },
+    "vin": {
+        "en": "VIN"
+    },
+    "workOrder": {
+        "en": "Work order"
+    },
+    "year": {
+        "en": "Year"
+    }
+}

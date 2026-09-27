@@ -1,8 +1,0 @@
-Create an app ShipTrack/ (back-end & front-end), which offers services to track parcel shipments from pickup to delivery.
-
-* Shipments are collected at a pickup address, routed through hubs and delivered by a carrier.
-* A shipment's status evolves continuously (registered, collected, in transit, at hub, out for delivery, delivered, delayed, failed attempt, returned, cancelled). Every change is recorded as a timestamped status event with the hub where it happened, an optional reason and a remark, so the full history remains visible.
-* Statuses are editable and define which transitions are allowed, which ones are terminal and which ones require a reason. Only permitted transitions can be applied, a failed delivery can be retried and a shipment can be rerouted or returned to sender.
-* Carriers, hubs, statuses, transitions and delay reasons can be fully managed, and delivery performance (on-time, delayed, failed) can be followed per carrier and per hub.
-
-Use a track & trace interface with a vertical status timeline, color-coded status badges and a shipment board grouped by current status.

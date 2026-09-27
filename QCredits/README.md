@@ -1,127 +1,141 @@
 # QCredits
 
-A standalone demo application for managing employee **training credits**, built on the Regira framework
-(.NET 10 API + Vue 3 SPA) using the Regira MCP server.
+Employee training-credit management: yearly QCredit budgets, credit requests with an approval workflow,
+carry-over between years and separately funded group trainings, with a clean HR-style web interface.
 
-> 1 QCredit = half a working day = EUR 250.
+> **1 QCredit = half a working day or EUR 250.**
 
-## What it does
-
-- Employees receive an annual budget of **20 QCredits** per year: 5 reserved for mandatory company
-  training days, 15 freely available for courses, books, online subscriptions or self-study.
-- Employees submit **QCredit requests** bundling one or more purchases/activities; requests need
-  administrator approval before credits are deducted.
-- Administrators manage the yearly **credit policy** (annual/reserved credits, max carry-over, minimum
-  allowed balance), and per-employee **carry-over** of unused credits into the next year (capped at 10).
-  Approved balances may go as low as **-10** credits.
-- **Group trainings** are funded separately and never touch a personal QCredit balance.
-- A **Balances** dashboard shows every employee's remaining/pending credits with progress bars, plus a
-  drill-down for a single employee.
-
-## Stack & ports
-
-| App | Tech | Port |
+| Part | Tech | URL |
 |---|---|---|
-| Back-end API | ASP.NET Core 10, `Regira.Entities`, EF Core + SQLite, Serilog, Scalar/OpenAPI | `http://localhost:6150` |
-| Front-end SPA | Vue 3, `@regira/modules`, Vite, Pinia, Bootstrap 5 | `http://localhost:6151` |
+| Back-end API (`QCredits.Api`) | .NET 10, ASP.NET Core, Regira Entities 6.4, EF Core + SQLite, ASP.NET Identity + Regira JWT | http://localhost:5851 (Scalar UI: `/scalar`, OpenAPI: `/openapi/v1.json`) |
+| Front-end SPA (`qcredits-spa`) | Vue 3 + TypeScript + Vite 8, `@regira/modules` 6.4 (full reference scaffold), Bootstrap 5 | http://localhost:5852 |
 
-No authentication: this is a small internal demo. Admin vs. employee actions are separated by workflow
-(the approve/reject panel only appears on pending requests, and only lists `Employee.role == Admin` as a
-valid approver), not by a login wall — see *Design notes* below.
+## Business rules
 
-## Running it
+- Every employee gets an **annual budget of 20 QCredits**, of which **5 are reserved for mandatory company days**,
+  leaving **15 freely available** credits (plus credits carried over from the previous year).
+- Credits can be spent on courses, books, online subscriptions, self-study during working hours, conferences and
+  certifications. One **request** can hold several purchases/activities (owned items).
+- Requests follow a workflow: `Draft -> Submitted -> Approved | Rejected`, `Submitted -> Draft` (withdraw) and
+  `Draft/Submitted -> Cancelled`. An administrator may also cancel an approved request, which gives the credits back.
+  **Only approved requests deduct credits**. Only drafts can be edited.
+- A balance may go down to the **minimum balance (-10 by default)**. Submitting checks
+  `remaining - pending - request >= minimum`; approving checks `remaining - request >= minimum`.
+- Administrators manage the yearly **credit policy** (annual, reserved, max carry-over, minimum balance), the
+  per-employee **allocations** (incl. used company days and individual overdraft limits), **generate** a year's
+  allocations and **close a year & roll over**: positive balances carry over up to **10 credits**, a deficit is
+  carried over in full (never below the minimum balance). A roll-over is refused while requests of that year are
+  still pending.
+- **Group trainings** are a separate entity with their own budget (total cost in EUR) and participants; they never
+  touch personal QCredit balances.
+
+Balance formula: `free = annual - reserved + carried over`, `remaining = free - approved`.
+
+## Roles & security
+
+- JWT auth on ASP.NET Identity (users in the same SQLite DB), roles `Admin` and `Employee` (role claim `role`).
+- Every endpoint requires a signed-in user. A global `WriteAuthorizationFilter` allows writes on departments,
+  employees, credit years, allocations and group trainings to `Admin` only.
+- Row-level security (global filter query builders): an employee only sees **their own** employee record,
+  allocations and requests (linked by e-mail); administrators see everything. Employees always create requests for
+  themselves (stamped server-side).
+- The workflow fields (`Status`, `SubmittedAt`, `DecidedAt`, `DecidedBy`, `DecisionComment`) are only written by the
+  workflow actions (`CreditRequestGuard` prepper + a scoped trusted-writer flag); approve/reject are `Admin`-only.
+- The SPA mirrors the tiers (`src/access.ts`): admin-only screens are hidden for employees, forms become read-only.
+
+### Demo accounts (development seed)
+
+The seeded password is configured in `QCredits.Api/appsettings.Development.json` (`Seed:DemoPassword`).
+
+| User | Role |
+|---|---|
+| `admin@qcredits.test` (Hanne Peeters, HR) | Admin + Employee |
+| `elise.maes@qcredits.test` (Engineering) | Employee |
+| `tom.wouters@qcredits.test` (Sales) | Employee |
+
+## Running
 
 ```bash
-# back-end (from backend/QCredits.Api)
-dotnet run --urls http://localhost:6150
-# Scalar UI at http://localhost:6150/scalar — the DB (qcredits.db) is created and seeded on first run
+# API (seeds the SQLite database on first start)
+cd QCredits.Api
+dotnet run --launch-profile http                    # http://localhost:5851
+dotnet run --launch-profile http -- --ResetDatabase=true   # drop + re-create + re-seed
 
-# front-end (from frontend, in a second terminal)
+# SPA
+cd qcredits-spa
 npm install
-npm run dev -- --port 6151
-# http://localhost:6151
+npm run dev                                         # http://localhost:5852 (strictPort)
+npm run build                                       # vue-tsc -b + vite build
 ```
 
-## Domain model
+The SPA calls the API origin directly (`public/config.json -> api`), the API allows the SPA origin via CORS
+(`appsettings.json -> Cors:Origins`). JWT audience = `qcredits-spa` on both sides.
 
-Five entities, all under the free tier (5 simple + 2 complex registrations):
+## API overview (`/api` prefix)
 
-| Entity | Classification | Notes |
+| Resource | Endpoints |
+|---|---|
+| `departments`, `employees`, `credit-years`, `credit-allocations` | Regira CRUD (`GET /`, `/search`, `/{id}`, `POST`, `PUT`, `PATCH`, `DELETE`) |
+| `credit-requests`, `group-trainings` | Regira CRUD + batch `POST /list`, `POST /search`, typed `sortBy` / `includes` |
+| `credit-requests/{id}/submit` \| `withdraw` \| `cancel` | workflow (owner or admin) |
+| `credit-requests/{id}/approve` \| `reject` | workflow (admin; reject needs a comment) |
+| `credit-allocations/generate`, `credit-allocations/rollover` | admin year actions (`{ "year": 2026 }`) |
+| `dashboard`, `dashboard/me` | aggregates (row-scoped) and the signed-in user's balance |
+| `auth`, `auth/validate`, `auth/refresh`, `auth/password/...` | Regira account controllers |
+
+## Data model
+
+Free-tier budget of Regira Entities: **4/5 simple + 2/2 complex** registrations.
+
+| Entity | Kind | Notes |
 |---|---|---|
-| `Employee` | simple | Person + `Role` (`Employee`/`Admin`) — role gates who can appear as an approver |
-| `CreditPolicy` | simple | One row per year: `AnnualCredits`, `ReservedCredits`, `MaxCarryOver`, `MinBalance` |
-| `EmployeeCarryOver` | simple | Admin-set carry-over per employee/year |
-| `GroupTraining` | simple | Independent — no FK to `Employee`, funded separately |
-| `QCreditRequest` | **complex** | Owns `QCreditRequestItem` via `e.Related()`; `Status`/decision fields kept off the input DTO |
-| `QCreditRequestItem` | owned child | Course/Book/Subscription/SelfStudy line items, no own registration |
+| `Department` | simple | normalized `?q=` search |
+| `Employee` | simple (+SearchObject) | linked to a login by e-mail, department eager-loaded |
+| `CreditYear` | simple | yearly policy (20 / 5 / 10 / -10), `IsClosed` |
+| `CreditAllocation` | simple (+SearchObject) | per employee per year; processor fills free/used/pending/remaining |
+| `CreditRequest` | complex | **primary entity**; owned `CreditRequestItem` rows via `Related()`, server-computed totals |
+| `GroupTraining` | complex | owned `GroupTrainingParticipant` rows (employee + attended) via `Related()` |
 
-**Budget tally:** 4 simple / 1 complex → fits the free tier (confirmed at startup: `Regira.Entities: 4
-simple / 1 complex registered → tier = free`).
-
-### Approval workflow
-
-`Status`, `DecisionDate`, `ApproverId` and `DecisionNotes` are intentionally absent from
-`QCreditRequestInputDto` — an ordinary `PUT`/`PATCH` can never change them. The only writer is
-`QCreditRequestWorkflowController` (`POST /qcredit-requests/{id}/approve|reject`), which flips a scoped
-`RequestWorkflowContext.IsTrustedWriter` flag before saving; `QCreditRequestStatusPrimer` restores the
-stored values from `EntityEntry.OriginalValues` on every other write. Approving also re-validates the
-employee's live balance against `CreditPolicy.MinBalance` and rejects with a 400 if it would go too low.
-The seeder is a trusted writer too, so historical Approved/Rejected rows can be stamped directly.
-
-### Balances
-
-`GET /balances` and `GET /balances/{employeeId}` are a read-only cross-entity aggregate endpoint
-(`BalancesController` + `BalanceCalculator`) — they bypass the entity pipeline entirely and compute
-`Remaining = (Annual - Reserved) + CarriedOver - Sum(Approved.TotalCredits)` directly against the
-`DbContext`, per the *Cross-entity aggregates & report endpoints* pattern.
+Credits are stored as `double` (half-credit steps, SQL aggregates on SQLite), money as `decimal`.
 
 ## Seed data
 
-Seeded once (skipped if `Employees` already has rows) through the registered `IEntityService`
-implementations with [Bogus](https://github.com/bchavez/Bogus), so the same primers/preppers the API
-uses at runtime also produce the seed:
+Seeded through the `IEntityService` implementations (preppers/normalizers run) with Bogus (`nl_BE`, fixed seed):
+8 departments, 90 employees (some joining mid-period, a few inactive), credit years 2024-2026 (2024/2025 closed),
+~260 allocations with carry-over computed from the previous year, **~550 credit requests** (coherent topic ->
+activities tuples, realistic status distribution, approvals never below the minimum balance) and ~33 group trainings
+with participants.
 
-- **160 employees** (14 administrators), 10 departments
-- **3 years** of `CreditPolicy` (current year and the two before it)
-- **~130 `EmployeeCarryOver` rows** (~40% of employees, into each non-first seeded year)
-- **28 `GroupTraining` sessions**
-- **500 `QCreditRequest`s** (the primary entity) with 1-3 owned line items each, weighted towards the two
-  most recent years, status mix ≈ 55% Approved / 25% Pending / 20% Rejected
+## Front-end highlights
 
-## Design notes / deviations
+- Home: personal balance card (progress bar used/pending/overdraft, company days, carry-over, requestable),
+  admin approval queue, organisation KPIs, usage per department and per activity type, group-training summary.
+- Requests: status badges, quick status filter, advanced filter (year, status, activity type, employee, department),
+  editable items table (credits suggested from cost), approval panel with timeline, balance preview and actions.
+- Allocations: per-employee progress bars, generate / close & roll-over actions for administrators.
+- Group trainings: tabbed form with a participants editor (attendance toggles).
 
-- **No authentication.** The bootstrap guide treats auth as optional and explicitly warns against
-  assuming it's required; a login/JWT/roles round-trip would have doubled the build for a feature the
-  brief didn't ask for. Admin/employee separation is expressed through the workflow endpoints and the
-  `Employee.Role` field instead.
-- **`CreditPolicy` is a modal-edit (simple) front-end slice** (`isComplex: false`) — four numeric fields,
-  no relations. Every other entity is a full Details-page slice.
-- **`GroupTraining` has no FK to `Employee`** — the spec asks that group trainings never affect a personal
-  balance, so it was kept fully independent rather than linked-but-ignored.
+## Build status
 
-## Verification performed
+- `dotnet build`: succeeded, 0 warnings, 0 errors.
+- `npm run build` (vue-tsc -b + vite build): succeeded.
+- Startup: `Regira.Entities: 4 simple / 2 complex registered -> tier = free`, no startup warnings.
+- Verified end to end (API + browser): role scoping, create -> update -> update, PATCH round trip, submit, approve,
+  reject validation, draft lock, participants save twice, no horizontal overflow at 375 px.
 
-- `dotnet build` — 0 warnings / 0 errors. `npm run build` (`vue-tsc -b` + `vite build`) — 0 errors.
-- Runtime: startup budget log, `create → update → update again → re-read` idempotency, PATCH/PUT round-trip
-  proving `Status`/`TotalCredits` survive a partial update, 409 on a constrained `Employee` delete,
-  approve/reject happy path + guard rails (re-approve a decided request, non-admin approver, balance floor),
-  and the SPA driven live in a browser (dashboard, 500-row paged overview, request details with tabs, the
-  approval panel, the Balances dashboard for all 160 employees, a mobile viewport) — all with a clean
-  console.
-
-## Credits
-
-Built by **Claude** (model `claude-sonnet-5`), running as the **Claude Code** CLI agent, reasoning effort
-**medium-low (40)**, via the Regira MCP server (`https://mcp.regira.com/mcp`).
-
-### Effort tracking
+## Project metrics
 
 | | Back-end | Front-end | Total |
 |---|---|---|---|
-| Regira MCP calls | ~20 | ~12 | **32** |
-| Wall-clock time | ~25 min | ~25 min | **~50 min** (shared discovery/reading time up front) |
+| Regira MCP calls | 21 | 9 | **30** |
+| Wall-clock time | ~15 min (12:19 - 12:34) | ~16 min (12:34 - 12:50) | **~31 min** |
+| Tokens (harness budget counter) | ~263k | ~180k | **~443k** |
 
-Token usage and USD cost are not observable from inside the agent session (no tool surfaces them), so
-they are omitted rather than estimated. The MCP call count above is a manual tally of every
-`get_bootstrap_guide` / `get_package` / `get_package_card` / `get_type` / `how_to` call made during the
-build (documentation lookups only — it excludes ordinary file/bash/browser tool calls).
+Cost: not reported by the harness. As a rough indication only, most of those tokens are cached context re-reads;
+check the billing console for the exact figure.
+
+## Credits
+
+Built by **Claude** (Anthropic), model **Claude Opus 5.5**, running as a **Claude Code** sub-agent
+(general-purpose agent type) with **low reasoning effort**, following the Regira MCP golden path
+(bootstrap guide -> package cards -> heading-scoped guides -> generators).

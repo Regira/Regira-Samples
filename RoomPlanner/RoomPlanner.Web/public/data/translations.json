@@ -1,0 +1,512 @@
+{
+    "Accepted": {
+        "en": "Accepted"
+    },
+    "account": {
+        "en": "Account"
+    },
+    "actionFailed": {
+        "en": "The action failed"
+    },
+    "addEquipment": {
+        "en": "Add equipment..."
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "address": {
+        "en": "Address"
+    },
+    "agenda": {
+        "en": "Agenda"
+    },
+    "agendaNotes": {
+        "en": "Agenda / notes"
+    },
+    "allBuildings": {
+        "en": "All buildings"
+    },
+    "allDepartments": {
+        "en": "All departments"
+    },
+    "approval": {
+        "en": "Approval"
+    },
+    "approvalNeededInfo": {
+        "en": "A selected room requires approval - the reservation stays pending until approved."
+    },
+    "approvals": {
+        "en": "Approvals"
+    },
+    "approvalsTile": {
+        "en": "Decide on bookings of rooms that require approval."
+    },
+    "approve": {
+        "en": "Approve"
+    },
+    "Approved": {
+        "en": "Approved"
+    },
+    "attendees": {
+        "en": "Attendees"
+    },
+    "availabilityOn": {
+        "en": "Availability on"
+    },
+    "available": {
+        "en": "Available"
+    },
+    "availableOf": {
+        "en": "available of"
+    },
+    "awaitingApproval": {
+        "en": "Awaiting approval"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "book": {
+        "en": "Book"
+    },
+    "booked": {
+        "en": "booked"
+    },
+    "booking": {
+        "en": "Booking"
+    },
+    "bookings": {
+        "en": "bookings"
+    },
+    "bookingsToday": {
+        "en": "Bookings today"
+    },
+    "building": {
+        "en": "Building"
+    },
+    "building.description": {
+        "en": "Buildings"
+    },
+    "buildings": {
+        "en": "Buildings"
+    },
+    "busyNow": {
+        "en": "Busy now"
+    },
+    "calendar": {
+        "en": "Calendar"
+    },
+    "calendarClickHint": {
+        "en": "click an empty slot to book"
+    },
+    "calendarHint": {
+        "en": "Pick a room, a participant or a building to show their week."
+    },
+    "calendarTile": {
+        "en": "Week view for a room, a colleague or a whole building."
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "Cancelled": {
+        "en": "Cancelled"
+    },
+    "cancelledOn": {
+        "en": "Cancelled on"
+    },
+    "cancelReservation": {
+        "en": "Cancel reservation"
+    },
+    "cancelReservationConfirm": {
+        "en": "Cancel '{title}'? The rooms are released and attendees keep a record of the cancellation."
+    },
+    "capacity": {
+        "en": "Capacity"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "city": {
+        "en": "City"
+    },
+    "clear": {
+        "en": "Clear"
+    },
+    "clickToBook": {
+        "en": "Click to book"
+    },
+    "close": {
+        "en": "Close"
+    },
+    "closesAt": {
+        "en": "Closes at"
+    },
+    "code": {
+        "en": "Code"
+    },
+    "color": {
+        "en": "Color"
+    },
+    "comingUpToday": {
+        "en": "Coming up today"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "Declined": {
+        "en": "Declined"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "department": {
+        "en": "Department"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "duration": {
+        "en": "Duration"
+    },
+    "email": {
+        "en": "Email"
+    },
+    "employee": {
+        "en": "Employee"
+    },
+    "employee.description": {
+        "en": "Employees"
+    },
+    "employees": {
+        "en": "Employees"
+    },
+    "end": {
+        "en": "End"
+    },
+    "equipment": {
+        "en": "Equipment"
+    },
+    "equipment.description": {
+        "en": "Equipment types"
+    },
+    "equipmentItem": {
+        "en": "Equipment"
+    },
+    "facilities": {
+        "en": "Facilities"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "findARoom": {
+        "en": "Find a room"
+    },
+    "finderTile": {
+        "en": "Pick a time, head count and equipment - get the rooms that are free."
+    },
+    "firstName": {
+        "en": "First name"
+    },
+    "floor": {
+        "en": "Floor"
+    },
+    "floor.description": {
+        "en": "Floors"
+    },
+    "floors": {
+        "en": "Floors"
+    },
+    "freeNow": {
+        "en": "free now"
+    },
+    "from": {
+        "en": "From"
+    },
+    "hideCancelled": {
+        "en": "Hide cancelled"
+    },
+    "icon": {
+        "en": "Icon"
+    },
+    "includePast": {
+        "en": "Include past"
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "inviteAttendee": {
+        "en": "Invite a colleague..."
+    },
+    "isActive": {
+        "en": "Active"
+    },
+    "jobTitle": {
+        "en": "Job title"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "lastName": {
+        "en": "Last name"
+    },
+    "level": {
+        "en": "Level"
+    },
+    "location": {
+        "en": "Location"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "matchingRooms": {
+        "en": "matching rooms"
+    },
+    "meeting": {
+        "en": "Meeting"
+    },
+    "menu": {
+        "en": "Menu"
+    },
+    "minCapacity": {
+        "en": "Min. seats"
+    },
+    "mostlyBooked": {
+        "en": "Mostly booked"
+    },
+    "mostlyFree": {
+        "en": "Mostly free"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "newReservation": {
+        "en": "New reservation"
+    },
+    "nextDay": {
+        "en": "Next day"
+    },
+    "nextSevenDays": {
+        "en": "Next 7 days"
+    },
+    "noAttendees": {
+        "en": "No attendees invited yet."
+    },
+    "noEquipment": {
+        "en": "No equipment listed."
+    },
+    "NoResponse": {
+        "en": "No response"
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "noRooms": {
+        "en": "No rooms match these filters."
+    },
+    "note": {
+        "en": "Note (optional)"
+    },
+    "nothingPlanned": {
+        "en": "Nothing else planned today."
+    },
+    "nothingToApprove": {
+        "en": "Nothing waiting for approval."
+    },
+    "now": {
+        "en": "now"
+    },
+    "occupiedNow": {
+        "en": "Occupied right now"
+    },
+    "onlyAvailable": {
+        "en": "Only available rooms"
+    },
+    "openingHours": {
+        "en": "Opening hours"
+    },
+    "opensAt": {
+        "en": "Opens at"
+    },
+    "optional": {
+        "en": "Optional"
+    },
+    "organizer": {
+        "en": "Organizer"
+    },
+    "outOfService": {
+        "en": "Out of service"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "PartiallyApproved": {
+        "en": "Partially approved"
+    },
+    "participant": {
+        "en": "Participant"
+    },
+    "partlyBooked": {
+        "en": "Partly booked"
+    },
+    "Pending": {
+        "en": "Pending"
+    },
+    "pendingInfo": {
+        "en": "Waiting for a facility manager to approve one or more rooms."
+    },
+    "people": {
+        "en": "People"
+    },
+    "phone": {
+        "en": "Phone"
+    },
+    "planner": {
+        "en": "Planner"
+    },
+    "plannerHint": {
+        "en": "Click free space on a room's row to book it; click a booking to open it. Striped bars await approval."
+    },
+    "plannerTile": {
+        "en": "Day timeline of every room in a building, with availability at a glance."
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "previousDay": {
+        "en": "Previous day"
+    },
+    "quantity": {
+        "en": "Quantity"
+    },
+    "reason": {
+        "en": "Reason (optional)"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "reject": {
+        "en": "Reject"
+    },
+    "Rejected": {
+        "en": "Rejected"
+    },
+    "rejectedInfo": {
+        "en": "One or more rooms were rejected - pick another room or reschedule."
+    },
+    "request": {
+        "en": "Request"
+    },
+    "requiresApproval": {
+        "en": "Requires approval"
+    },
+    "reservation": {
+        "en": "Reservation"
+    },
+    "reservation.description": {
+        "en": "Reservations"
+    },
+    "reservations": {
+        "en": "Reservations"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "room": {
+        "en": "Room"
+    },
+    "room.description": {
+        "en": "Meeting rooms"
+    },
+    "rooms": {
+        "en": "Rooms"
+    },
+    "roomsFreeNow": {
+        "en": "Rooms free right now"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "saving": {
+        "en": "Saving..."
+    },
+    "schedule": {
+        "en": "Schedule"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "seats": {
+        "en": "seats"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "showOutOfService": {
+        "en": "Show out-of-service rooms"
+    },
+    "showWeekend": {
+        "en": "Show weekend"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "start": {
+        "en": "Start"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "subject": {
+        "en": "Subject"
+    },
+    "tagline": {
+        "en": "Book meeting rooms across all buildings - see availability at a glance."
+    },
+    "Tentative": {
+        "en": "Tentative"
+    },
+    "thisWeek": {
+        "en": "This week"
+    },
+    "timelineHint": {
+        "en": "Dashed box = this reservation. Click free space to move it there."
+    },
+    "today": {
+        "en": "Today"
+    },
+    "until": {
+        "en": "Until"
+    },
+    "upcomingBookings": {
+        "en": "Upcoming bookings"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "when": {
+        "en": "When"
+    }
+}

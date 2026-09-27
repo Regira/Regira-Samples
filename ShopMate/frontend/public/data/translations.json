@@ -1,38 +1,341 @@
 {
-    "addItemPlaceholder": { "en": "Add an item..." },
-    "archived": { "en": "Archived" },
-    "articles": { "en": "Articles" },
-    "article": { "en": "Article" },
-    "bought": { "en": "Bought" },
-    "categories": { "en": "Categories" },
-    "category": { "en": "Category" },
-    "childCategories": { "en": "Child categories" },
-    "color": { "en": "Color" },
-    "created": { "en": "Created" },
-    "deleteItem": { "en": "Delete" },
-    "description": { "en": "Description" },
-    "filtersAreApplied": { "en": "Filters are applied" },
-    "icon": { "en": "Icon" },
-    "isActive": { "en": "Active" },
-    "items": { "en": "items" },
-    "keywords": { "en": "Keywords" },
-    "main": { "en": "Main" },
-    "name": { "en": "Name" },
-    "new": { "en": "New" },
-    "noResults": { "en": "No results" },
-    "notes": { "en": "Notes" },
-    "overview": { "en": "Overview" },
-    "parentCategories": { "en": "Parent categories" },
-    "popOut": { "en": "Open in new tab" },
-    "quantity": { "en": "Quantity" },
-    "results": { "en": "results" },
-    "search": { "en": "Search" },
-    "searchItems": { "en": "Search items" },
-    "shopper": { "en": "Shopper" },
-    "shoppingList": { "en": "Shopping list" },
-    "shoppingLists": { "en": "Shopping lists" },
-    "showArchived": { "en": "Show archived lists" },
-    "toBuy": { "en": "To buy" },
-    "topLevelOnly": { "en": "Top-level only" },
-    "unit": { "en": "Unit" }
+    "account": {
+        "en": "Account"
+    },
+    "addArticle": {
+        "en": "Add article"
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "addParentCategory": {
+        "en": "Add a parent category"
+    },
+    "all": {
+        "en": "All"
+    },
+    "allDone": {
+        "en": "All done - nothing left to buy!"
+    },
+    "alreadyBought": {
+        "en": "Already bought"
+    },
+    "article": {
+        "en": "Article"
+    },
+    "article.description": {
+        "en": "Everything on your lists"
+    },
+    "articleCount": {
+        "en": "{count} articles"
+    },
+    "articlePlaceholder": {
+        "en": "e.g. Bananas"
+    },
+    "articles": {
+        "en": "Articles"
+    },
+    "back": {
+        "en": "Back"
+    },
+    "backHome": {
+        "en": "Back home"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "bought": {
+        "en": "Bought"
+    },
+    "browse": {
+        "en": "Browse"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "categories": {
+        "en": "Categories"
+    },
+    "category": {
+        "en": "Category"
+    },
+    "category.description": {
+        "en": "Article categories"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "clear": {
+        "en": "Clear"
+    },
+    "clearCart": {
+        "en": "Clear the cart"
+    },
+    "clearCartConfirm": {
+        "en": "Remove the {count} bought articles from this list?"
+    },
+    "close": {
+        "en": "Close"
+    },
+    "color": {
+        "en": "Colour"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "deleteListConfirm": {
+        "en": "Delete \"{title}\" and its {count} articles?"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "dragToSort": {
+        "en": "drag to sort"
+    },
+    "editList": {
+        "en": "Edit list"
+    },
+    "email": {
+        "en": "E-mail"
+    },
+    "emptyList": {
+        "en": "Empty list"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtered": {
+        "en": "filtered"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "hello": {
+        "en": "Hi {name}!"
+    },
+    "hierarchy": {
+        "en": "Hierarchy"
+    },
+    "home": {
+        "en": "Home"
+    },
+    "homeSummary": {
+        "en": "{lists} lists, {open} articles to buy"
+    },
+    "icon": {
+        "en": "Icon"
+    },
+    "inCart": {
+        "en": "in the cart"
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "less": {
+        "en": "Less"
+    },
+    "listNotFound": {
+        "en": "This list does not exist (anymore)."
+    },
+    "listTitlePlaceholder": {
+        "en": "e.g. Weekly groceries"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "manage": {
+        "en": "Manage"
+    },
+    "manageShoppers": {
+        "en": "Manage shoppers"
+    },
+    "markBought": {
+        "en": "Mark as bought"
+    },
+    "markNeeded": {
+        "en": "Put back on the list"
+    },
+    "more": {
+        "en": "More"
+    },
+    "myLists": {
+        "en": "My lists"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "needAgain": {
+        "en": "Need again"
+    },
+    "new": {
+        "en": "New"
+    },
+    "newList": {
+        "en": "New list"
+    },
+    "noMatches": {
+        "en": "Nothing matches this filter"
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "noSubCategories": {
+        "en": "No sub-categories"
+    },
+    "note": {
+        "en": "Note"
+    },
+    "notePlaceholder": {
+        "en": "e.g. organic, the big pack"
+    },
+    "openList": {
+        "en": "Open list"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "parentCategories": {
+        "en": "Parent categories"
+    },
+    "parentCategoriesHelp": {
+        "en": "A category can live under several parents (e.g. Cheese under Dairy and Deli)."
+    },
+    "parentCategory": {
+        "en": "Parent category"
+    },
+    "pinned": {
+        "en": "Pinned to the top"
+    },
+    "pinnedOnly": {
+        "en": "Pinned only"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "preview": {
+        "en": "Preview"
+    },
+    "quantity": {
+        "en": "Quantity"
+    },
+    "quickAddPlaceholder": {
+        "en": "Add an article... e.g. 2 kg apples"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "reorder": {
+        "en": "Drag to reorder"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "searchArticles": {
+        "en": "Search articles"
+    },
+    "searchInList": {
+        "en": "Search this list"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "shopper": {
+        "en": "Shopper"
+    },
+    "shopper.description": {
+        "en": "People who shop"
+    },
+    "shoppers": {
+        "en": "Shoppers"
+    },
+    "shopping": {
+        "en": "Shopping"
+    },
+    "shoppingList": {
+        "en": "Shopping list"
+    },
+    "shoppingList.description": {
+        "en": "Your shopping lists"
+    },
+    "shoppingLists": {
+        "en": "Lists"
+    },
+    "showAll": {
+        "en": "Show all"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "stillToBuy": {
+        "en": "Still to buy"
+    },
+    "subCategories": {
+        "en": "Sub-categories"
+    },
+    "switchShopper": {
+        "en": "Switch shopper"
+    },
+    "title": {
+        "en": "Title"
+    },
+    "toBuy": {
+        "en": "To buy"
+    },
+    "toBuyCount": {
+        "en": "{count} to buy"
+    },
+    "topLevel": {
+        "en": "top level"
+    },
+    "topLevelOnly": {
+        "en": "Top-level only"
+    },
+    "uncheckAll": {
+        "en": "Uncheck all"
+    },
+    "unit": {
+        "en": "Unit"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "welcome": {
+        "en": "Welcome!"
+    },
+    "whoIsShopping": {
+        "en": "Who is shopping?"
+    }
 }

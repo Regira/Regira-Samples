@@ -1,2 +1,0 @@
-Attachment for ticket #440 - Mobile app keeps logging me out
-Generated for HelpDesk demo seed data.

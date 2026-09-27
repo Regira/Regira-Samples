@@ -1,149 +1,122 @@
 # ShopMate
 
-A mobile-first shopping list app built on the **Regira** framework and its Regira MCP server. Shoppers
-manage multiple shopping lists; each list holds sortable articles that can be marked active ("need to
-buy") or inactive ("bought"); articles carry one or more categories, and categories form a many-to-many
-hierarchy (a category can have several parents *and* several children — e.g. "Organic" sits under both
-"Produce" and "Dairy & Eggs").
+A mobile-first shopping-list app: a .NET 10 **Regira Entities** API plus a Vue 3 **@regira/modules** SPA.
 
-## Stack
+- A **shopper** manages several **shopping lists**.
+- A list holds **articles** that are **sortable** (drag the grip) and can be **activated / deactivated**
+  (active = still to buy, inactive = in the cart).
+- An article has **multiple categories**; shoppers filter by category chips (a pick includes all its
+  sub-categories) and by free text.
+- **Categories form a multi-parent hierarchy** (e.g. *Cheese* sits under both *Dairy & Eggs* and *Deli*).
 
-| Layer | Tech |
-|---|---|
-| Backend API | ASP.NET Core (.NET 10), `Regira.Entities.Web` + EF Core (SQLite), Mapster mapping, OpenAPI + Scalar |
-| Frontend SPA | Vue 3 + TypeScript + Vite, `@regira/modules` (entities client, UI kit), Bootstrap 5 |
-| Seeding | [Bogus](https://github.com/bchavez/Bogus) driving the registered `IEntityService` implementations |
-
-## Ports
-
-- Backend API: `http://localhost:6170` (Scalar docs at `/scalar`, OpenAPI at `/openapi/v1.json`)
-- Frontend SPA: `http://localhost:6171`
+| Part | Folder | URL |
+|---|---|---|
+| API (ASP.NET Core, SQLite) | `backend/ShopMate.Api` | http://localhost:5871 (Scalar UI: `/scalar`, OpenAPI: `/openapi/v1.json`) |
+| SPA (Vue 3 + Vite) | `frontend` | http://localhost:5872 (proxies `/api` to the API) |
 
 ## Running it
 
 ```bash
-# Terminal 1 - API (seeds the SQLite DB on first run)
+# API - creates + seeds shopmate.db on first start
 cd backend/ShopMate.Api
-dotnet run
+dotnet run --launch-profile http
+# start over with a fresh, re-seeded database:
+dotnet run --launch-profile http -- --ResetDatabase=true
 
-# Terminal 2 - SPA
+# SPA
 cd frontend
 npm install
-npm run dev
+npm run dev        # http://localhost:5872 (strictPort)
+npm run build      # vue-tsc -b + vite build
 ```
 
-Open `http://localhost:6171`. No authentication is configured (the spec did not call for user accounts),
-so the app is usable immediately.
+Requirements: .NET SDK 10, Node 24 / npm 11.
 
-## Domain model
+## Back-end
 
-- **ShoppingList** — `Title`, `OwnerName` (the shopper), `Description`, `Icon`/`ColorHex`, `IsArchived`
-  (soft-delete — an archived list and its articles just drop out of the normal views). Simple entity.
-- **Category** — `Title`, `Icon`/`ColorHex`, and a **self-referencing many-to-many hierarchy**
-  (`RelatedCategory` join rows carry `ParentId`/`ChildId`) — a category can have several parents and
-  several children at once, not just a single-parent tree. Simple entity.
-- **Article** — `Title`, `Notes`, `Quantity`/`Unit`, `IsActive` (need to buy vs. bought), `SortOrder`
-  (per-list drag-order), a required `ShoppingListId` FK, and a many-to-many `Categories` join
-  (`ArticleCategory`). Complex entity (typed sort/includes, full-text `Q` search over
-  title+notes via `NormalizedContent`).
+Template `BasicApi` (no authentication) from the Regira bootstrap guide: Serilog, OpenAPI + Scalar,
+`ConfigureDefaultJsonOptions()`, a central `api` route prefix, SQLite with `Foreign Keys=True`,
+`EnsureCreated()` and seeding between `Build()` and `Run()`.
 
-Free-tier budget: 2 simple + 1 complex registration (`ShoppingList`, `Category` simple; `Article`
-complex) — the two join entities (`ArticleCategory`, `RelatedCategory`) are owned via `e.Related()` and
-cost no registration slot. Confirmed at every startup via the framework's own log line:
-`Regira.Entities: 2 simple / 1 complex registered -> tier = free`.
+### Entities (free tier: 3 simple / 1 complex)
 
-## Seeded data
+| Entity | Registration | Notes |
+|---|---|---|
+| `Shopper` | simple | name, e-mail, avatar colour |
+| `ShoppingList` | simple + `ShoppingListSearchObject` | FK `ShopperId`; shopper eager-loaded on every row; `ShoppingListProcessor` fills `articleCount` / `activeCount` |
+| `Category` | simple + `CategorySearchObject` | multi-parent DAG via the owned self-join `RelatedCategory` (`ParentEntities` / `ChildEntities`, both `Related()`); `CategoryProcessor` fills `articleCount` |
+| `Article` | **complex** (`ArticleSortBy`, `[Flags] ArticleIncludes`) | FK `ShoppingListId`; owned m2m join `ArticleCategory` via `Related()`; normalized full-text (`q`) over title + note |
 
-Seeded through `IEntityService<T>` (never straight against the `DbSet`), using Bogus for names, owners,
-dates and free text:
+Design decisions
 
-- **~40 categories**, 12 root groups (Produce, Dairy & Eggs, Bakery, Meat & Seafood, Pantry, Frozen,
-  Beverages, Household, Personal Care, Snacks, Baby, Pet Supplies) each with 2-4 children, plus two
-  deliberately **multi-parent** categories (`Organic` under Produce *and* Dairy & Eggs; `Bulk Buy` under
-  Pantry *and* Household) to exercise the hierarchy end to end.
-- **25 shopping lists** (Weekly Groceries, Weekend BBQ, Camping Trip, Baby Essentials, …), 3 of them
-  seeded already archived to demonstrate the soft-delete / restore flow.
-- **500 articles** (the primary entity), distributed across the lists, each drawn from a curated
-  per-category grocery item pool (Apples, Whole Milk, Chicken Breast, Toothpaste, Dog Food, …), with
-  randomized quantity/unit, ~65%/35% active/bought split, 1-2 categories each, and backdated
-  `Created`/`LastModified` timestamps.
+- **Articles are a top-level entity** (not an owned child of the list) so they can be searched, filtered
+  and paged server-side (`/articles/search?q=&categoryId=&isActive=&shoppingListId=&shopperId=`).
+- **`SortOrder` is `[ServerOwned]`**: a PUT/PATCH of one article can never shuffle its siblings. It is minted
+  on create (appended to the end of the list, in a prepper) and rewritten only by the collection-level domain
+  action `POST /api/articles/reorder { shoppingListId, ids[] }`.
+- **Activate / deactivate** is a single-field `PATCH /api/articles/{id} { "isActive": false }`.
+- Category filter: the SPA expands a picked category to its descendants (the DAG is small reference data
+  and already loaded client-side) and sends the id set as `categoryId=..&categoryId=..`.
+- Delete behaviour: shopper -> lists -> articles cascade; a category still used by articles answers **409**
+  (`Restrict`); removing a category removes only its hierarchy links.
+- An unknown `ShoppingListId` on an article is a field-level **400** (prepper), not a 409.
 
-## Mobile-first UI
+### Seed data (through `IEntityService`, Bogus)
 
-- Bottom tab bar (Lists / Items / Categories) replaces the framework's default dashboard+navbar shell —
-  the shell components are documented as *default implementations, not requirements*, and this app
-  deliberately replaces them while keeping the underlying functionality (config-driven entity slices,
-  paging, filtering, feedback).
-- Cards instead of table rows everywhere; large (≥44px) touch targets on every control.
-- A small app-owned `SwipeActions` component (`src/components/ui/SwipeActions.vue`, pointer-events based,
-  no external library) powers swipe-to-reveal actions: swipe a shopping-list or category card left to
-  archive/delete (with a confirm step via the kit's `ConfirmButton`), swipe an article row right to
-  reorder, left to delete; a big tap-target circle toggles "bought" without opening anything.
-- Shopping-list detail page embeds a hand-rolled `ArticleManager` (built on `useSearchView`, per the
-  framework's own guidance that a hand-written view is the right tool outside the scaffolded Overview)
-  with an inline "add item" bar, category chip filters, a to-buy/bought toggle, and free-text search.
+`Data/Seeding/DataSeeder.cs` seeds, in waves and only when the database is empty:
+55 categories (14 roots, topological waves so every parent exists before its children),
+8 shoppers, 31 lists (every shopper has a pinned "Weekly groceries" + 2-4 themed lists) and
+**500 articles** drawn from a correlated product catalog (`SeedCatalog.cs`: product + unit + quantity range +
+categories travel together; notes are picked per category branch). About 60 % of the articles are still to buy.
 
-## Known framework interaction (documented, not hidden)
+## Front-end
 
-Ordering the **unfiltered, cross-list** `Article` search by `SortOrder` returns one row fewer than the
-requested `pageSize` on every page (the count is correct, only `items` comes up short) — reproducible with
-a plain `.OrderBy(x => x.SortOrder)`, with or without an `Id` tiebreaker, and *not* reproduced ordering by
-another equally-duplicated column (`ShoppingListId`) instead. `SortOrder` is scoped per shopping list (many
-rows legitimately share the same value across different lists), so this only surfaces cross-list; scoped to
-a single `shoppingListId` — its intended use, the per-list reorder view where values are unique — it is
-unaffected. Worked around in `ArticleServiceConfiguration.cs` by defaulting the unscoped browse to a
-`Title` sort; full repro notes are in the code comment there. This is the one non-cosmetic surprise found
-during an otherwise clean build.
+Full reference scaffold of `@regira/modules` (`scaffold.mjs --shell --no-auth` + one slice per entity,
+`Article --owns ArticleCategory --as categories --picker Category`), then restyled mobile-first:
 
-## Project structure
+- **App bar** (brand, global article search, shopper switcher) and a **bottom tab bar** built from
+  `config.json -> navigation` via `useNavigation()`.
+- **Home**: the current shopper's lists as large cards with progress, "New list", and the config-driven dashboard.
+- **List board** (`/lists/:id`), the in-store screen:
+  - big check circles to tick articles off; **swipe right** = bought / put back, **swipe left** = delete (confirmed);
+  - **drag the grip** to reorder (persisted via `/articles/reorder`; disabled while a filter narrows the list;
+    ArrowUp / ArrowDown on a focused grip);
+  - sticky **search + category chips** (root chips, then a second row of sub-categories);
+  - "in the cart" section with *Uncheck all* / *Clear the cart*;
+  - **quick add** bar that understands `2 kg apples`, `6 eggs` and copies the categories of an earlier
+    article with the same name;
+  - tap an article to edit it in a modal (quantity stepper, unit, note, list, category chips).
+- **Articles** overview: server-side paging + count, status segments (All / To buy / Bought), category chips,
+  advanced filter (list, shopper, status); rows swipe like on the board.
+- **Categories**: list with parents and article counts; the form has a *Hierarchy* tab with an owned-m2m chip
+  editor for the parent categories (`InputSelectorInline`, `_deleted` marking) and the read-only sub-categories.
+- **Shoppers**: simple entity edited in a modal; the "who is shopping" choice is kept per device (localStorage).
 
-```
-ShopMate/
-  backend/ShopMate.Api/         ASP.NET Core API (33 .cs files)
-    Entities/ShoppingLists/     entity, DTOs, search object, processor, service config
-    Entities/Categories/        entity, RelatedCategory join, DTOs, processor, service config
-    Entities/Articles/          entity, ArticleCategory join, DTOs, sort/includes enums, query builder
-    Data/                       DbContext + Bogus-driven DataSeeder
-    Controllers/                three thin EntityControllerBase<> controllers
-  frontend/                     Vue 3 SPA (88 .vue/.ts files under src/)
-    src/entities/{shopping-lists,categories,articles}/   generated-then-customized entity slices
-    src/entities/articles/article-categories/            owned Article<->Category join sub-slice
-    src/components/ui/SwipeActions.vue                   app-owned swipe gesture wrapper
-    src/components/layout/                               mobile shell (TheHeader, BottomNav, Main)
-```
+App-specific classes use the `sm-` prefix; the theme lives in `src/assets/theme.scss`.
 
-## Verification performed
+## Verification
 
-- `dotnet build` — 0 warnings, 0 errors.
-- `npm run build` (`vue-tsc -b && vite build`) — 0 type errors.
-- Runtime: startup log confirms the 2 simple / 1 complex tier; create -> update -> update-again -> re-read
-  round-trips on `ShoppingList` and `Article` (including the many-to-many `Categories` join surviving an
-  update that omits the collection); archived-list filtering and restore; category multi-parent hierarchy
-  create/read verified via the API; the SPA end-to-end: browse lists, open a list, add an article, mark it
-  bought (verified it re-sorts to the bottom), delete it, filter articles by category and free text, create
-  a category with a parent link — all confirmed against the live API (network tab + response payloads), not
-  just a green build.
+- `dotnet build` - 0 warnings, 0 errors; startup logs `3 simple / 1 complex registered -> tier = free` and no warnings.
+- API round-trips: create -> update -> update again -> re-read (categories survive, `SortOrder` unchanged),
+  PATCH `isActive`, reorder, category filter, 400 on an unknown list, 409 on deleting a used category,
+  category parent links saved twice without duplicates.
+- `npm run build` (vue-tsc -b + vite build) green; driven in the browser at 375 px and 1280 px: toggle, swipe
+  both ways, drag-reorder, quick add, filters restored from the URL after reload, category hierarchy edits,
+  new list defaults to the current shopper, no horizontal overflow.
 
-## Effort tracking
+## Build statistics
 
-Tracked by the agent during the build (approximate — reconstructed from the session transcript, not an
-instrumented counter).
-
-| | Backend | Frontend | Total |
+| | Back-end | Front-end | Total |
 |---|---|---|---|
-| Regira MCP calls | ~27 | ~20 | **~47** |
-| Wall-clock time | ~45 min | ~26 min | **~71 min** |
+| Regira MCP calls | 15 | 14 | **29** |
+| Wall-clock time | ~8 min (12:19 - 12:27) | ~20 min (12:27 - 12:47) | **~28 min** |
+| Tokens (cumulative context processed, harness counter) | ~0.20 M | ~0.24 M | **~0.44 M** |
 
-- Total session wall-clock time: ~71 minutes (single continuous session, one mid-session resume with no
-  time lost).
-- Agent context consumed: ~500K tokens over the session (from the harness's own remaining-budget counter;
-  not a direct proxy for API input+output token billing).
-- Total cost: not independently metered by the harness in this environment; given the token volume above
-  and current Claude Sonnet pricing, a rough order-of-magnitude estimate is in the low single-digit USD
-  range for this build. Treat this figure as indicative only, not a billed total.
+Cost: most of those tokens are cached context re-reads; at typical Opus-class rates with prompt caching this
+lands roughly in the **USD 2 - 5** range (an estimate - the exact billed amount is not visible from inside the session).
 
 ## Credits
 
-Built by **Claude Sonnet 5** (`claude-sonnet-5`), running as **Claude Code** (Anthropic's CLI agent), at
-**medium reasoning effort**, using the Regira MCP server for framework guidance and the Regira package
-documentation throughout.
+Built by **Claude** (Anthropic), model *Claude Opus 5.5*, running as a **Claude Code sub-agent**
+(general-purpose agent type) with **low reasoning effort**, following the Regira MCP golden path
+(bootstrap guide -> package cards -> scoped guides -> generators). Framework: [Regira](https://regira.com).

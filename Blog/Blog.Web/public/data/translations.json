@@ -1,0 +1,281 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "allTags": {
+        "en": "All tags"
+    },
+    "allTopics": {
+        "en": "All topics"
+    },
+    "anyStatus": {
+        "en": "Any status"
+    },
+    "anyYear": {
+        "en": "Any year"
+    },
+    "article": {
+        "en": "Article"
+    },
+    "author": {
+        "en": "Author"
+    },
+    "authorExact": {
+        "en": "Author (exact name)"
+    },
+    "backToStories": {
+        "en": "Back to all stories"
+    },
+    "blogPost": {
+        "en": "Blog post"
+    },
+    "blogPost.description": {
+        "en": "Write, schedule and publish articles"
+    },
+    "blogPosts": {
+        "en": "Blog posts"
+    },
+    "builtWith": {
+        "en": "Built with Regira, .NET and Vue"
+    },
+    "by": {
+        "en": "by"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "categories": {
+        "en": "Categories"
+    },
+    "category": {
+        "en": "Category"
+    },
+    "category.description": {
+        "en": "The sections articles are filed under"
+    },
+    "clearAll": {
+        "en": "Clear all"
+    },
+    "color": {
+        "en": "Colour"
+    },
+    "content": {
+        "en": "Content"
+    },
+    "contentHint": {
+        "en": "Markdown: ## heading, > quote, - list, **bold**, *italic*, [link](https://...)"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "editStory": {
+        "en": "Edit this story"
+    },
+    "featured": {
+        "en": "Featured"
+    },
+    "featuredStories": {
+        "en": "Featured stories"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "hasPublishedPosts": {
+        "en": "Only with published posts"
+    },
+    "isPublished": {
+        "en": "Published"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "latest": {
+        "en": "Latest"
+    },
+    "latestStories": {
+        "en": "Latest stories"
+    },
+    "loadFailed": {
+        "en": "The stories could not be loaded. Please try again in a moment."
+    },
+    "main": {
+        "en": "Main"
+    },
+    "manage": {
+        "en": "Manage"
+    },
+    "moreFrom": {
+        "en": "More from {category}"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "noStories": {
+        "en": "No stories match these filters."
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "posts": {
+        "en": "Posts"
+    },
+    "presentation": {
+        "en": "Presentation"
+    },
+    "publication": {
+        "en": "Publication"
+    },
+    "published": {
+        "en": "Published"
+    },
+    "publishedAt": {
+        "en": "Published on"
+    },
+    "publishedAtHint": {
+        "en": "Publication date - leave empty to use the moment you publish; a future date schedules the post"
+    },
+    "publishedIn": {
+        "en": "Published in"
+    },
+    "readingTimeMin": {
+        "en": "{min} min read"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "resultsHeading": {
+        "en": "Results"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "searchStories": {
+        "en": "Search stories, authors..."
+    },
+    "showing": {
+        "en": "Showing"
+    },
+    "slug": {
+        "en": "Slug (URL)"
+    },
+    "slugAuto": {
+        "en": "generated from the title when empty"
+    },
+    "sortBy": {
+        "en": "Sort by"
+    },
+    "sortCreated": {
+        "en": "Recently created"
+    },
+    "sortLastModified": {
+        "en": "Recently edited"
+    },
+    "sortLongest": {
+        "en": "Longest read"
+    },
+    "sortNewest": {
+        "en": "Newest first"
+    },
+    "sortOldest": {
+        "en": "Oldest first"
+    },
+    "sortOrder": {
+        "en": "Sort order"
+    },
+    "sortShortest": {
+        "en": "Quick reads first"
+    },
+    "sortTitle": {
+        "en": "Title A-Z"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "statusDraft": {
+        "en": "Draft"
+    },
+    "statusHintDraft": {
+        "en": "Only visible here in the studio."
+    },
+    "statusHintPublished": {
+        "en": "Live on the blog."
+    },
+    "statusHintScheduled": {
+        "en": "Goes live automatically on the publication date."
+    },
+    "statusPublished": {
+        "en": "Published"
+    },
+    "statusScheduled": {
+        "en": "Scheduled"
+    },
+    "stories": {
+        "en": "Stories"
+    },
+    "storyCount": {
+        "en": "{count} stories"
+    },
+    "storyNotFound": {
+        "en": "This story isn't available"
+    },
+    "storyNotFoundHint": {
+        "en": "It may have been moved, unpublished, or it simply hasn't gone live yet."
+    },
+    "studio": {
+        "en": "Studio"
+    },
+    "studioIntro": {
+        "en": "Manage articles, categories and tags. Only published articles appear on the public blog."
+    },
+    "summary": {
+        "en": "Summary (shown on article cards)"
+    },
+    "tag": {
+        "en": "Tag"
+    },
+    "tags": {
+        "en": "Tags"
+    },
+    "title": {
+        "en": "Title"
+    },
+    "updatedOn": {
+        "en": "updated {date}"
+    },
+    "viewBlog": {
+        "en": "View blog"
+    },
+    "viewOnBlog": {
+        "en": "View on blog"
+    }
+}

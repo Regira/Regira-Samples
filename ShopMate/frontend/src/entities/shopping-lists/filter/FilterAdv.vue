@@ -14,27 +14,40 @@
         <!-- keywords (free-text q) -->
         <input v-model.lazy.trim="searchObject.q" class="form-control mb-2" :placeholder="$t('keywords')" @change="handleUpdate" />
 
-        <input v-model.lazy.trim="searchObject.ownerName" class="form-control mb-2" :placeholder="$t('shopper')" @change="handleUpdate" />
-
-        <NullableCheckBox
-            :modelValue="searchObject.archived === ArchivedFilter.included"
-            id="showArchived"
-            :label="$t('showArchived')"
-            @update:modelValue="(v?: boolean) => { searchObject.archived = v ? ArchivedFilter.included : undefined; handleUpdate() }"
-        />
+        <div class="mb-2">
+            <ShopperInputSelector
+                v-model="filterShopper"
+                v-model:idValue="searchObject.shopperId as number"
+                :canEdit="false"
+                :placeholder="$t('shopper')"
+                @select="handleUpdate"
+            />
+        </div>
+        <div class="mb-2">
+            <NullableCheckBox v-model="searchObject.isPinned" id="filterIsPinned" :label="$t('pinnedOnly')" @update:modelValue="handleUpdate" />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue"
 import { IconButton, NullableCheckBox } from "@regira/modules/vue/ui"
-import { useFilter, type FilterEmits, ArchivedFilter } from "@regira/modules/vue/entities"
+import { useFilter, type FilterEmits } from "@regira/modules/vue/entities"
 import SearchObject from "./SearchObject"
+import { InputSelector as ShopperInputSelector } from "@/entities/shoppers"
+import type { Entity as Shopper } from "@/entities/shoppers"
 
 interface Emits extends /* @vue-ignore */ FilterEmits<SearchObject> {}
 const emit = defineEmits<Emits & { "update:modelValue": (v: SearchObject) => true; filter: (v: SearchObject) => true; close: () => void }>()
 defineProps<{ resultCount?: number }>()
 
 const searchObject = defineModel<SearchObject>({ required: true })
+const filterShopper = ref<Shopper>()
 // handleUpdate = sync the model + re-run the search; bind it on EVERY input above.
-const { handleReset, handleUpdate, filterIsActive } = useFilter({ searchObject, emit, Constructor: SearchObject })
+const { handleReset: resetSearchObject, handleUpdate, filterIsActive } = useFilter({ searchObject, emit, Constructor: SearchObject })
+// Clear the selector-backing entities too — resetting the ids alone leaves each control showing a label.
+function handleReset() {
+    resetSearchObject()
+    filterShopper.value = undefined
+}
 </script>

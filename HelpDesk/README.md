@@ -1,159 +1,126 @@
-# HelpDesk
+# HelpDesk - support center
 
-A standalone support-ticket desk built on the **Regira** framework (.NET 10 API + Vue 3 SPA), generated
-end-to-end through the **Regira MCP server**. Customers raise tickets, agents work them through a Kanban
-board or filtered queues, and every ticket carries a conversation thread and file attachments.
+A support-ticket application: a .NET 10 **Regira Entities** API with JWT sign-in, and a Vue 3 SPA built on
+**@regira/modules**. It has a support-center layout: a sidebar with work queues, a KPI dashboard, a
+drag-and-drop **Kanban board**, and **conversation-style comment threads**.
 
-## What it does
+| Part | Folder | URL |
+|---|---|---|
+| Back-end API (ASP.NET Core, SQLite) | `HelpDesk.Api/` | http://localhost:5841 (Scalar UI at `/scalar`, OpenAPI at `/openapi/v1.json`) |
+| Front-end SPA (Vue 3 + Vite, Bootstrap 5) | `HelpDesk.Web/` | http://localhost:5842 (proxies `/api` to the API) |
 
-- **Customers** create support tickets, tag them with one or more **categories**, and follow up in a
-  conversation thread.
-- Tickets carry a **priority**, a **status**, and an **assigned agent**; both are optional until triaged.
-- Every ticket supports **multiple comments** (customer-visible or internal-only agent notes) and
-  **multiple file attachments**.
-- **Administrators** manage the reference data — categories, priorities, statuses and support teams — and
-  the people directory (customers, agents, admins).
-- The SPA offers three ways into the same data: a **Kanban board** (drag a card to change its status), a
-  filterable **ticket queue** (list + advanced filters + paging), and **conversation-style** comment threads
-  on each ticket's details page.
+## Features
 
-## Stack
+- **Customers** sign in to a self-service portal. They can open tickets, choose categories (one or more) and urgency, attach files, reply in the thread, and follow the status. The API scopes them to their own tickets.
+- **Agents** work queues (*My queue*, *Unassigned*, *Overdue*, *All open*, *All tickets*) and the Kanban board, where dropping a card changes its status. They can assign tickets (*Assign to me*), change status quickly, set due dates, and add **internal notes** that customers never see.
+- **Administrators** also manage categories (with a routing team), priorities (with an SLA target in hours), statuses (Kanban columns, default and closed flags), support teams, people, and logins.
+- **Tickets** have a sequential code (`HD-000123`), a priority, a status, a team, an assignee, an SLA due date (created + the priority's target hours), and timestamps for when they were closed and first answered. They also carry categories (m2m), comments and file attachments.
+- **Dashboard** shows open, unassigned, overdue and closed-in-30-days counts, a 30-day created/closed chart, tickets by status and priority, team queues, and the average first-response time.
+- **Search**: `?q=` matches the ticket code, subject and customer (name, company, e-mail). There are filters for status, priority, category, team, customer, assignee, closed/overdue/assigned/attachments, plus sort options.
 
-| Layer | Tech |
-|---|---|
-| API | ASP.NET Core 10, `Regira.Entities` (EF Core + SQLite), OpenAPI + Scalar |
-| SPA | Vue 3, TypeScript, Vite, Pinia, Bootstrap 5, `@regira/modules` |
-| Auth | none (internal-tool / demo scope — see *Design notes*) |
-
-## Running it
+## Running
 
 ```bash
-# API — http://localhost:6140  (Scalar UI opens automatically)
-cd HelpDesk.API
-dotnet run --urls http://localhost:6140
+# API (creates App_Data/helpdesk.db and seeds on first start)
+cd HelpDesk.Api
+dotnet run --launch-profile http                      # http://localhost:5841
+dotnet run --launch-profile http -- --ResetDatabase=true   # drop + re-seed (Development)
 
-# SPA — http://localhost:6141
-cd HelpDesk.SPA
+# SPA
+cd HelpDesk.Web
 npm install
-npm run dev
+npm run dev                                           # http://localhost:5842 (strictPort)
+npm run build                                         # vue-tsc -b + vite build
 ```
 
-The API seeds itself on first run (SQLite file `helpdesk.db`, created via `EnsureCreated()`). Delete the
-`.db` file to force a full reseed after a model change.
+### Demo accounts
 
-## Data model
+Seeding creates 37 logins, all with the demo password stored in `HelpDesk.Api/appsettings.Development.json`
+(`Seed:DemoPassword`):
 
-Regira's `Regira.Entities` package caps the **free tier** at 5 simple + 2 complex entity registrations (7
-total, independent buckets). The domain was classified against that budget before any code was written:
-
-| Entity | Classification | Why |
-|---|---|---|
-| `Category` | simple | flat lookup |
-| `Priority` | simple | flat lookup (`Level` drives sort/urgency) |
-| `Status` | simple | flat lookup (`SortOrder` drives the Kanban columns, `IsClosed` marks a done state) |
-| `SupportTeam` | simple | flat lookup, `Members` is a back-reference (not owned) |
-| `TicketAttachment` | simple | the per-owner attachment join `HasAttachments` registers |
-| `Person` | **complex** | one role-discriminated actor (`Role: Customer \| Agent \| Admin`) instead of separate `Customer`/`Employee` registrations — the standard "Stakeholders" budget-fix remedy |
-| `Ticket` | **complex** | the aggregate root: FK to `Priority`/`Status`/`SupportTeam`/two `Person`s, an owned `Categories` m2m join, an owned `Comments`-adjacent conversation, and attachments |
-
-**→ 5 simple / 2 complex = 7/7**, confirmed at startup by the framework's own log line
-(`Regira.Entities: 5 simple / 2 complex registered → tier = free`).
-
-Two deliberate deviations from the "obvious" shape, both budget- and UX-driven:
-
-- **`Comments` are not an owned `e.Related()` collection.** A conversation thread that required resending
-  the *entire* history on every new message (the `Related()` contract) would be both wasteful and racy
-  under concurrent posting. Comments are served through two narrow, hand-written actions on
-  `TicketController` — `GET/POST /tickets/{id}/comments` — backed by the raw `AppDbContext`, costing no
-  extra registration slot.
-- **`ClosedAt` is fully server-owned.** A `Prepare` hook on the `Ticket` registration stamps it the moment
-  a ticket lands on a status with `IsClosed = true`, clears it on reopen, and preserves the original
-  close time across further edits — it is never present on `TicketInputDto`, so a client can't tamper with it.
-
-## Seeded data
-
-Generated with **Bogus** through `IEntityService` (see `HelpDesk.API/Data/Seeding/SeedData.cs`), seeded in
-dependency order (lookups → people → tickets → comments → attachments):
-
-| Entity | Count |
+| Role | Login |
 |---|---|
-| Priorities | 4 |
-| Statuses | 6 |
-| Categories | 10 |
-| Support teams | 5 |
-| People | ~348 (≈320 customers, ≈24 agents, 4 admins) |
-| **Tickets** | **500** (the primary entity) |
-| Comments | ~1,000 (weighted customer/agent turns, back-dated relative to each ticket) |
-| Attachments | ~90 (a representative subset, not every ticket) |
+| Admin + Agent | `alex.morgan@helpdesk.test` |
+| Agents | every employee (`<first>.<last>@helpdesk.test`; see *People*, filter *Employees*) |
+| Customers | the first 12 active customers (*People*, filter *Has a login*), e.g. `ezekiel.cremin@emardmcdermott.test` |
 
-Distributions are deliberately weighted, not uniform (`Created` spread over the last 180 days, status/priority
-via weighted-random, ~12% of `New` tickets left unassigned) — a flat distribution across every ticket would
-make the Kanban board and the queue filters look meaningless.
+The JWT signing secret for Development is in the same file. For any other environment, provide
+`Authentication:Jwt:Secret` (64 characters or more) through user secrets or environment variables.
 
-## Project structure
+## Architecture
 
-```
-HelpDesk/
-├── HelpDesk.API/            # ASP.NET Core 10 API (port 6140)
-│   ├── Entities/             # per-entity folders: model, DTOs, search object, service config
-│   ├── Controllers/          # EntityControllerBase<> subclasses + TicketController's comment actions
-│   ├── Data/                 # AppDbContext + Seeding/SeedData.cs
-│   └── Extensions/           # DI wiring (AddEntityServices)
-└── HelpDesk.SPA/             # Vue 3 SPA (port 6141)
-    └── src/entities/
-        ├── categories/ priorities/ statuses/ support-teams/   # lookup slices
-        ├── people/                                            # Customer/Agent/Admin directory
-        ├── entity-attachments/                                # shared file-upload slice
-        └── tickets/
-            ├── board/         # Kanban board (custom view, drag-and-drop status change)
-            ├── comments/      # CommentsPanel.vue — conversation thread (custom, not a scaffolded slice)
-            └── ticket-categories/  # generated m2m chip editor (Ticket ↔ Category)
-```
+### Back-end (`HelpDesk.Api`)
 
-## Design notes / trade-offs
+- **Template**: `BasicApi`, plus the JWT registrations from `SelfHostingApiWithAuth` (Identity users in the same SQLite database, roles `Admin`/`Agent`/`Customer` issued as a `role` claim, refresh tokens). Also Serilog, OpenAPI with Scalar, and the central route prefix `api`.
+- **Entity budget (free tier, 5 simple + 2 complex, fits exactly)**:
 
-- **No authentication.** The spec describes distinct actors (customers, agents, admins) but not a login
-  flow; adding one would have doubled the scope without changing the CRUD/Kanban/conversation surface the
-  brief asked for. The `Person.Role` field is what a future auth layer would gate on
-  (`SelfHostingApiWithAuth` + `roles-end-to-end` is the documented upgrade path).
-- **Priorities and Statuses are real admin-manageable entities**, not hard-coded enums, exactly as the
-  spec's "administrators can manage categories, priorities, statuses and support teams" line asks — this is
-  what makes them count against the entity budget and drove the `Person` merge above.
-- **Kanban board fetches a capped page** (the server's default `MaxPageSize`, ~100 rows) rather than all
-  500 tickets — a real board would add a "load more"/virtualized column; out of scope for this pass.
+  | Entity | Registration |
+  |---|---|
+  | SupportTeam, Priority, Status | simple |
+  | Category | simple (`For<Category, int, CategorySearchObject>`) |
+  | TicketAttachment | simple (the `HasAttachments` join) |
+  | Person | complex: customers **and** employees in one role-discriminated type (the budget-saving "stakeholder" move) |
+  | Ticket | complex: typed `TicketSortBy` + `[Flags] TicketIncludes` (Categories, Comments, Attachments) |
+  | TicketCategory | owned m2m join (`e.Related`) |
+  | TicketComment | owned child with a single writer, the comment action |
 
-## Verification performed
+- **Pipeline pieces**:
+  - `TicketPrepper`: code minting, defaults (status, priority, routing team, SLA due date), `ClosedAt` bookkeeping, and customer write-restrictions.
+  - `TicketQueryBuilder`: the domain filters.
+  - `TicketProcessor`: comment and attachment counters; strips internal notes for customers.
+  - `TicketNormalizer`: folds the customer into the ticket's `?q=`.
+  - `TicketCodeGenerator`: a singleton, primed from the highest code.
+- **Security**:
+  - Global row filters: `TicketAccessFilter`, `TicketAttachmentAccessFilter`, `PersonAccessFilter`.
+  - `WriteAuthorizationFilter`: a per-controller allow-list for writes and deletes.
+  - `TicketOwnerScopeFilter`: closes the attachment-upload hole.
+  - Everything requires authentication (`MapControllers().RequireAuthorization()`); the dashboard is staff-only.
+- **Custom endpoints**:
+  - `POST api/tickets/{id}/comments`: the conversation thread.
+  - `GET api/me`: roles and linked person.
+  - `POST api/persons/{id}/account`: admin creates a login.
+  - `GET api/dashboard`: KPIs.
+  - The standard `auth`, `auth/password` and `users` account endpoints.
+- **Seeding** (`Data/Seeding`, Bogus, fixed seed) goes through the `IEntityService` implementations and `UserManager`:
+  - 6 teams, 13 categories, 4 priorities, 6 statuses
+  - 185 people (25 employees, 160 customers)
+  - **520 tickets**, about 1,700 comments with correlated conversations, and about 130 attachments
+  - Open tickets are dated relative to their own SLA window, so roughly a quarter of open work is overdue.
 
-- `dotnet build` — 0 warnings, 0 errors.
-- `npm run build` (`vue-tsc -b && vite build`) — clean.
-- API smoke-tested end-to-end via `curl`: create → update → update again (idempotency) → re-read, comment
-  post/list, attachment upload/download, `ClosedAt` auto-stamp on status transition.
-- SPA driven live against the running API: ticket overview + paging + filters, ticket details (all tabs),
-  posting a comment through the actual UI (author picker → message → POST → thread refresh), the Kanban
-  board, and every lookup/person overview page.
+### Front-end (`HelpDesk.Web`)
+
+- Full reference scaffold (`scaffold.mjs --shell` plus one slice per entity). Ticket was scaffolded with `--rel` for each relation, `--owns TicketCategory --picker Category`, and `--attachments`.
+- Custom support-center shell: a dark sidebar (queues, plus entity navigation built from `config.json → navigation` through `useNavigation()`), a top bar with global ticket search, and role-aware home pages (staff dashboard, customer portal).
+- The ticket page has tabs: **Conversation** (chat bubbles, internal notes in amber, composer with Ctrl+Enter), **Details** (form) and **Files**. A side panel shows the properties, quick status buttons and *Assign to me*.
+- **Kanban board** (`/board`): one column per status, each column its own server-side search (capped, with a "show all" link). Drag and drop saves through the pooled ticket service; touch screens get a "move to" select.
+- `infrastructure/access.ts` mirrors the API's write tiers: buttons are hidden or forms read-only per role.
+- Deliberate deviations:
+  - Small, bounded lookups (status, priority, team) use each slice's shipped `SelectorDropdown`; people use the scalable `InputSelector`.
+  - Status and priority badges are plain coloured pills rather than record buttons, since they are lookups.
+  - The four reference-data entities are hidden from agents' navigation (admin-only).
+  - Single language (English); no language selector.
+
+## Build status
+
+- `dotnet build`: succeeds with 0 warnings. Startup logs `5 simple / 2 complex registered -> tier = free` and no validation warnings.
+- `npm run build` (`vue-tsc -b && vite build`): succeeds.
+- Verified at runtime:
+  - Through the API: create, update twice, PATCH and re-read; customer row scoping (404 on foreign tickets, 403 on deletes, admin writes and the dashboard); internal notes hidden; attachment upload scope; attachment download.
+  - In the browser: login, dashboard, drag and drop on the board, sending a reply, quick status change and a second save, customer ticket creation with a category chip and a second save, queues, lookups, and the mobile layout.
+
+## Build statistics
+
+| Phase | Regira MCP calls | Wall-clock time | Tokens (approx.) |
+|---|---|---|---|
+| Back-end (design, API, auth, seeding, API verification) | 25 | ~15 min | ~320k |
+| Front-end (scaffold, shell, slices, board, conversation, browser verification) + README | 10 | ~23 min | ~230k |
+| **Total** | **35** | **~38 min** | **~550k** (cumulative, mostly cached context) |
+
+Estimated cost: about US$3-6 at list API prices, most of it cache reads. This is an estimate: the session
+does not expose exact billing.
 
 ## Credits
 
-Built by **Claude Sonnet 5** (`claude-sonnet-5`), running as **Claude Code** at reasoning effort **medium**
-(default), driven entirely through the **Regira MCP server** tools (`get_bootstrap_guide`, `get_package`,
-`how_to`, `get_type`, `search_docs`, and friends) plus the .NET/npm toolchain and a live browser for runtime
-verification. No hand-authored framework code was written from memory — every Regira-specific pattern
-(entity budget classification, attachments wiring, owned m2m collections, the front-end slice scaffold) was
-sourced from the MCP docs for this session.
-
-## Effort tracking
-
-Best-effort reconstruction from the session transcript (not instrumented at the time):
-
-| | Back-end | Front-end | Total |
-|---|---|---|---|
-| Regira MCP calls (`get_bootstrap_guide`/`get_package`/`how_to`/`get_type`/`get_package_card`/`get_section_toc`) | ~23 | ~15 | ~38 |
-| Other tool calls (Bash/Read/Write/Edit/Browser/etc.) | ~60 | ~90 | ~150 |
-| Wall-clock time | ~35 min | ~55 min | ~90 min* |
-| Tokens (session total, approximate) | — | — | ~490,000 |
-| Estimated cost (Claude Sonnet 5 intro pricing, $2/$10 per MTok, ~80/20 input/output split assumed) | — | — | **~$1.60** |
-
-\* Back-end and front-end phases overlapped with verification/debugging passes that touched both, so the
-per-side split is approximate; total wall-clock is the reliable number. Token/cost figures come from the
-session's own running token counter, not a dedicated billing API, so treat them as an order-of-magnitude
-estimate rather than an invoice.
+Built by **Claude** (Anthropic), model *Claude Opus 5.5*, running as a Claude Code sub-agent (general-purpose
+agent type) with **low reasoning effort**. It followed the Regira MCP documentation server (bootstrap guide, package cards,
+entities/security/UI guides) and used no prior memory or other projects as reference.

@@ -1,0 +1,20 @@
+{
+    "clientApp": "qcredits-spa",
+    "api": { "development": "http://localhost:5851/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "QCredits" },
+    "navigation": {
+        "groups": [
+            { "id": "Credits", "title": "creditsGroup", "icon": "bi bi-mortarboard" },
+            { "id": "Administration", "title": "administration", "icon": "admin" }
+        ],
+        "dashboard": [
+            ["Credits", ["CreditRequest", "CreditAllocation", "GroupTraining"]],
+            ["Administration", ["Employee", "Department", "CreditYear"]]
+        ],
+        "navbar": ["CreditRequest", "CreditAllocation", "GroupTraining", ["Administration", ["Employee", "Department", "CreditYear"]]],
+        "search": "CreditRequest"
+    }
+}

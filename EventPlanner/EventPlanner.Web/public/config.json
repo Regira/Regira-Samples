@@ -1,0 +1,20 @@
+{
+    "clientApp": "eventplanner-spa",
+    "api": "/api",
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "EventPlanner" },
+    "navigation": {
+        "groups": [
+            { "id": "Events", "title": "eventsGroup", "icon": "bi bi-stars" },
+            { "id": "Setup", "title": "setupGroup", "icon": "bi bi-sliders" }
+        ],
+        "dashboard": [
+            ["Events", ["EventItem", "Registration", "Speaker"]],
+            ["Setup", ["LocationItem", "EventCategory", "Employee"]]
+        ],
+        "navbar": ["EventItem", "Registration", "Speaker", ["Setup", ["LocationItem", "EventCategory", "Employee"]]],
+        "search": "EventItem"
+    }
+}

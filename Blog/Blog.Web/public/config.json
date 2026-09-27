@@ -1,0 +1,14 @@
+{
+    "api": "/api",
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "The Margin" },
+    "tagline": { "en": "Unhurried writing about technology, design, travel and the good things in between." },
+    "navigation": {
+        "groups": [{ "id": "Content", "title": "content", "icon": "bi bi-journal-richtext" }],
+        "dashboard": [["Content", ["BlogPost", "Category", "Tag"]]],
+        "navbar": [["Content", ["BlogPost", "Category", "Tag"]]],
+        "search": "BlogPost"
+    }
+}

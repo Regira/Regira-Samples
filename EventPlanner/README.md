@@ -1,147 +1,147 @@
 # EventPlanner
 
-A vibrant event-management demo app built on the **Regira** framework (`Regira.Entities` on the backend,
-`@regira/modules` / Vue 3 on the frontend). Organizations create multi-day events at venues, build an
-agenda of sessions with speakers and capacity limits, and employees register for events and optionally
-pick individual sessions.
+Company event management: events at a location spanning one or more days, an agenda of sessions (each with
+its own speakers and capacity), employee registrations with optional session selection, and an admin
+back-office for locations, speakers, event categories and participant registrations.
 
-- **Back-end API:** http://localhost:6120 (Scalar UI at `/scalar`, OpenAPI at `/openapi/v1.json`)
-- **Front-end SPA:** http://localhost:6121
-- No authentication — this is an open internal-tool style demo (`--no-auth` scaffold), matching the spec's
-  silence on login/credentials.
-
-## Domain model
-
-| Entity | Kind | Notes |
-|---|---|---|
-| **Location** (SPA: `Venue`) | simple | Venue: address, city, country, capacity, image |
-| **Speaker** | simple | bio, job title, company, photo |
-| **EventCategory** | simple | color + icon, edited as a modal (flat lookup) |
-| **Employee** | simple | the people who register for events |
-| **Session** | simple | belongs to an `Event` (FK), many-to-many with `Speaker` |
-| **Event** (SPA: `EventItem`) | complex | venue + category (to-one), banner, multi-day start/end, `Sessions` back-ref |
-| **Registration** | complex | employee + event, status (Pending/Confirmed/Cancelled/Attended), optional many-to-many with `Session` |
-
-Two owned join entities ride on their parents via `e.Related()` and cost no registration slot:
-`SessionSpeaker` (Session ↔ Speaker) and `RegistrationSession` (Registration ↔ Session, "which sessions
-did this employee pick").
-
-**Free-tier budget:** 5 simple + 2 complex = **7 registrations, exactly the hard ceiling** — the app logs
-`Regira.Entities: 5 simple / 2 complex registered → tier = free` at startup with zero warnings.
-
-`Event`/`Registration`/`Session` renamed `EventItem`/`Registration`/`Session` were kept as-is except `Event`
-→ `EventItem` and `Location` → `Venue` on the **frontend only** (both collide with DOM globals — `window.Event`,
-`window.Location` — flagged by the scaffolder; the backend class names and API routes are unaffected).
+| Part | Path | Stack | URL |
+|---|---|---|---|
+| Back-end API | `EventPlanner.Api/` | .NET 10, ASP.NET Core, EF Core 10 + SQLite, Regira Entities 6.4 (free tier), ASP.NET Identity + Regira JWT auth, Serilog, OpenAPI + Scalar | http://localhost:5821 (Scalar UI: `/scalar`) |
+| Front-end SPA | `EventPlanner.Web/` | Vue 3 + TypeScript + Vite 8, Pinia, `@regira/modules` 6.4 (full scaffold), Bootstrap 5 + Bootstrap Icons | http://localhost:5822 |
 
 ## Running it
 
-**Backend** (SQLite, auto-created + seeded on first run):
 ```bash
-cd backend
-dotnet run --urls http://localhost:6120
-```
-Seeding is idempotent — it only runs when the `Registrations` table is empty. Delete `eventplanner.db*` to
-reseed from scratch.
+# API (creates + seeds eventplanner.db on first start; add -- --ResetDatabase=true to rebuild it)
+cd EventPlanner.Api
+dotnet run --launch-profile http
 
-**Frontend:**
-```bash
-cd frontend
+# SPA (proxies /api to the API, so both share one origin — no CORS)
+cd EventPlanner.Web
 npm install
-npm run dev
+npm run dev          # http://localhost:5822 (strictPort)
+npm run build        # vue-tsc -b + vite build
 ```
-`public/config.json` points the SPA straight at `http://localhost:6120/api` with CORS enabled on the API
-(the "simplest dev setup" — no Vite proxy needed).
 
-## Seed data
+### Demo accounts (seed data, development only)
 
-Generated with [Bogus](https://github.com/bchavez/Bogus), through `IEntityService` (never the raw
-`DbContext`), in FK-ordered waves with backdated `Created` timestamps so date-based UI (upcoming/past,
-registration trends) shows a real spread instead of everything "created just now":
+| Role | User name | Password |
+|---|---|---|
+| Administrator (+ employee) | `admin@eventplanner.local` | `Admin123!` |
+| Employee | `employee@eventplanner.local` | `Employee123!` |
+| 150 generated employees | `firstname.lastname@eventplanner.local` | `Welcome123!` |
 
-| Entity | Rows |
-|---|---|
-| EventCategory | 8 |
-| Location (Venue) | 18 |
-| Speaker | 65 |
-| Employee | 320 |
-| Event | 70 |
-| Session | 247 |
-| **Registration** (primary entity) | **520** |
+## Features
 
-Registration status is weighted (Confirmed 50% / Pending 20% / Attended 20% / Cancelled 10%) so every
-status bucket — and every session's seat-fill bar — has a realistic, non-degenerate distribution.
+**Employees**
+- Home: hero banner, stats, *my upcoming registrations*, featured and upcoming events.
+- Event overview as a card grid (category-coloured banners, date chips, capacity bars), keyword search,
+  advanced filter (category, location, speaker, dates, upcoming, featured) and server-side paging.
+- Event page: banner, key facts, description, **agenda per day** (timeline with room, track, seats, speakers),
+  **speaker cards**, and a sticky registration panel (pick sessions, notes, register / cancel / re-register;
+  full events put new registrations on the **wait list**).
+- *My registrations*: change the selected sessions, add notes, cancel.
+- Speaker directory (cards) with profile page and the upcoming events they speak at.
 
-## Notable implementation details
+**Administrators** (role `Admin`)
+- Create/edit events with tabs: details, agenda editor (sessions as cards, speakers as chips), participants.
+- Manage locations, speakers, event categories (colour + icon) and every registration (register any employee,
+  set status incl. wait list).
+- Read-only employee directory.
 
-- **Cross-entity aggregates via processors.** `Session.SeatsTaken` and `Event.SessionCount` /
-  `RegistrationCount` are `[NotMapped]` fields filled by `SessionProcessor` / `EventProcessor`, which query
-  the store directly — because `RegistrationSession` is owned by `Registration`, not by `Session`, and
-  `Session`/`Registration` are independent entities with a back-ref to `Event`, not owned via `Related()`.
-- **Nested-collection date hydration.** `Event.Sessions` arrives on the Details page as a nested
-  `SessionCoreDto[]` (Details always eager-loads every registered include) — plain JSON with string dates,
-  not the pooled `Session` model. `EventItem`'s `EntityService.toEntity` lifts `startTime`/`endTime` to real
-  `Date` instances; the same nested-DTO trap is why `Session`'s own `EntityService` hydrates `startTime`/
-  `endTime` too (only `created`/`lastModified` are auto-converted by the framework).
-  `[NotMapped] SeatsTaken` is rendered as "—" (not 0) on that nested view, since the processor that fills it
-  never runs on a nested projection.
-  `Session.SessionSpeakers` and `Registration.SelectedSessions` are the generated `InputSelectorInline`
-  owned-collection editors — chips with `_deleted` marking, wired to their sibling slice's pool.
-- **Free-text search.** `EventCategory` initially had no `IHasNormalizedContent`, so `?q=` silently matched
-  nothing — the app logged the warning at startup (`?q= text search is silently ignored for: EventCategory`)
-  and it was fixed by adding the interface + a `[Normalized]` field before shipping.
-- **Vibrant UI, built on the standard scaffold.** Overview lists are restyled per entity rather than left as
-  generic tables: `Event` is a banner-card grid (category badge, date chip, banner image, session/attendee
-  counts), `Speaker` is a photo-card grid, `Session` is agenda rows (time, room, speaker names, a seat-fill
-  progress bar), `EventCategory` is colored chips. All still use the shipped `useSearchView` / `useForm` /
-  `InputSelector` / `InputSelectorInline` composables and components — only the markup changed.
-- **Sessions tab on the Event page.** A `TabContainer` splits the Event form into `#form` and `#sessions`
-  (disabled until the event is saved) — the latter is a read-only agenda of `item.sessions` plus links to
-  manage sessions for that event or add a new one.
+## Architecture
 
-## Verification performed
+### Back-end (`EventPlanner.Api`)
 
-- Backend: `dotnet build` clean (0 warnings/errors); full create → PATCH (partial) → PUT → re-read round
-  trip on `Location`; a `Registration` created with `selectedSessions`, PATCHed on `status` only, and
-  re-read to confirm the owned collection survived untouched (the documented `null` = "not sent" contract).
-- Frontend: `npm run build` (`vue-tsc -b && vite build`) clean, 0 type errors, both times it was run.
-  Live-browser pass against the running API: all seven overviews (banner cards, speaker cards, agenda,
-  category chips, plain lists), an Event's tabbed Details page including the Sessions tab, and a full
-  create round-trip driven through the actual rendered form (fill → Save → `POST /api/event-categories` →
-  200 → list refreshes with the new row) — that test row was deleted afterwards to keep the shipped seed
-  data exactly as listed above.
+```
+Controllers/            entity controllers (EntityControllerBase), auth controllers, read-only EmployeesController
+Data/                   EventPlannerDbContext (IdentityDbContext) + Seeding/ (DatabaseSeeder, SeedCatalog)
+Entities/<Entity>/      model, DTOs, search object, query builders, preppers, processors, service configuration
+Infrastructure/         HostingExtensions (DI + pipeline), Security/ (roles, ICurrentUser, write filter, claims factory)
+```
 
-## Project metrics
+**Regira Entities budget (free tier: 5 simple + 2 complex)** — logged at start-up as
+`3 simple / 2 complex registered → tier = free`:
 
-Tracked for this build (both apps built in one continuous session; approximate — no built-in call/token
-counter exists, so this is a manual tally against the tool-call log):
+| Entity | Registration | Notes |
+|---|---|---|
+| `Location` | simple (`LocationSearchObject`) | normalized `?q=` search |
+| `Speaker` | simple (`SpeakerSearchObject`) | normalized `?q=` search |
+| `EventCategory` | simple | own `?q=` title filter |
+| `Event` | complex (`EventSortBy`, `EventIncludes`) | aggregate root: owns `Session` → owns `SessionSpeaker` (nested `Related()`) |
+| `Registration` | complex (`RegistrationSortBy`, `RegistrationIncludes`) | owns `RegistrationSession` (selected sessions) |
 
-| | Backend | Frontend | Total |
+Employees are ASP.NET Identity users (`AppUser`), not Regira entities.
+
+**Business rules**
+- Every endpoint requires a signed-in user; writes on locations, speakers, categories and events are
+  admin-only (`WriteAuthorizationFilter`, an allow-list keyed on the controller).
+- Row scoping via global filter query builders: employees only see (and so only modify/delete) their own
+  registrations; draft events are hidden from employees.
+- `RegistrationPrepper`: employees always register themselves (user stamped from the token), event must be
+  published and not ended, one registration per employee per event, confirmed/wait-list status from the
+  event capacity, selected sessions must belong to the event and have seats left (counting rows pending in
+  the same `SaveChanges` batch). `EventId`/`UserId` are `[ServerOwned]` (immutable after create).
+- `EventPrepper`: end date ≥ start date, sessions inside the event, end after start, duplicate speakers removed.
+- `EventProcessor` fills registration/wait-list counts, seats taken per session and the caller's own registration id.
+- Referential integrity (SQLite `Foreign Keys=True`): deleting a location, category or speaker in use, or an
+  event with registrations, answers **409**; removing a session removes it from everyone's selection.
+- Times: `Session.StartTime/EndTime` are UTC instants; `Event.StartDate/EndDate` are `DateOnly`.
+
+**Seed data** (through the `IEntityService` implementations, Bogus + correlated tuples in `SeedCatalog`):
+10 categories, 20 locations, 80 speakers, 152 users, **500 events** (primary entity) with ~2,100 sessions and
+~3,100 speaker links, and ~10,000 registrations with session selections. Verified invariants: no event or
+session over capacity, wait list only on full events, cancelled events only have cancelled registrations,
+no registrations on drafts, no registration created after its event started.
+
+### Front-end (`EventPlanner.Web`)
+
+Full Regira scaffold (`scaffold.mjs --shell` + one slice per entity) with custom views:
+
+| Slice | Folder | Notes |
+|---|---|---|
+| `EventItem` | `src/entities/events` | card grid, `EventPage` (fiche), tabbed editor, `sessions/` owned-collection editor, participants tab |
+| `Registration` | `src/entities/registrations` | `SessionPicker` checklist for the owned session selection |
+| `Speaker` | `src/entities/speakers` | card grid, profile + "speaks at" |
+| `LocationItem` | `src/entities/locations` | |
+| `EventCategory` | `src/entities/event-categories` | modal form (colour + icon preview) |
+| `Employee` | `src/entities/employees` | read-only directory (`GET /api/employees`) |
+
+`EventItem` / `LocationItem` avoid shadowing the DOM globals `Event` / `Location`. `src/access.ts` mirrors the
+API's write tiers so the UI only offers actions the caller may perform. The theme lives in `src/assets/theme.scss`
+(`ep-*` classes).
+
+**Deliberate deviations from the scaffold defaults**
+- Event and speaker overviews render cards instead of table rows; the related category/location on an event
+  card is shown as text (open them from the event editor's selectors).
+- The session selection of a registration is a checklist of the event's sessions (bounded set that needs
+  time/room/seats per option) instead of `InputSelectorInline` chips; unticking a stored row marks it `_deleted`.
+- Existing events open on the event page (`EventItemFiche`); administrators switch to the editor from there.
+
+## Verification
+
+- `dotnet build` — 0 warnings, 0 errors; start-up logs no Regira warnings.
+- `npm run build` (vue-tsc -b + vite build) — green.
+- API smoke script: create → update → update → PATCH → re-read (owned sessions + nested speakers survive),
+  400s from preppers, 403 for employee writes, 404 on foreign registrations, 409 on referenced deletes,
+  per-identity counts (admin 500 events / employee 485, admin all registrations / employee own).
+- Browser (Vite dev server): login, home, event cards + paging, event page, admin edit saved twice, add session
+  + speaker chip saved twice, participants tab, employee registration with sessions, cancel + re-register,
+  manage registration saved twice, role gating on every overview, no horizontal overflow at 375 px.
+
+## Project statistics
+
+| | Back-end | Front-end | Total |
 |---|---|---|---|
-| Regira MCP calls | ~21 | ~27 | **~48** |
-| Wall-clock time | ~12 min | ~55 min | **~67 min** |
-| Tokens (session total, not separable per side) | | | **~500K** |
-| Estimated cost (Claude Sonnet 5, uncached list rate) | | | **~$3–5** |
+| Regira MCP calls | 26 | 15 | **41** |
+| Wall-clock time | ~11 min | ~21 min (incl. browser verification) | **~32 min** (12:19 - 12:51) |
+| Tokens (approx., from the agent's budget counter) | ~240k | ~235k | **~475k** |
 
-The frontend took longer mainly because of the scaffold-then-hand-customize workflow across 7 full entity
-slices (8 files each) plus 2 owned sub-slices, and a live-browser debugging pass that caught two real
-runtime bugs (see below) that a type-check alone could not have found. The cost figure is a rough
-upper bound at Anthropic's published per-token list rate — agentic sessions like this one typically qualify
-for prompt-caching discounts that would bring the real figure down; there is no exact per-session cost API
-available to this agent.
-
-### Bugs found and fixed during live verification (not caught by `dotnet build` / `vue-tsc`)
-
-1. **`formatDateTime` mask misuse.** Used `"MMM"` expecting a textual month name; the library's mask
-   vocabulary is numeric-only (`d/dd`, `M/MM`, `yy/yyyy`, `h/H/m`), so `"MMM"` silently rendered `"044"`
-   (`MM` → `"04"` + leftover `M` → `"4"`) instead of throwing. Fixed by composing the month abbreviation via
-   `Intl.DateTimeFormat` instead, guarded against `undefined`/invalid dates.
-2. **Backend process instability under the harness's background-task runner** — the API process exited
-   cleanly (code 0, then later code 1) twice with no application-level error logged, unrelated to any code
-   change; restarting it was the fix each time. Left as an environment note, not a code defect.
+Cost estimate: the token counter mixes cached and uncached input, so no exact figure can be given; at typical
+Opus-class list prices with heavy prompt caching this corresponds to roughly USD 3-8.
 
 ## Credits
 
-Built by **Claude Sonnet 5** (`claude-sonnet-5`), running as **Claude Code** in agentic/auto mode with the
-Regira MCP server (`https://mcp.regira.com/mcp`) for all framework guidance — no prior memory of the Regira
-framework was used, per the task's instructions; every convention above was looked up fresh from the MCP
-docs for this build. Reasoning effort: default (not explicitly configured for this session).
+Built end-to-end by **Claude** (Anthropic, model Opus 5.5) running as a **Claude Code sub-agent**
+(general-purpose agent type, reasoning effort: low), following the Regira MCP golden path
+(`get_bootstrap_guide` → package cards → targeted guide sections → scaffold generators).
