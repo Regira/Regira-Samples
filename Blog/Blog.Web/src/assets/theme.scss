@@ -1,0 +1,593 @@
+// App theme - loaded after bootstrap.min.css + @regira/modules/style.css, so everything here wins.
+// Editorial look: warm paper background, ink-dark text, serif display titles, generous reading measure.
+
+$font-display: "Fraunces", Georgia, "Times New Roman", serif;
+$font-reading: "Source Serif 4", Georgia, "Times New Roman", serif;
+$font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+:root {
+    --blog-paper: #fbf9f4;
+    --blog-ink: #1c1b19;
+    --blog-muted: #6b6760;
+    --blog-rule: #e4dfd4;
+    --blog-accent: #b3261e;
+    --blog-card: #ffffff;
+
+    --rg-accent: var(--blog-ink);
+    --rg-accent-bg: rgba(28, 27, 25, 0.06);
+    --bs-body-font-family: #{$font-ui};
+    --bs-body-color: var(--blog-ink);
+    --bs-link-color-rgb: 28, 27, 25;
+    --bs-link-hover-color-rgb: 179, 38, 30;
+    --bs-border-radius: 0.375rem;
+}
+
+body {
+    background-color: var(--blog-paper);
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    > main {
+        flex: 1 0 auto;
+        padding-top: 0.5rem;
+        padding-bottom: 2rem;
+    }
+}
+
+.btn-dark {
+    --bs-btn-bg: var(--blog-ink);
+    --bs-btn-border-color: var(--blog-ink);
+}
+.pagination {
+    --bs-pagination-color: var(--blog-ink);
+    --bs-pagination-active-bg: var(--blog-ink);
+    --bs-pagination-active-border-color: var(--blog-ink);
+    --bs-pagination-bg: transparent;
+}
+
+// ---------------------------------------------------------------- masthead (reader chrome)
+.masthead {
+    border-bottom: 3px double var(--blog-ink);
+    margin-bottom: 2rem;
+    background: var(--blog-paper);
+
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0 0.25rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--blog-muted);
+        border-bottom: 1px solid var(--blog-rule);
+    }
+    &__manage {
+        margin-left: auto;
+        color: var(--blog-muted);
+        text-decoration: none;
+        &:hover {
+            color: var(--blog-accent);
+        }
+    }
+    &__brand {
+        display: block;
+        text-align: center;
+        font-family: $font-display;
+        font-weight: 700;
+        font-size: clamp(2.5rem, 7vw, 4.75rem);
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--blog-ink);
+        text-decoration: none;
+        padding: 1.25rem 0 1rem;
+    }
+    &__sections {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 0.6rem 0.25rem;
+        border-top: 1px solid var(--blog-rule);
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        scrollbar-width: none;
+        // centred while it fits, scrollable from the first item once it overflows (justify-content: center would clip the start)
+        > a:first-child {
+            margin-left: auto;
+        }
+        > a:last-child {
+            margin-right: auto;
+        }
+        a {
+            color: var(--blog-ink);
+            text-decoration: none;
+            &:hover,
+            &.active {
+                color: var(--blog-accent);
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------- admin chrome
+.page--admin {
+    > header {
+        background: var(--blog-card);
+        border-bottom: 1px solid var(--blog-rule);
+    }
+    > main {
+        padding-top: 1rem;
+    }
+}
+.admin-navbar .navbar-brand {
+    font-family: $font-display;
+    font-weight: 700;
+}
+.studio__title {
+    font-family: $font-display;
+    font-weight: 700;
+}
+.stat-card {
+    color: inherit;
+    border-color: var(--blog-rule);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    &:hover {
+        box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+    &__count {
+        font-family: $font-display;
+        font-size: 2.25rem;
+        font-weight: 600;
+        line-height: 1.1;
+    }
+}
+.category-swatch {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.post-status-col {
+    width: 7rem;
+}
+.post-title-input {
+    font-family: $font-display;
+    font-weight: 600;
+}
+.content-editor {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.content-preview {
+    background: var(--blog-card);
+    max-height: 38rem;
+    overflow-y: auto;
+}
+.cover-preview {
+    width: 100%;
+    max-height: 12rem;
+    object-fit: cover;
+}
+
+// ---------------------------------------------------------------- shared reader bits
+.section-label {
+    font-family: $font-ui;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blog-muted);
+    border-top: 2px solid var(--blog-ink);
+    padding-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+.tagline {
+    font-family: $font-reading;
+    font-style: italic;
+    color: var(--blog-muted);
+    text-align: center;
+    max-width: 44rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.category-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cat-color);
+    text-decoration: none;
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 0.55rem;
+        height: 0.55rem;
+        margin-right: 0.4rem;
+        border-radius: 50%;
+        background: var(--cat-color);
+        vertical-align: 0.05rem;
+    }
+    &:hover {
+        text-decoration: underline;
+    }
+}
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--blog-ink);
+    color: var(--blog-paper);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex: none;
+    &--lg {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+// ---------------------------------------------------------------- filters
+.category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    .pill {
+        --cat-color: var(--blog-ink);
+        border: 1px solid var(--blog-rule);
+        background: var(--blog-card);
+        color: var(--blog-ink);
+        border-radius: 999px;
+        padding: 0.3rem 0.9rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        &:hover {
+            border-color: var(--cat-color);
+            color: var(--cat-color);
+        }
+        &.active {
+            background: var(--cat-color);
+            border-color: var(--cat-color);
+            color: #fff;
+            .pill-count {
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+    }
+    .pill-count {
+        font-size: 0.75rem;
+        color: var(--blog-muted);
+        margin-left: 0.2rem;
+    }
+}
+.blog-filters .form-control,
+.blog-filters .form-select,
+.blog-filters .input-group-text {
+    border-color: var(--blog-rule);
+    background-color: var(--blog-card);
+}
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    .chip {
+        border: 0;
+        border-radius: 999px;
+        background: var(--blog-ink);
+        color: var(--blog-paper);
+        padding: 0.2rem 0.4rem 0.2rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+// ---------------------------------------------------------------- article cards
+.post-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--blog-card);
+    border: 1px solid var(--blog-rule);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    &:hover {
+        box-shadow: 0 0.75rem 2rem rgba(28, 27, 25, 0.08);
+        transform: translateY(-2px);
+        .post-card__media img {
+            transform: scale(1.03);
+        }
+    }
+
+    &__media {
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--blog-rule);
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+    }
+    &__media-fallback {
+        display: block;
+        width: 100%;
+        height: 100%;
+        opacity: 0.25;
+    }
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 1.1rem 1.25rem 1.25rem;
+    }
+    &__title {
+        font-family: $font-display;
+        font-weight: 600;
+        font-size: 1.35rem;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        margin-bottom: 0.5rem;
+        a {
+            color: var(--blog-ink);
+            text-decoration: none;
+            background-image: linear-gradient(currentColor, currentColor);
+            background-size: 0 1px;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            transition: background-size 0.25s ease;
+            &:hover {
+                background-size: 100% 1px;
+            }
+        }
+    }
+    &__summary {
+        font-family: $font-reading;
+        color: #45423d;
+        font-size: 1rem;
+        line-height: 1.55;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 0.9rem;
+    }
+    &__meta {
+        margin-top: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8rem;
+        color: var(--blog-muted);
+        .dot {
+            opacity: 0.6;
+        }
+    }
+    &__author {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--blog-ink);
+        font-weight: 500;
+        text-decoration: none;
+        &:hover {
+            color: var(--blog-accent);
+        }
+    }
+    &__tags {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.75rem;
+        padding: 0;
+        margin: 0.75rem 0 0;
+        font-size: 0.78rem;
+        a {
+            color: var(--blog-muted);
+            text-decoration: none;
+            &:hover {
+                color: var(--blog-accent);
+            }
+        }
+    }
+
+    // the lead story: bigger type, image beside the text on wide screens
+    &--lead {
+        .post-card__title {
+            font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+            line-height: 1.1;
+        }
+        .post-card__summary {
+            font-size: 1.15rem;
+            -webkit-line-clamp: 4;
+        }
+        .post-card__body {
+            padding: 1.5rem 1.75rem 1.75rem;
+        }
+    }
+}
+
+// ---------------------------------------------------------------- article page
+.article {
+    max-width: 46rem;
+    margin: 0 auto;
+}
+.article-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--blog-muted);
+    a:first-child {
+        color: var(--blog-muted);
+        text-decoration: none;
+    }
+}
+.article-title {
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    line-height: 1.07;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+.article-dek {
+    font-family: $font-reading;
+    font-size: 1.35rem;
+    line-height: 1.5;
+    color: #45423d;
+    margin-bottom: 1.5rem;
+}
+.article-byline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--blog-rule);
+    border-bottom: 1px solid var(--blog-rule);
+    margin-bottom: 2rem;
+}
+.article-cover {
+    margin: 0 0 2.25rem;
+    img {
+        width: 100%;
+        border-radius: 0.5rem;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
+}
+.article-body {
+    font-family: $font-reading;
+    font-size: 1.2rem;
+    line-height: 1.75;
+    color: #2a2825;
+    p {
+        margin-bottom: 1.4rem;
+    }
+    h2,
+    h3,
+    h4 {
+        font-family: $font-display;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 2.5rem 0 1rem;
+        line-height: 1.2;
+    }
+    h2 {
+        font-size: 1.75rem;
+    }
+    h3 {
+        font-size: 1.4rem;
+    }
+    ul,
+    ol {
+        margin-bottom: 1.4rem;
+        padding-left: 1.4rem;
+    }
+    li {
+        margin-bottom: 0.4rem;
+    }
+    blockquote {
+        border-left: 3px solid var(--blog-accent);
+        margin: 2rem 0;
+        padding: 0.25rem 0 0.25rem 1.5rem;
+        font-family: $font-display;
+        font-size: 1.5rem;
+        line-height: 1.4;
+        font-style: italic;
+        p {
+            margin: 0;
+        }
+    }
+    a {
+        color: var(--blog-accent);
+    }
+    code {
+        font-size: 0.9em;
+        background: rgba(28, 27, 25, 0.06);
+        padding: 0.1em 0.3em;
+        border-radius: 0.25rem;
+        color: inherit;
+    }
+}
+.content-preview .article-body {
+    font-size: 1.05rem;
+}
+.article-footer {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--blog-rule);
+}
+.article-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    a {
+        display: inline-block;
+        border: 1px solid var(--blog-rule);
+        background: var(--blog-card);
+        border-radius: 999px;
+        padding: 0.25rem 0.8rem;
+        font-size: 0.85rem;
+        color: var(--blog-ink);
+        text-decoration: none;
+        &:hover {
+            border-color: var(--blog-accent);
+            color: var(--blog-accent);
+        }
+    }
+}
+.related {
+    border-top: 3px double var(--blog-ink);
+}
+
+// ---------------------------------------------------------------- footer
+.site-footer {
+    border-top: 1px solid var(--blog-rule);
+    background: var(--blog-paper);
+    &__brand {
+        font-family: $font-display;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+}
+
+// App-level conventions the entity slices use:
+.striped > *:nth-child(even) {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+}
+// The app-owned wrapper around FormButtonsRow (deliberately NOT `.form-buttons`, the library's own root).
+.form-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--blog-paper);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    .modal & {
+        background-color: var(--bs-body-bg, #fff);
+    }
+}

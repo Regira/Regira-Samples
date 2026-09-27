@@ -23,3 +23,6 @@ export { default as Details } from "./details/Details.vue"
 export { default as Form } from "./details/Form.vue"
 
 export { default as plugin } from "./setup"
+
+export { default as CategoryChipFilter } from "./filter/CategoryChipFilter.vue"
+export { default as useCategoryTree } from "./data/useCategoryTree"

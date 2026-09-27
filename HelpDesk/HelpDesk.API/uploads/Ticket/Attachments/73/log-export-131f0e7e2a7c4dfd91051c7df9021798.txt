@@ -1,2 +1,0 @@
-Attachment for ticket #73 - Printer integration not detected
-Generated for HelpDesk demo seed data.

@@ -1,0 +1,20 @@
+{
+    "clientApp": "helpdesk-spa",
+    "api": "/api",
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "HelpDesk" },
+    "navigation": {
+        "groups": [
+            { "id": "Support", "title": "support", "icon": "bi bi-life-preserver" },
+            { "id": "Admin", "title": "administration", "icon": "admin" }
+        ],
+        "dashboard": [
+            ["Support", ["Ticket", "Person"]],
+            ["Admin", ["SupportTeam", "Category", "Priority", "Status"]]
+        ],
+        "navbar": ["Ticket", "Person", ["Admin", ["SupportTeam", "Category", "Priority", "Status"]]],
+        "search": "Ticket"
+    }
+}

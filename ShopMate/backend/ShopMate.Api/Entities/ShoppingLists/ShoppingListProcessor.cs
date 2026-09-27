@@ -5,34 +5,23 @@ using ShopMate.Api.Data;
 
 namespace ShopMate.Api.Entities.ShoppingLists;
 
+/// <summary>Fills the article counters shown on every list card.</summary>
 public class ShoppingListProcessor(ShopMateDbContext dbContext) : IEntityProcessor<ShoppingList, EntityIncludes>
 {
     public async Task Process(IList<ShoppingList> items, EntityIncludes? includes, CancellationToken token = default)
     {
-        var listIds = items.Select(x => x.Id).ToList();
-        // IgnoreQueryFilters(): the archived-list filter on Article is also inlined here (it correlates
-        // through ShoppingList.IsArchived), so a recompute for an archived list would otherwise see zero
-        // articles even though restoring the list would immediately reveal them again - see
-        // Regira.Entities entities.patterns -> Aggregates over a non-owned child collection.
+        if (items.Count == 0) return;
+        var ids = items.Select(x => x.Id).ToList();
         var counts = await dbContext.Articles
-            .IgnoreQueryFilters()
-            .Where(x => listIds.Contains(x.ShoppingListId))
-            .GroupBy(x => x.ShoppingListId)
-            .Select(g => new { ShoppingListId = g.Key, Total = g.Count(), Active = g.Count(a => a.IsActive) })
-            .ToDictionaryAsync(x => x.ShoppingListId, token);
-
+            .Where(a => ids.Contains(a.ShoppingListId))
+            .GroupBy(a => a.ShoppingListId)
+            .Select(g => new { Id = g.Key, Total = g.Count(), Active = g.Count(a => a.IsActive) })
+            .ToDictionaryAsync(x => x.Id, token);
         foreach (var item in items)
         {
-            if (counts.TryGetValue(item.Id, out var count))
-            {
-                item.ArticleCount = count.Total;
-                item.ActiveArticleCount = count.Active;
-            }
-            else
-            {
-                item.ArticleCount = 0;
-                item.ActiveArticleCount = 0;
-            }
+            var c = counts.GetValueOrDefault(item.Id);
+            item.ArticleCount = c?.Total ?? 0;
+            item.ActiveCount = c?.Active ?? 0;
         }
     }
 }

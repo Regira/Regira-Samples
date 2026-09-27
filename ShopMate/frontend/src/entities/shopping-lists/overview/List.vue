@@ -1,5 +1,6 @@
 <template>
-    <div class="sm-list-stack">
+    <!-- shopping lists render as a card grid (1 column on phones, 2-3 on wider screens) -->
+    <div class="sm-list-grid">
         <ListItem
             v-for="(item, i) in items"
             :key="item.$id"
@@ -24,17 +25,9 @@ interface Emits extends /* @vue-ignore */ OverviewEmits<Entity> {}
 const emit = defineEmits<Emits>()
 const props = defineProps<{ modelValue?: Array<Entity>; readonly?: boolean }>()
 
-const { fromPool } = useEntityStore()
+const { fromPool } = useEntityStore() // resolve rows through the shared pool (reactive cache)
 const items = computed<Array<Entity>>({
     get: () => fromPool(props.modelValue || []),
     set: (value) => emit("update:modelValue", value),
 })
 </script>
-
-<style scoped>
-.sm-list-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-</style>

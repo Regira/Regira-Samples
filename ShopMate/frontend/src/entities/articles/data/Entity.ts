@@ -5,15 +5,14 @@ import type { Entity as ArticleCategory } from "../article-categories"
 export class Article extends EntityBase {
     id: number = 0
     title = ""
-    notes?: string
+    description?: string
     quantity?: number
     unit?: string
-    isActive = true
-    sortOrder = 0
+    isActive = true // true = still need to buy
+    sortOrder = 0 // server-owned: changed through EntityService.reorder
     shoppingListId?: number
-    shoppingList?: ShoppingList // populated only when the API eager-loads it — e.Includes(...), not a client includes flag
-    categories?: Array<ArticleCategory> // owned join rows (back-end e.Related(x => x.Categories)) — needs ?includes=Categories
-
+    shoppingList?: ShoppingList // loaded with ?includes=ShoppingList (and always on Details)
+    categories?: Array<ArticleCategory> // loaded with ?includes=Categories (and always on Details)
     created?: Date
     lastModified?: Date
 
@@ -23,7 +22,14 @@ export class Article extends EntityBase {
     override get $title(): string | undefined {
         return this.title
     }
+    get $amount(): string {
+        return this.quantity != null ? [formatQuantity(this.quantity), this.unit].filter(Boolean).join(" ") : this.unit || ""
+    }
 }
 
-export const Entity = Article // the barrel name other slices import — `import type { Entity as Article } from "@/entities/articles"`, never `{ Article }`
+function formatQuantity(value: number) {
+    return Number.isInteger(value) ? String(value) : value.toLocaleString(undefined, { maximumFractionDigits: 2 })
+}
+
+export const Entity = Article
 export default Article

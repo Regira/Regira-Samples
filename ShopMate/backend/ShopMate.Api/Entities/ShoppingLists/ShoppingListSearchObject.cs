@@ -4,5 +4,6 @@ namespace ShopMate.Api.Entities.ShoppingLists;
 
 public record ShoppingListSearchObject : SearchObject
 {
-    public string? OwnerName { get; set; }
+    public ICollection<int>? ShopperId { get; set; }
+    public bool? IsPinned { get; set; }
 }

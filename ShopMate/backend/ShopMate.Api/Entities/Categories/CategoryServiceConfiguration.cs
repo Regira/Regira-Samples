@@ -7,6 +7,7 @@ namespace ShopMate.Api.Entities.Categories;
 
 public static class CategoryServiceConfiguration
 {
+    // simple registration with a search object (1 simple slot); RelatedCategory is an owned join row (no slot)
     public static EntityServiceCollection<ShopMateDbContext> AddCategories(this IEntityServiceCollection<ShopMateDbContext> services)
         => services.For<Category, int, CategorySearchObject>(e =>
         {
@@ -23,6 +24,9 @@ public static class CategoryServiceConfiguration
                 return query;
             });
             e.SortBy(query => query.OrderBy(x => x.Title));
+            // The SPA needs the hierarchy on list rows (it builds the filter tree client-side), and a simple
+            // registration binds no ?includes= -> load both link collections unconditionally, split to avoid
+            // the Cartesian explosion. Category count stays small (reference data).
             e.Includes((query, _) => query
                 .Include(x => x.ParentEntities!).ThenInclude(x => x.Parent)
                 .Include(x => x.ChildEntities!).ThenInclude(x => x.Child)

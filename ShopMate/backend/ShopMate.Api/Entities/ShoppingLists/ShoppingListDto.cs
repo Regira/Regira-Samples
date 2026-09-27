@@ -1,21 +1,30 @@
+using ShopMate.Api.Entities.Shoppers;
+
 namespace ShopMate.Api.Entities.ShoppingLists;
 
-/// <summary>Slim shape used as the nested reference on Article (avoids re-computing counts per row).</summary>
-public class ShoppingListCoreDto
+public class ShoppingListDto
 {
     public int Id { get; set; }
+    public int ShopperId { get; set; }
+    public ShopperDto? Shopper { get; set; }
     public string Title { get; set; } = null!;
-    public string? OwnerName { get; set; }
-    public string? ColorHex { get; set; }
-    public string? Icon { get; set; }
-}
-
-public class ShoppingListDto : ShoppingListCoreDto
-{
     public string? Description { get; set; }
-    public bool IsArchived { get; set; }
+    public string? Color { get; set; }
+    public bool IsPinned { get; set; }
     public DateTime Created { get; set; }
     public DateTime? LastModified { get; set; }
     public int? ArticleCount { get; set; }
-    public int? ActiveArticleCount { get; set; }
+    public int? ActiveCount { get; set; }
+}
+
+public class ShoppingListInputDto
+{
+    public int Id { get; set; }
+    public int ShopperId { get; set; }
+    public string Title { get; set; } = null!;
+    public string? Description { get; set; }
+    public string? Color { get; set; }
+    public bool IsPinned { get; set; }
+    // Articles are deliberately absent: they are written through their own /articles endpoints
+    // (one writer per save path).
 }

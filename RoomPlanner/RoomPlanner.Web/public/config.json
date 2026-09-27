@@ -1,0 +1,21 @@
+{
+    "api": { "development": "/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "RoomPlanner" },
+    "navigation": {
+        "groups": [
+            { "id": "Booking", "title": "booking", "icon": "bi bi-calendar-check" },
+            { "id": "Facilities", "title": "facilities", "icon": "bi bi-building" },
+            { "id": "People", "title": "people", "icon": "bi bi-people" }
+        ],
+        "dashboard": [
+            ["Booking", ["Reservation", "Room"]],
+            ["Facilities", ["Building", "Floor", "Equipment"]],
+            ["People", ["Employee"]]
+        ],
+        "navbar": ["Reservation", "Room", ["Facilities", ["Building", "Floor", "Equipment"]], "Employee"],
+        "search": "Room"
+    }
+}

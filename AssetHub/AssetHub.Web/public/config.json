@@ -1,0 +1,20 @@
+{
+    "clientApp": "assethub-spa",
+    "api": { "development": "/api", "production": "/api" },
+    "includeCredentials": false,
+    "isDebug": false,
+    "culture": "en-GB",
+    "title": { "en": "AssetHub" },
+    "navigation": {
+        "groups": [
+            { "id": "Inventory", "title": "inventory", "icon": "boxes" },
+            { "id": "Administration", "title": "administration", "icon": "settings" }
+        ],
+        "dashboard": [
+            ["Inventory", ["Asset", "Employee"]],
+            ["Administration", ["Category", "AssetStatus", "Location", "Supplier"]]
+        ],
+        "navbar": ["Asset", "Employee", ["Administration", ["Category", "AssetStatus", "Location", "Supplier"]]],
+        "search": "Asset"
+    }
+}

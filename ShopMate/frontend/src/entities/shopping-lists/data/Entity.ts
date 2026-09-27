@@ -1,16 +1,17 @@
 import { EntityBase } from "@regira/modules/vue/entities"
+import type { Entity as Shopper } from "@/entities/shoppers"
 
 export class ShoppingList extends EntityBase {
     id: number = 0
     title = ""
-    ownerName?: string
     description?: string
-    colorHex?: string
-    icon?: string
-    isArchived = false
+    color?: string = "#16a34a"
+    isPinned = false
+    shopperId?: number
+    shopper?: Shopper // eager-loaded unconditionally by the API (e.Includes)
+    // read-only counters filled by the API's ShoppingListProcessor
     articleCount?: number
-    activeArticleCount?: number
-
+    activeCount?: number
     created?: Date
     lastModified?: Date
 
@@ -20,7 +21,12 @@ export class ShoppingList extends EntityBase {
     override get $title(): string | undefined {
         return this.title
     }
+    /** 0..100: share of the list that is already bought. */
+    get $progress(): number {
+        const total = this.articleCount ?? 0
+        return total ? Math.round(((total - (this.activeCount ?? 0)) / total) * 100) : 0
+    }
 }
 
-export const Entity = ShoppingList // the barrel name other slices import — `import type { Entity as ShoppingList } from "@/entities/shopping-lists"`, never `{ ShoppingList }`
+export const Entity = ShoppingList
 export default ShoppingList

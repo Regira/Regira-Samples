@@ -1,0 +1,545 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "accountAndTickets": {
+        "en": "Account & tickets"
+    },
+    "active": {
+        "en": "Active"
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "addNote": {
+        "en": "Add note"
+    },
+    "administration": {
+        "en": "Administration"
+    },
+    "all": {
+        "en": "All"
+    },
+    "allMyTickets": {
+        "en": "All my tickets"
+    },
+    "assigned": {
+        "en": "Assigned"
+    },
+    "assignedEmployee": {
+        "en": "Assignee"
+    },
+    "assignedTickets": {
+        "en": "Assigned tickets"
+    },
+    "assignedToMe": {
+        "en": "Assigned to me"
+    },
+    "assignToMe": {
+        "en": "Assign to me"
+    },
+    "avgFirstResponse": {
+        "en": "Avg. first response (30 days)"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "byStatus": {
+        "en": "Tickets by status"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "categories": {
+        "en": "Categories"
+    },
+    "category": {
+        "en": "Category"
+    },
+    "categoryDescription": {
+        "en": "Ticket categories and their routing team"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "closed": {
+        "en": "Closed"
+    },
+    "closedAt": {
+        "en": "Closed"
+    },
+    "closedLast30": {
+        "en": "Closed (30 days)"
+    },
+    "color": {
+        "en": "Colour"
+    },
+    "company": {
+        "en": "Company"
+    },
+    "conversation": {
+        "en": "Conversation"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "createLogin": {
+        "en": "Create login"
+    },
+    "ctrlEnterToSend": {
+        "en": "Ctrl+Enter to send"
+    },
+    "customer": {
+        "en": "Customer"
+    },
+    "customerIntro": {
+        "en": "Follow up on your support requests or open a new one - our team usually replies within one working day."
+    },
+    "customers": {
+        "en": "Customers"
+    },
+    "dashboard": {
+        "en": "Dashboard"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "descriptionPlaceholder": {
+        "en": "Describe what happens, since when, and what you already tried..."
+    },
+    "details": {
+        "en": "Details"
+    },
+    "dueDate": {
+        "en": "Due date"
+    },
+    "dueDateHint": {
+        "en": "Defaults to created + the priority's target hours."
+    },
+    "dueIn": {
+        "en": "due in {time}"
+    },
+    "email": {
+        "en": "E-mail"
+    },
+    "employee": {
+        "en": "Employee"
+    },
+    "employees": {
+        "en": "Employees"
+    },
+    "emptyColumn": {
+        "en": "No tickets"
+    },
+    "familyName": {
+        "en": "Last name"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "firstResponse": {
+        "en": "First response"
+    },
+    "givenName": {
+        "en": "First name"
+    },
+    "handling": {
+        "en": "Handling"
+    },
+    "hasAccount": {
+        "en": "Has a login"
+    },
+    "hasAttachment": {
+        "en": "With attachments"
+    },
+    "helloName": {
+        "en": "Hello {name}"
+    },
+    "home": {
+        "en": "Home"
+    },
+    "icon": {
+        "en": "Icon"
+    },
+    "inactive": {
+        "en": "inactive"
+    },
+    "initialPassword": {
+        "en": "Initial password"
+    },
+    "internalNote": {
+        "en": "Internal note"
+    },
+    "internalNotePlaceholder": {
+        "en": "Internal note - only visible to support staff..."
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "isActive": {
+        "en": "Active"
+    },
+    "isClosedStatus": {
+        "en": "Counts as closed"
+    },
+    "isDefault": {
+        "en": "Default"
+    },
+    "jobTitle": {
+        "en": "Job title"
+    },
+    "kanbanBoard": {
+        "en": "Kanban board"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "last30Days": {
+        "en": "Created vs closed - last 30 days"
+    },
+    "level": {
+        "en": "Level"
+    },
+    "loadFailed": {
+        "en": "Loading failed"
+    },
+    "login": {
+        "en": "Login"
+    },
+    "loginCreated": {
+        "en": "Login created"
+    },
+    "loginFailed": {
+        "en": "Creating the login failed"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "manage": {
+        "en": "Manage"
+    },
+    "members": {
+        "en": "Members"
+    },
+    "menu": {
+        "en": "Menu"
+    },
+    "movedTo": {
+        "en": "{code} moved to {status}"
+    },
+    "moveFailed": {
+        "en": "Moving the ticket failed"
+    },
+    "moveTo": {
+        "en": "Move to"
+    },
+    "myAccount": {
+        "en": "My account"
+    },
+    "mySupport": {
+        "en": "My support"
+    },
+    "myTickets": {
+        "en": "My tickets"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "newTicket": {
+        "en": "New ticket"
+    },
+    "noAccount": {
+        "en": "No login"
+    },
+    "noDescription": {
+        "en": "(no description)"
+    },
+    "noOpenRequests": {
+        "en": "You have no open requests."
+    },
+    "noReplies": {
+        "en": "No replies yet."
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "onlyMine": {
+        "en": "Only mine"
+    },
+    "open": {
+        "en": "Open"
+    },
+    "open2": {
+        "en": "Open"
+    },
+    "openByPriority": {
+        "en": "Open tickets by priority"
+    },
+    "openRequests": {
+        "en": "Open requests"
+    },
+    "openTickets": {
+        "en": "Open tickets"
+    },
+    "organisation": {
+        "en": "Organisation / team"
+    },
+    "overdue": {
+        "en": "Overdue"
+    },
+    "overdueBy": {
+        "en": "overdue {time}"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "person": {
+        "en": "Person"
+    },
+    "personDescription": {
+        "en": "Customers and support staff"
+    },
+    "persons": {
+        "en": "People"
+    },
+    "phone": {
+        "en": "Phone"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "priorities": {
+        "en": "Priorities"
+    },
+    "priority": {
+        "en": "Priority"
+    },
+    "priorityDescription": {
+        "en": "Ticket priorities and their SLA targets"
+    },
+    "priorityHintCustomer": {
+        "en": "How urgent is this for you? Our team may adjust it."
+    },
+    "properties": {
+        "en": "Properties"
+    },
+    "queueAll": {
+        "en": "All tickets"
+    },
+    "queueMine": {
+        "en": "My queue"
+    },
+    "queueOpen": {
+        "en": "All open"
+    },
+    "queueOverdue": {
+        "en": "Overdue"
+    },
+    "queues": {
+        "en": "Queues"
+    },
+    "queueUnassigned": {
+        "en": "Unassigned"
+    },
+    "quickAccess": {
+        "en": "Quick access"
+    },
+    "quickStatus": {
+        "en": "Change status"
+    },
+    "recentlyResolved": {
+        "en": "Recently resolved"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "replyPlaceholder": {
+        "en": "Write a reply..."
+    },
+    "reportedTickets": {
+        "en": "Reported tickets"
+    },
+    "request": {
+        "en": "Request"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "role": {
+        "en": "Role"
+    },
+    "roleAdmin": {
+        "en": "Administrator"
+    },
+    "roleAgent": {
+        "en": "Support agent"
+    },
+    "roleCustomer": {
+        "en": "Customer"
+    },
+    "routingTeam": {
+        "en": "Routing team"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "saving": {
+        "en": "Saving..."
+    },
+    "search": {
+        "en": "Search"
+    },
+    "sendFailed": {
+        "en": "Sending failed"
+    },
+    "sending": {
+        "en": "Sending..."
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "sendReply": {
+        "en": "Send reply"
+    },
+    "sent": {
+        "en": "Sent"
+    },
+    "showAll": {
+        "en": "Show all {count}"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signInIntro": {
+        "en": "Sign in to the HelpDesk support center."
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "sla": {
+        "en": "SLA"
+    },
+    "slaBreached": {
+        "en": "SLA breached"
+    },
+    "slaMet": {
+        "en": "SLA met"
+    },
+    "sortBy": {
+        "en": "Sort by"
+    },
+    "sortCode": {
+        "en": "Reference"
+    },
+    "sortDueDate": {
+        "en": "Due date"
+    },
+    "sortLastActivity": {
+        "en": "Last activity"
+    },
+    "sortName": {
+        "en": "Name"
+    },
+    "sortNewest": {
+        "en": "Newest first"
+    },
+    "sortOldest": {
+        "en": "Oldest first"
+    },
+    "sortOrder": {
+        "en": "Order"
+    },
+    "sortPriority": {
+        "en": "Priority"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "statusDescription": {
+        "en": "Workflow states - one Kanban column each"
+    },
+    "statuses": {
+        "en": "Statuses"
+    },
+    "subject": {
+        "en": "Subject"
+    },
+    "subjectPlaceholder": {
+        "en": "Short summary of the problem"
+    },
+    "support": {
+        "en": "Support"
+    },
+    "supportCenter": {
+        "en": "Support center"
+    },
+    "supportTeam": {
+        "en": "Team"
+    },
+    "supportTeamDescription": {
+        "en": "Support teams and their queues"
+    },
+    "supportTeams": {
+        "en": "Support teams"
+    },
+    "targetHours": {
+        "en": "Target (hours)"
+    },
+    "teamQueues": {
+        "en": "Team queues"
+    },
+    "ticket": {
+        "en": "Ticket"
+    },
+    "ticketDescription": {
+        "en": "Support tickets"
+    },
+    "ticketKeywords": {
+        "en": "Search reference, subject or customer"
+    },
+    "tickets": {
+        "en": "Tickets"
+    },
+    "unassigned": {
+        "en": "Unassigned"
+    },
+    "updated": {
+        "en": "updated"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "welcome": {
+        "en": "Welcome"
+    },
+    "welcomeBack": {
+        "en": "Welcome back, {name}"
+    },
+    "workspace": {
+        "en": "Workspace"
+    }
+}

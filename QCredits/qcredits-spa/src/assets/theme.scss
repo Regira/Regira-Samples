@@ -1,0 +1,149 @@
+// App theme — loaded after bootstrap.min.css + @regira/modules/style.css, so everything here wins.
+:root {
+    // library tokens (see ui.customize.md for the full list)
+    // --rg-accent: #0d6efd;
+    // --rg-accent-bg: rgba(13, 110, 253, 0.1);   // modal-header tint
+    // --rg-deleted-bg: rgba(220, 53, 69, 0.25);  // pending-delete rows/chips
+    // global bootstrap knobs
+    // --bs-border-radius: 0.5rem;
+    // --bs-link-color-rgb: 13, 110, 253;
+}
+
+// Accent swap — precompiled Bootstrap reads component-level vars:
+// .btn-primary {
+//     --bs-btn-bg: var(--rg-accent);
+//     --bs-btn-border-color: var(--rg-accent);
+// }
+// .pagination {
+//     --bs-pagination-active-bg: var(--rg-accent);
+//     --bs-pagination-active-border-color: var(--rg-accent);
+// }
+
+// The page's own vertical rhythm — without it the first slice control (the inline filter's .input-group)
+// sits flush against the header. .form-toolbar's `position: sticky; top: 0` below assumes this gap exists.
+.page > main {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+// App-level conventions the entity slices use:
+.striped > *:nth-child(even) {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+}
+
+// `.entity-list` containment (zeroed .row gutter margins + min-width:0 on the cells, so text-truncate can
+// clip and the row never drags the page sideways) ships in @regira/modules/style.css — do NOT redeclare it.
+// It sets no `overflow`, by design. Opt a single list into sideways scrolling with .entity-list--scroll-x.
+
+// The app-owned wrapper around FormButtonsRow. Deliberately NOT `.form-buttons` — that class is the
+// library component's own root, and a rule on it would apply to both the wrapper and the component
+// inside it (doubled padding, a second border, a nested sticky context).
+// Raising `top` to clear a fixed navbar also applies inside modals, where there is no navbar —
+// reset it with `.modal & { top: 0 }` if you do.
+.form-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bs-body-bg, #fff);
+}
+
+// ---- QCredits: clean HR look -------------------------------------------------------------
+:root {
+    --rg-accent: #2f6f8f;
+    --rg-accent-bg: rgba(47, 111, 143, 0.08);
+    --bs-body-bg: #f6f8fa;
+    --bs-border-radius: 0.5rem;
+    --bs-link-color-rgb: 47, 111, 143;
+    --bs-primary: #2f6f8f;
+    --bs-primary-rgb: 47, 111, 143;
+}
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.btn-primary {
+    --bs-btn-bg: var(--rg-accent);
+    --bs-btn-border-color: var(--rg-accent);
+    --bs-btn-hover-bg: #275d78;
+    --bs-btn-hover-border-color: #275d78;
+    --bs-btn-active-bg: #214f66;
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--rg-accent);
+    --bs-btn-border-color: var(--rg-accent);
+    --bs-btn-hover-bg: var(--rg-accent);
+    --bs-btn-hover-border-color: var(--rg-accent);
+}
+.pagination {
+    --bs-pagination-active-bg: var(--rg-accent);
+    --bs-pagination-active-border-color: var(--rg-accent);
+}
+.page > header {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--bs-border-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.page > footer {
+    background: transparent !important;
+}
+.navbar-brand {
+    font-weight: 600;
+    color: var(--rg-accent) !important;
+}
+.navbar-brand::before {
+    content: "\F4F5"; // bi-mortarboard-fill
+    font-family: "bootstrap-icons";
+    margin-right: 0.4rem;
+}
+.card {
+    border-color: rgba(0, 0, 0, 0.06);
+}
+.form-section {
+    background: #ffffff;
+}
+.entity-list {
+    background: #ffffff;
+    border-radius: var(--bs-border-radius);
+    padding: 0 0.5rem;
+}
+.progress-stacked,
+.progress {
+    background-color: #e7ecf0;
+}
+.qc-bar-thin {
+    height: 0.45rem;
+}
+.qc-reserved {
+    height: 1.1rem;
+    font-size: 0.7rem;
+}
+.qc-stat {
+    background: var(--bs-tertiary-bg);
+    border-radius: var(--bs-border-radius);
+    padding: 0.5rem 0.25rem;
+}
+.qc-stat-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.qc-stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--bs-secondary-color);
+}
+.qc-kpi .card-body {
+    padding: 0.8rem 1rem;
+}
+.qc-kpi-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--bs-secondary-color);
+}
+.qc-kpi-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.qc-status-select {
+    max-width: 11rem;
+}

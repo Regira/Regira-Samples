@@ -1,0 +1,392 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "add": {
+        "en": "Add"
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "addProduct": {
+        "en": "Add a product..."
+    },
+    "allStatuses": {
+        "en": "All statuses"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "badge": {
+        "en": "Badge"
+    },
+    "brand": {
+        "en": "Brand"
+    },
+    "brand.description": {
+        "en": "Brands and manufacturers"
+    },
+    "brands": {
+        "en": "Brands"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "catalog": {
+        "en": "Catalog"
+    },
+    "categories": {
+        "en": "Categories"
+    },
+    "category": {
+        "en": "Category"
+    },
+    "category.description": {
+        "en": "Product categories shown in the storefront navigation"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "city": {
+        "en": "City"
+    },
+    "color": {
+        "en": "Colour"
+    },
+    "compareAtPrice": {
+        "en": "Compare-at price"
+    },
+    "country": {
+        "en": "Country"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "ctaLabel": {
+        "en": "Button label"
+    },
+    "ctaLink": {
+        "en": "Button link"
+    },
+    "customer": {
+        "en": "Customer"
+    },
+    "customerName": {
+        "en": "Name"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "email": {
+        "en": "Email"
+    },
+    "endDate": {
+        "en": "End date"
+    },
+    "featured": {
+        "en": "Featured"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "form": {
+        "en": "Details"
+    },
+    "iconName": {
+        "en": "Icon (Bootstrap icon name)"
+    },
+    "imageUrl": {
+        "en": "Image URL"
+    },
+    "inactive": {
+        "en": "Inactive"
+    },
+    "inStock": {
+        "en": "In stock"
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "isActive": {
+        "en": "Active"
+    },
+    "items": {
+        "en": "Items"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "lineTotal": {
+        "en": "Line total"
+    },
+    "live": {
+        "en": "Live"
+    },
+    "liveNow": {
+        "en": "Live now"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "marketing": {
+        "en": "Marketing"
+    },
+    "maxPrice": {
+        "en": "Max. price"
+    },
+    "maxTotal": {
+        "en": "Max. total"
+    },
+    "minPrice": {
+        "en": "Min. price"
+    },
+    "minTotal": {
+        "en": "Min. total"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "noOrderLines": {
+        "en": "No lines yet."
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "notes": {
+        "en": "Notes"
+    },
+    "onSale": {
+        "en": "On sale"
+    },
+    "order": {
+        "en": "Order"
+    },
+    "order.description": {
+        "en": "Customer orders"
+    },
+    "orderCode": {
+        "en": "Order no."
+    },
+    "orderLines": {
+        "en": "Order lines"
+    },
+    "orders": {
+        "en": "Orders"
+    },
+    "orderStatus": {
+        "en": "Status & fulfilment"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "paymentMethod": {
+        "en": "Payment"
+    },
+    "period": {
+        "en": "Period"
+    },
+    "phone": {
+        "en": "Phone"
+    },
+    "placed": {
+        "en": "Placed"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "postalCode": {
+        "en": "Postal code"
+    },
+    "presentation": {
+        "en": "Presentation"
+    },
+    "preview": {
+        "en": "Preview"
+    },
+    "price": {
+        "en": "Price"
+    },
+    "pricingAndStock": {
+        "en": "Pricing & stock"
+    },
+    "product": {
+        "en": "Product"
+    },
+    "product.description": {
+        "en": "The product catalog"
+    },
+    "products": {
+        "en": "Products"
+    },
+    "promotion": {
+        "en": "Promotion"
+    },
+    "promotion.description": {
+        "en": "Storefront banners and campaigns"
+    },
+    "promotions": {
+        "en": "Promotions"
+    },
+    "published": {
+        "en": "Published"
+    },
+    "quantity": {
+        "en": "Qty"
+    },
+    "ratingAndReviews": {
+        "en": "Rating / reviews"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "sales": {
+        "en": "Sales"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "scheduled": {
+        "en": "Scheduled"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "shipping": {
+        "en": "Shipping"
+    },
+    "shippingAddress": {
+        "en": "Shipping address"
+    },
+    "shippingMethod": {
+        "en": "Shipping"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "sku": {
+        "en": "SKU"
+    },
+    "slug": {
+        "en": "Slug"
+    },
+    "sortCustomer": {
+        "en": "Customer A-Z"
+    },
+    "sortDefault": {
+        "en": "Sort: featured first"
+    },
+    "sortNewest": {
+        "en": "Newest"
+    },
+    "sortNewestFirst": {
+        "en": "Newest first"
+    },
+    "sortOldestFirst": {
+        "en": "Oldest first"
+    },
+    "sortOrder": {
+        "en": "Sort order"
+    },
+    "sortPopularity": {
+        "en": "Most reviewed"
+    },
+    "sortPriceAsc": {
+        "en": "Price: low to high"
+    },
+    "sortPriceDesc": {
+        "en": "Price: high to low"
+    },
+    "sortRating": {
+        "en": "Top rated"
+    },
+    "sortStock": {
+        "en": "Lowest stock first"
+    },
+    "sortTitle": {
+        "en": "Title A-Z"
+    },
+    "sortTotalAsc": {
+        "en": "Lowest total"
+    },
+    "sortTotalDesc": {
+        "en": "Highest total"
+    },
+    "startDate": {
+        "en": "Start date"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "stock": {
+        "en": "Stock"
+    },
+    "storefront": {
+        "en": "Storefront"
+    },
+    "street": {
+        "en": "Street and number"
+    },
+    "subtitle": {
+        "en": "Subtitle"
+    },
+    "subtotal": {
+        "en": "Subtotal"
+    },
+    "theme": {
+        "en": "Theme"
+    },
+    "title": {
+        "en": "Title"
+    },
+    "total": {
+        "en": "Total"
+    },
+    "totalsComputedOnSave": {
+        "en": "Prices and totals are calculated by the server when the order is saved."
+    },
+    "unitPrice": {
+        "en": "Unit price"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "viewInStore": {
+        "en": "View in store"
+    },
+    "website": {
+        "en": "Website"
+    }
+}

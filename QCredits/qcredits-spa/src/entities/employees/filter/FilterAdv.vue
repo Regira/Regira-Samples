@@ -1,0 +1,60 @@
+<template>
+    <div class="adv-filter">
+        <!-- top row: result count (left) + clear (right) — the overview-filter convention; keep it -->
+        <div class="row">
+            <div class="col mb-2" v-if="resultCount != null">
+                <span class="text-info">{{ resultCount }} {{ $t("results") }}</span>
+                <small v-if="filterIsActive" class="ms-2 italic-muted">({{ $t("filtersAreApplied") }})</small>
+            </div>
+            <div class="col mb-2 text-end">
+                <IconButton icon="clear" :showText="true" @click="handleReset" />
+            </div>
+        </div>
+
+        <!-- keywords (free-text q) -->
+        <input v-model.lazy.trim="searchObject.q" class="form-control mb-2" :placeholder="$t('keywords')" @change="handleUpdate" />
+
+        <!-- TODO: one input per SearchObject filter field (placeholder `title` — keep in sync with SearchObject.ts).
+             Native <input> → @change="handleUpdate". A custom component (InputSelector, NullableCheckBox,
+             DateInput) emits Vue events only → @select="handleUpdate" / @update:modelValue="handleUpdate",
+             or the results and the count go stale. A checkbox filter needs its own label — pass `label`
+             (with an `id`, so clicking the text toggles the box). e.g.:
+                 <BarInputSelector v-model="bar" v-model:idValue="searchObject.barId" @select="handleUpdate" />
+                 <NullableCheckBox v-model="searchObject.isActive" id="isActive" :label="$t('isActive')" @update:modelValue="handleUpdate" /> -->
+        <div class="mb-2">
+            <DepartmentInputSelector
+                v-model="filterDepartment"
+                v-model:idValue="searchObject.departmentId as number"
+                :canEdit="false"
+                :placeholder="$t('department')"
+                @select="handleUpdate"
+            />
+        </div>
+        <div class="mb-2">
+            <NullableCheckBox v-model="searchObject.isActive" id="employeeIsActive" :label="$t('isActive')" @update:modelValue="handleUpdate" />
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue"
+import { IconButton, NullableCheckBox } from "@regira/modules/vue/ui"
+import { useFilter, type FilterEmits } from "@regira/modules/vue/entities"
+import SearchObject from "./SearchObject"
+import { InputSelector as DepartmentInputSelector } from "@/entities/departments"
+import type { Entity as Department } from "@/entities/departments"
+
+interface Emits extends /* @vue-ignore */ FilterEmits<SearchObject> {}
+const emit = defineEmits<Emits & { "update:modelValue": (v: SearchObject) => true; filter: (v: SearchObject) => true; close: () => void }>()
+defineProps<{ resultCount?: number }>()
+
+const searchObject = defineModel<SearchObject>({ required: true })
+const filterDepartment = ref<Department>()
+// handleUpdate = sync the model + re-run the search; bind it on EVERY input above.
+const { handleReset: resetSearchObject, handleUpdate, filterIsActive } = useFilter({ searchObject, emit, Constructor: SearchObject })
+// Clear the selector-backing entities too — resetting the ids alone leaves each control showing a label.
+function handleReset() {
+    resetSearchObject()
+    filterDepartment.value = undefined
+}
+</script>

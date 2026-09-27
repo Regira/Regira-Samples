@@ -1,2 +1,0 @@
-Attachment for ticket #99 - Data export is missing columns
-Generated for HelpDesk demo seed data.

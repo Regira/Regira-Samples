@@ -1,0 +1,611 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "activityBook": {
+        "en": "Book"
+    },
+    "activityCertification": {
+        "en": "Certification"
+    },
+    "activityConference": {
+        "en": "Conference"
+    },
+    "activityCourse": {
+        "en": "Course"
+    },
+    "activityOnlineSubscription": {
+        "en": "Online subscription"
+    },
+    "activityOther": {
+        "en": "Other"
+    },
+    "activitySelfStudy": {
+        "en": "Self-study"
+    },
+    "addActivity": {
+        "en": "Add activity"
+    },
+    "addItemsFirst": {
+        "en": "Add at least one purchase or activity before submitting."
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "addParticipant": {
+        "en": "Add a participant..."
+    },
+    "administration": {
+        "en": "Administration"
+    },
+    "afterApproval": {
+        "en": "Balance after approval"
+    },
+    "allActivityTypes": {
+        "en": "All activity types"
+    },
+    "allMyRequests": {
+        "en": "All my requests"
+    },
+    "allocation": {
+        "en": "Allocation"
+    },
+    "allStatuses": {
+        "en": "All statuses"
+    },
+    "allYears": {
+        "en": "All years"
+    },
+    "annualCredits": {
+        "en": "Annual credits"
+    },
+    "approvalWorkflow": {
+        "en": "Approval"
+    },
+    "approve": {
+        "en": "Approve"
+    },
+    "approvedSpend": {
+        "en": "Approved spend"
+    },
+    "approveRequest": {
+        "en": "Approve request"
+    },
+    "attended": {
+        "en": "Attended"
+    },
+    "awaitingApproval": {
+        "en": "Awaiting approval"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "balance": {
+        "en": "Balance"
+    },
+    "balanceExplanation": {
+        "en": "Free credits = annual budget - reserved company days + carried over. Only approved requests are deducted; group trainings never are."
+    },
+    "balanceYear": {
+        "en": "Balance {year}"
+    },
+    "belowMinimum": {
+        "en": "below the minimum balance of {min}"
+    },
+    "by": {
+        "en": "by"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "cancelApprovedConfirm": {
+        "en": "Cancel this approved request? The credits are given back to the employee."
+    },
+    "cancelConfirm": {
+        "en": "Cancel this request? It can no longer be submitted afterwards."
+    },
+    "cancelRequest": {
+        "en": "Cancel request"
+    },
+    "carriedOver": {
+        "en": "Carried over"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "closed": {
+        "en": "Closed"
+    },
+    "code": {
+        "en": "Code"
+    },
+    "commentOptional": {
+        "en": "Comment (optional)"
+    },
+    "companyDays": {
+        "en": "Reserved for mandatory company days"
+    },
+    "companyDaysShort": {
+        "en": "Company days"
+    },
+    "cost": {
+        "en": "Cost (EUR)"
+    },
+    "costEur": {
+        "en": "Estimated cost in EUR"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "createdOn": {
+        "en": "Created"
+    },
+    "creditAllocation": {
+        "en": "Credit allocation"
+    },
+    "creditAllocation.description": {
+        "en": "Yearly QCredit budgets per employee"
+    },
+    "creditAllocations": {
+        "en": "Allocations"
+    },
+    "creditHistory": {
+        "en": "Credit history"
+    },
+    "creditPolicy": {
+        "en": "Credit policy"
+    },
+    "creditRequest": {
+        "en": "Credit request"
+    },
+    "creditRequest.description": {
+        "en": "Training requests and their approval"
+    },
+    "creditRequests": {
+        "en": "Requests"
+    },
+    "creditRule": {
+        "en": "1 QCredit = half a working day or EUR 250."
+    },
+    "credits": {
+        "en": "credits"
+    },
+    "creditsGroup": {
+        "en": "QCredits"
+    },
+    "creditsHeader": {
+        "en": "Credits"
+    },
+    "creditsLeft": {
+        "en": "credits left"
+    },
+    "creditYear": {
+        "en": "Credit year"
+    },
+    "creditYear.description": {
+        "en": "Yearly credit policy (budget, reserve, carry-over, minimum balance)"
+    },
+    "creditYears": {
+        "en": "Credit years"
+    },
+    "date": {
+        "en": "Date"
+    },
+    "days": {
+        "en": "days"
+    },
+    "daysShort": {
+        "en": "d"
+    },
+    "decidedAsApproved": {
+        "en": "Approved"
+    },
+    "decidedAsCancelled": {
+        "en": "Cancelled"
+    },
+    "decidedAsRejected": {
+        "en": "Rejected"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "department": {
+        "en": "Department"
+    },
+    "department.description": {
+        "en": "Organisation units"
+    },
+    "departments": {
+        "en": "Departments"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "durationDays": {
+        "en": "Duration (days)"
+    },
+    "email": {
+        "en": "E-mail"
+    },
+    "employee": {
+        "en": "Employee"
+    },
+    "employee.description": {
+        "en": "Staff members and their credit history"
+    },
+    "employees": {
+        "en": "Employees"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "firstName": {
+        "en": "First name"
+    },
+    "freeBudget": {
+        "en": "Free budget"
+    },
+    "freeCredits": {
+        "en": "Free"
+    },
+    "freeCreditsFormula": {
+        "en": "Each employee gets {free} freely available credits (plus carried-over credits)."
+    },
+    "generate": {
+        "en": "Generate"
+    },
+    "generateAllocations": {
+        "en": "Generate allocations"
+    },
+    "generateAllocationsConfirm": {
+        "en": "Create the missing {year} allocations for every active employee, using the {year} credit policy?"
+    },
+    "goTo": {
+        "en": "Go to"
+    },
+    "groupTraining": {
+        "en": "Group training"
+    },
+    "groupTraining.description": {
+        "en": "Company trainings funded from a separate budget"
+    },
+    "groupTrainingFunding": {
+        "en": "Group trainings are funded from a separate budget and never affect the personal QCredit balances of the participants."
+    },
+    "groupTrainingFundingShort": {
+        "en": "Separate budget - no impact on personal balances"
+    },
+    "groupTrainings": {
+        "en": "Group trainings"
+    },
+    "groupTrainingsYear": {
+        "en": "Group trainings {year}"
+    },
+    "gtStatusCancelled": {
+        "en": "Cancelled"
+    },
+    "gtStatusCompleted": {
+        "en": "Completed"
+    },
+    "gtStatusPlanned": {
+        "en": "Planned"
+    },
+    "hireDate": {
+        "en": "Hire date"
+    },
+    "inboxZero": {
+        "en": "Nothing waiting for approval."
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "isActive": {
+        "en": "Active"
+    },
+    "isClosed": {
+        "en": "Year closed"
+    },
+    "jobTitle": {
+        "en": "Job title"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "lastName": {
+        "en": "Last name"
+    },
+    "left": {
+        "en": "left"
+    },
+    "location": {
+        "en": "Location"
+    },
+    "lockedExplanation": {
+        "en": "Only draft requests can be edited. Withdraw a submitted request to change it."
+    },
+    "main": {
+        "en": "Main"
+    },
+    "maxCarryOver": {
+        "en": "Max carry-over"
+    },
+    "minBalance": {
+        "en": "Minimum balance"
+    },
+    "minBalanceHelp": {
+        "en": "How far a balance may go below zero."
+    },
+    "motivation": {
+        "en": "Motivation"
+    },
+    "motivationPlaceholder": {
+        "en": "Why is this training useful for you and the team?"
+    },
+    "myCredits": {
+        "en": "My QCredits {year}"
+    },
+    "myGroupTrainings": {
+        "en": "My group trainings {year}"
+    },
+    "myRecentRequests": {
+        "en": "My recent requests"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "newActivityPlaceholder": {
+        "en": "New purchase or activity, e.g. 'Kubernetes course'"
+    },
+    "newRequest": {
+        "en": "New request"
+    },
+    "no": {
+        "en": "No"
+    },
+    "noAllocation": {
+        "en": "No credit allocation for {year} yet."
+    },
+    "noParticipants": {
+        "en": "No participants yet."
+    },
+    "noRequestsYet": {
+        "en": "You have no requests yet."
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "notes": {
+        "en": "Notes"
+    },
+    "open": {
+        "en": "Open"
+    },
+    "openQueue": {
+        "en": "Open the approval queue"
+    },
+    "overdrawn": {
+        "en": "Overdrawn"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "participant": {
+        "en": "Participant"
+    },
+    "participants": {
+        "en": "Participants"
+    },
+    "participantsShort": {
+        "en": "Part."
+    },
+    "pending": {
+        "en": "pending"
+    },
+    "pendingCredits": {
+        "en": "Pending"
+    },
+    "personalDetails": {
+        "en": "Personal details"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "position": {
+        "en": "Position"
+    },
+    "processing": {
+        "en": "Processing..."
+    },
+    "provider": {
+        "en": "Provider"
+    },
+    "purchasesAndActivities": {
+        "en": "Purchases & activities"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "reject": {
+        "en": "Reject"
+    },
+    "rejectReason": {
+        "en": "Reason for rejection (required)"
+    },
+    "rejectRequest": {
+        "en": "Reject request"
+    },
+    "remainingCredits": {
+        "en": "Remaining"
+    },
+    "request": {
+        "en": "Request"
+    },
+    "requestable": {
+        "en": "Requestable"
+    },
+    "reservedCredits": {
+        "en": "Reserved credits"
+    },
+    "reservedCreditsHelp": {
+        "en": "Reserved for mandatory company days."
+    },
+    "reservedUsed": {
+        "en": "Reserved used"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "rollover": {
+        "en": "Close year & roll over"
+    },
+    "rolloverConfirm": {
+        "en": "Close {year} and carry the remaining balances over to {next}? Positive balances carry up to the policy maximum, deficits carry in full."
+    },
+    "save": {
+        "en": "Save"
+    },
+    "saveBeforeSubmit": {
+        "en": "Save your changes before submitting."
+    },
+    "search": {
+        "en": "Search"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "separateBudget": {
+        "en": "separate budget"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "startDate": {
+        "en": "Start date"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "statusApproved": {
+        "en": "Approved"
+    },
+    "statusCancelled": {
+        "en": "Cancelled"
+    },
+    "statusDraft": {
+        "en": "Draft"
+    },
+    "statusRejected": {
+        "en": "Rejected"
+    },
+    "statusSubmitted": {
+        "en": "Submitted"
+    },
+    "submitForApproval": {
+        "en": "Submit for approval"
+    },
+    "submitted": {
+        "en": "Submitted"
+    },
+    "submittedOn": {
+        "en": "Submitted"
+    },
+    "title": {
+        "en": "Title"
+    },
+    "titlePlaceholder": {
+        "en": "e.g. Azure Solutions Architect path"
+    },
+    "totalCost": {
+        "en": "Total cost"
+    },
+    "totalCostEur": {
+        "en": "Total cost (EUR)"
+    },
+    "totalCredits": {
+        "en": "Total"
+    },
+    "trainings": {
+        "en": "trainings"
+    },
+    "type": {
+        "en": "Type"
+    },
+    "usage": {
+        "en": "Usage"
+    },
+    "usageByDepartment": {
+        "en": "Usage by department"
+    },
+    "usageByType": {
+        "en": "Approved credits by activity type"
+    },
+    "used": {
+        "en": "used"
+    },
+    "usedCredits": {
+        "en": "Used"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "view": {
+        "en": "View"
+    },
+    "welcome": {
+        "en": "Welcome {name}"
+    },
+    "withdraw": {
+        "en": "Withdraw"
+    },
+    "workflowDoneapprove": {
+        "en": "Approved"
+    },
+    "workflowDonecancel": {
+        "en": "Cancelled"
+    },
+    "workflowDonereject": {
+        "en": "Rejected"
+    },
+    "workflowDonesubmit": {
+        "en": "Submitted for approval"
+    },
+    "workflowDonewithdraw": {
+        "en": "Withdrawn - back to draft"
+    },
+    "workflowFailed": {
+        "en": "The action failed"
+    },
+    "year": {
+        "en": "Year"
+    },
+    "yearActions": {
+        "en": "Year actions"
+    },
+    "yesCancel": {
+        "en": "Yes, cancel"
+    }
+}

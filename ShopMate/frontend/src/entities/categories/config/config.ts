@@ -11,15 +11,15 @@ const config: IConfig = {
     isComplex: true,
 
     routePrefix: "categories",
-    baseQueryParams: {}, // Category is a "simple" entity server-side — ParentEntities/ChildEntities are eager-loaded unconditionally, no ?includes= flag exists to request
-    initialQuery: {},
+    baseQueryParams: {}, // add includes ONLY for a COLLECTION the API gates behind its named [Flags] enum, e.g. { includes: ["Lines"] }; a to-one shown on every row belongs in the API's unconditional e.Includes instead
+    initialQuery: {}, // route query for the GENERATED nav link ONLY — lost on refresh/deep-link. A default sortBy or includes belongs in baseQueryParams
 
     overviewTitle: "categories",
     detailsTitle: "category",
     description: "category.description",
     icon: "bi bi-tags",
 
-    defaultPageSize: 60,
+    defaultPageSize: 25,
 
     api, // every *Url below defaults to `api` when omitted; keep only the ones you override
     searchUrl: api + "/search", // counted search endpoint — the overview pages through it (every controller exposes /search)

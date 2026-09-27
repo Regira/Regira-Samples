@@ -11,9 +11,14 @@
                     :readonly="readonly"
                     :feedback="feedback"
                     :show-delete="item?.id > 0"
+                    :labels="{ save: $t('save'), cancel: $t('cancel'), delete: $t('delete'), restore: $t('restore') }"
+                    :modal-title="$t('delete')"
                     @cancel="handleCancel"
                     @remove="handleRemove"
-                />
+                    @restore="handleRestore"
+                >
+                    <template #delete>{{ $t("deleteItem", { title: item?.$title }) }}</template>
+                </FormButtonsRow>
             </div>
             <div class="col-auto order-2 order-md-3">
                 <!-- In a modal (isPopup) there is no overview to return to — offer a pop-out to the full page instead. -->
@@ -36,44 +41,44 @@
 
         <FormSection :title="$t(config.detailsTitle || '')" :readonly="readonly">
             <div class="mb-3">
-                <input v-model="item.title" :readonly="readonly" class="form-control" required />
-                <FormLabel :label="$t('name')" />
+                <FormLabel :label="$t('title')" />
+                <input v-model="item.title" :readonly="readonly" class="form-control form-control-lg" required maxlength="128" :placeholder="$t('articlePlaceholder')" />
             </div>
-
-            <div class="mb-3">
-                <button type="button" class="btn" :class="item.isActive ? 'btn-outline-secondary' : 'btn-success'" :disabled="readonly" @click="item.isActive = !item.isActive">
-                    <i class="bi" :class="item.isActive ? 'bi-circle' : 'bi-check-circle-fill'"></i>
-                    {{ item.isActive ? $t("toBuy") : $t("bought") }}
-                </button>
-            </div>
-
-            <div class="row">
-                <div class="col-6 col-sm-4 mb-3">
-                    <input v-model.number="item.quantity" type="number" min="0" step="0.1" :readonly="readonly" class="form-control" />
+            <div class="row g-2 mb-3">
+                <div class="col-6">
                     <FormLabel :label="$t('quantity')" />
+                    <div class="input-group sm-stepper">
+                        <button type="button" class="btn btn-outline-secondary" :disabled="readonly" :aria-label="$t('less')" @click="step(-1)"><i class="bi bi-dash-lg"></i></button>
+                        <input v-model.number="item.quantity" :readonly="readonly" type="number" inputmode="decimal" min="0" step="any" class="form-control text-center" />
+                        <button type="button" class="btn btn-outline-secondary" :disabled="readonly" :aria-label="$t('more')" @click="step(1)"><i class="bi bi-plus-lg"></i></button>
+                    </div>
                 </div>
-                <div class="col-6 col-sm-4 mb-3">
-                    <input v-model="item.unit" :readonly="readonly" class="form-control" />
+                <div class="col-6">
                     <FormLabel :label="$t('unit')" />
+                    <input v-model.trim="item.unit" :readonly="readonly" class="form-control" maxlength="16" list="sm-units" />
+                    <datalist id="sm-units">
+                        <option v-for="u in units" :key="u" :value="u" />
+                    </datalist>
                 </div>
             </div>
-
             <div class="mb-3">
-                <input v-model="item.notes" :readonly="readonly" class="form-control" />
-                <FormLabel :label="$t('notes')" />
-            </div>
-
-            <div class="mb-3">
-                <ShoppingListInputSelector v-model="item.shoppingList" v-model:idValue="item.shoppingListId as number" :canEdit="false" />
                 <FormLabel :label="$t('shoppingList')" />
+                <ShoppingListInputSelector v-model="item.shoppingList" v-model:idValue="item.shoppingListId" :readonly="readonly" :placeholder="$t('shoppingList')" />
             </div>
-
             <div class="mb-3">
-                <ArticleCategoryOverview v-model="item.categories" />
-                <FormLabel :label="$t('categories')" />
+                <FormLabel :label="$t('note')" />
+                <input v-model="item.description" :readonly="readonly" class="form-control" maxlength="1024" :placeholder="$t('notePlaceholder')" />
+            </div>
+            <div class="form-check form-switch sm-switch mb-2">
+                <input id="articleIsActive" v-model="item.isActive" :disabled="readonly" class="form-check-input" type="checkbox" role="switch" />
+                <label class="form-check-label" for="articleIsActive">{{ item.isActive ? $t("stillToBuy") : $t("alreadyBought") }}</label>
             </div>
         </FormSection>
+        <FormSection :title="$t('categories')" :readonly="readonly" class="mt-3">
+            <ArticleCategoryOverview v-model="item.categories" />
+        </FormSection>
 
+        <!-- <Debug> dumps the live payload, self-gated on $isDebug (?debug=1) — inert in production; curate the payload. -->
         <Debug :modelValue="{ item }" />
     </form>
 </template>
@@ -86,8 +91,8 @@ import { useForm, type FormEmits, formDefaults } from "@regira/modules/vue/entit
 import config from "../config/config"
 import Entity from "../data/Entity"
 import useEntityStore from "../data/store"
-import { InputSelector as ShoppingListInputSelector } from "@/entities/shopping-lists"
 import { ArticleCategoryOverview } from "../article-categories"
+import { InputSelector as ShoppingListInputSelector } from "@/entities/shopping-lists"
 
 interface Emits extends /* @vue-ignore */ FormEmits<Entity> {}
 const emit = defineEmits<Emits>()
@@ -97,5 +102,12 @@ const props = withDefaults(
 )
 
 const { service: entityService } = useEntityStore()
-const { item, feedback, handleCancel, handleSubmit, handleRemove } = useForm<Entity>({ entityService, props, emit })
+const { item, feedback, handleCancel, handleSubmit, handleRemove, handleRestore } = useForm<Entity>({ entityService, props, emit })
+
+const units = ["pcs", "kg", "g", "l", "ml", "pack", "box", "bag", "bottle", "can", "jar", "bunch"]
+function step(delta: number) {
+    const next = Math.max(0, (Number(item.value.quantity) || 0) + delta)
+    item.value.quantity = next || undefined
+}
+// the form's handleRemove() takes NO argument (it removes item.value) — unlike the overview's handleRemove(item)
 </script>

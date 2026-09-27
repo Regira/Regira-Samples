@@ -1,0 +1,422 @@
+{
+    "account": {
+        "en": "Account"
+    },
+    "addNewFile(s)": {
+        "en": "Add new file(s)"
+    },
+    "address": {
+        "en": "Address"
+    },
+    "addSession": {
+        "en": "Add session"
+    },
+    "agenda": {
+        "en": "Agenda"
+    },
+    "all": {
+        "en": "All"
+    },
+    "allCategories": {
+        "en": "All categories"
+    },
+    "backToSignIn": {
+        "en": "Back to sign in"
+    },
+    "bannerUrl": {
+        "en": "Banner image URL"
+    },
+    "bio": {
+        "en": "Biography"
+    },
+    "browseEvents": {
+        "en": "Browse all events"
+    },
+    "cancel": {
+        "en": "Cancel"
+    },
+    "Cancelled": {
+        "en": "Cancelled"
+    },
+    "cancelRegistration": {
+        "en": "Cancel registration"
+    },
+    "capacity": {
+        "en": "Capacity"
+    },
+    "category": {
+        "en": "Category"
+    },
+    "changePassword": {
+        "en": "Change password"
+    },
+    "chooseNewPassword": {
+        "en": "Choose a new password"
+    },
+    "chooseSessions": {
+        "en": "Pick the sessions you want to attend (optional)"
+    },
+    "city": {
+        "en": "City"
+    },
+    "color": {
+        "en": "Colour"
+    },
+    "company": {
+        "en": "Company"
+    },
+    "Confirmed": {
+        "en": "Confirmed"
+    },
+    "country": {
+        "en": "Country"
+    },
+    "created": {
+        "en": "Created"
+    },
+    "dates": {
+        "en": "Dates"
+    },
+    "day": {
+        "en": "Day"
+    },
+    "delete": {
+        "en": "Delete"
+    },
+    "deleteItem": {
+        "en": "Delete {title}?"
+    },
+    "department": {
+        "en": "Department"
+    },
+    "description": {
+        "en": "Description"
+    },
+    "Draft": {
+        "en": "Draft"
+    },
+    "edit": {
+        "en": "Edit"
+    },
+    "editEvent": {
+        "en": "Edit event"
+    },
+    "email": {
+        "en": "E-mail"
+    },
+    "employee": {
+        "en": "Employee"
+    },
+    "employee.description": {
+        "en": "Employee directory (read-only)"
+    },
+    "employeeOnlyOwn": {
+        "en": "You can only register yourself"
+    },
+    "employees": {
+        "en": "Employees"
+    },
+    "endDate": {
+        "en": "End date"
+    },
+    "endTime": {
+        "en": "End"
+    },
+    "event": {
+        "en": "Event"
+    },
+    "event.description": {
+        "en": "Company events, conferences, workshops and more"
+    },
+    "eventCancelled": {
+        "en": "This event has been cancelled"
+    },
+    "eventCategories": {
+        "en": "Categories"
+    },
+    "eventCategory": {
+        "en": "Category"
+    },
+    "eventCategory.description": {
+        "en": "Event categories (colour + icon)"
+    },
+    "eventEnded": {
+        "en": "This event has ended"
+    },
+    "eventPage": {
+        "en": "Event page"
+    },
+    "events": {
+        "en": "Events"
+    },
+    "eventsGroup": {
+        "en": "Events"
+    },
+    "featured": {
+        "en": "Featured"
+    },
+    "featuredEvent": {
+        "en": "Featured event"
+    },
+    "files": {
+        "en": "Files"
+    },
+    "filtersAreApplied": {
+        "en": "Filters are applied"
+    },
+    "firstName": {
+        "en": "First name"
+    },
+    "form": {
+        "en": "Details"
+    },
+    "from": {
+        "en": "From"
+    },
+    "full": {
+        "en": "Full"
+    },
+    "heroSubtitle": {
+        "en": "Conferences, workshops, team days and more - find your next event and save your seat."
+    },
+    "heroTitle": {
+        "en": "Discover what's happening"
+    },
+    "icon": {
+        "en": "Icon"
+    },
+    "imageUrl": {
+        "en": "Image URL"
+    },
+    "invalidResetLink": {
+        "en": "This recovery link is invalid or incomplete. Request a new one from the sign-in screen."
+    },
+    "isFeatured": {
+        "en": "Featured"
+    },
+    "jobTitle": {
+        "en": "Job title"
+    },
+    "keywords": {
+        "en": "Keywords"
+    },
+    "lastName": {
+        "en": "Last name"
+    },
+    "location": {
+        "en": "Location"
+    },
+    "location.description": {
+        "en": "Venues where events take place"
+    },
+    "locations": {
+        "en": "Locations"
+    },
+    "main": {
+        "en": "Main"
+    },
+    "manage": {
+        "en": "Manage"
+    },
+    "manageRegistration": {
+        "en": "Manage my registration"
+    },
+    "maxParticipants": {
+        "en": "Max. participants"
+    },
+    "myRegistrations": {
+        "en": "My registrations"
+    },
+    "name": {
+        "en": "Name"
+    },
+    "new": {
+        "en": "New"
+    },
+    "noResults": {
+        "en": "No results"
+    },
+    "noSessions": {
+        "en": "No sessions scheduled yet."
+    },
+    "noSessionsSelected": {
+        "en": "No sessions selected - you attend the event as a whole"
+    },
+    "noSpeakers": {
+        "en": "No speakers announced yet."
+    },
+    "notes": {
+        "en": "Notes"
+    },
+    "notOpen": {
+        "en": "Registration is not open"
+    },
+    "onWaitlist": {
+        "en": "on wait list"
+    },
+    "overview": {
+        "en": "Overview"
+    },
+    "participants": {
+        "en": "Participants"
+    },
+    "past": {
+        "en": "Past"
+    },
+    "photoUrl": {
+        "en": "Photo URL"
+    },
+    "popOut": {
+        "en": "Open in new tab"
+    },
+    "Published": {
+        "en": "Published"
+    },
+    "recoveryMailFailed": {
+        "en": "Sending the recovery link failed. Please try again."
+    },
+    "recoveryMailSent": {
+        "en": "If that account exists, a recovery link is on its way."
+    },
+    "register": {
+        "en": "Register"
+    },
+    "registered": {
+        "en": "You're registered"
+    },
+    "registerNow": {
+        "en": "Register now"
+    },
+    "registration": {
+        "en": "Registration"
+    },
+    "registration.description": {
+        "en": "Who is going where"
+    },
+    "registrationCancelled": {
+        "en": "Registration cancelled"
+    },
+    "registrationFailed": {
+        "en": "Registration failed"
+    },
+    "registrations": {
+        "en": "Registrations"
+    },
+    "registrationSaved": {
+        "en": "Registration saved"
+    },
+    "registrationsCount": {
+        "en": "registrations"
+    },
+    "resetPassword": {
+        "en": "Reset password"
+    },
+    "restore": {
+        "en": "Restore"
+    },
+    "results": {
+        "en": "results"
+    },
+    "room": {
+        "en": "Room"
+    },
+    "save": {
+        "en": "Save"
+    },
+    "search": {
+        "en": "Search"
+    },
+    "seats": {
+        "en": "seats"
+    },
+    "seatsLeft": {
+        "en": "seats left"
+    },
+    "sendRecoveryLink": {
+        "en": "Send recovery link"
+    },
+    "session": {
+        "en": "Session"
+    },
+    "sessions": {
+        "en": "Sessions"
+    },
+    "sessionSpeakers": {
+        "en": "Speakers"
+    },
+    "setupGroup": {
+        "en": "Setup"
+    },
+    "signIn": {
+        "en": "Sign in"
+    },
+    "signOut": {
+        "en": "Sign out"
+    },
+    "speaker": {
+        "en": "Speaker"
+    },
+    "speaker.description": {
+        "en": "Keynote speakers, trainers and hosts"
+    },
+    "speakers": {
+        "en": "Speakers"
+    },
+    "speakersTab": {
+        "en": "Speakers"
+    },
+    "speaksAt": {
+        "en": "Speaks at"
+    },
+    "startDate": {
+        "en": "Start date"
+    },
+    "startTime": {
+        "en": "Start"
+    },
+    "statsEvents": {
+        "en": "upcoming events"
+    },
+    "statsRegistrations": {
+        "en": "of your registrations"
+    },
+    "statsSpeakers": {
+        "en": "speakers"
+    },
+    "status": {
+        "en": "Status"
+    },
+    "summary": {
+        "en": "Summary"
+    },
+    "title": {
+        "en": "Title"
+    },
+    "topics": {
+        "en": "Topics"
+    },
+    "track": {
+        "en": "Track"
+    },
+    "until": {
+        "en": "Until"
+    },
+    "upcoming": {
+        "en": "Upcoming"
+    },
+    "upcomingEvents": {
+        "en": "Upcoming events"
+    },
+    "username": {
+        "en": "Username"
+    },
+    "viewEvent": {
+        "en": "View event page"
+    },
+    "waitlisted": {
+        "en": "You're on the wait list"
+    },
+    "Waitlisted": {
+        "en": "Wait list"
+    }
+}

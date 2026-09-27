@@ -1,168 +1,131 @@
-# Webshop
+# Nordlys Store - Webshop
 
-A standalone e-commerce demo application built on the **Regira** framework (.NET 10 back-end +
-Vue 3 front-end), created end-to-end through the **Regira MCP server**.
+A full-stack webshop built on the **Regira** framework: a .NET 10 Entities API and a Vue 3 SPA that contains
+both a polished **storefront** (catalog, filters, product pages, cart, checkout) and a **back office**
+(orders, products, categories, brands and promotional banners).
 
-Customers can browse a catalog of ~500 products across 14 categories, filter and sort the catalog,
-view product detail pages, build a shopping cart, and complete a guest checkout that creates a real
-order against the back-end API.
-
----
-
-## Ports
-
-| App | URL |
-|---|---|
-| Back-end API (Scalar docs at `/scalar`) | http://localhost:6180 |
-| Front-end SPA | http://localhost:6181 |
+| Part | Folder | URL |
+|---|---|---|
+| Back-end API (ASP.NET Core, Regira Entities, SQLite) | `Webshop.Api/` | http://localhost:5881 (Scalar UI: `/scalar`, OpenAPI: `/openapi/v1.json`) |
+| Front-end SPA (Vue 3, Vite, Bootstrap 5, @regira/modules) | `webshop-spa/` | http://localhost:5882 (storefront `/`, back office `/admin`) |
 
 ## Running it
 
-**Back-end**
-
 ```bash
-cd backend/Webshop.Api
-dotnet run --urls http://localhost:6180
-```
+# API - creates and seeds webshop.db on first start
+cd Webshop.Api
+dotnet run --launch-profile http                 # http://localhost:5881
+dotnet run --launch-profile http -- --ResetDatabase=true   # drop + recreate + reseed (Development only)
 
-On first run it creates `webshop.db` (SQLite) and seeds the catalog automatically (see *Seeding*
-below). Delete `webshop.db` to force a full reseed (schema changes are not migrated automatically —
-this is the standard `Database.EnsureCreated()` starter setup, not EF migrations).
-
-**Front-end**
-
-```bash
-cd frontend
+# SPA - the Vite dev server proxies /api to the API
+cd webshop-spa
 npm install
-npm run dev
+npm run dev                                      # http://localhost:5882 (strictPort)
+npm run build                                    # vue-tsc -b + vite build
 ```
 
-The Vite dev server proxies `/api/*` to `http://localhost:6180`, so start the back-end first.
+## Features
 
-`npm run build` runs `vue-tsc -b` (strict type-check) followed by the production Vite build; both
-complete cleanly with zero errors.
+### Storefront (`/`)
+- **Home**: rotating hero carousel and compact banners driven by live `Promotion`s, USP strip, category tiles
+  (with live product counts), product rails (staff picks, hot deals, new arrivals, top rated) and a newsletter block.
+- **Catalog** (`/shop`): server-side filtering on category, brand (multi), price range, rating, on sale, in stock and
+  staff picks; keyword search; six sort orders; server-side paging (24 per page). Every filter lives in the URL, so
+  promotion banners deep-link into filtered views (e.g. `/shop?categoryId=1&onSale=true`). Only published products are listed.
+- **Product page**: large visual, sale badge and savings, rating, stock status, quantity stepper, add-to-cart / buy-now,
+  highlights, description and shipping tabs, related products.
+- **Cart** (`/cart`): persisted in `localStorage`, prices/stock re-validated against the API on open,
+  free-shipping progress bar, savings, quantity changes and removal.
+- **Checkout** (`/checkout`): contact, address, delivery method (Standard / Express / Pickup) and payment method
+  (demo - no payment data is collected), live totals, terms checkbox, optional "remember my details".
+  Only product ids and quantities are sent - **the API prices every line itself**.
+- **Order confirmation** (`/order/:id/confirmation`): order number, status timeline, lines, totals and address.
+- Product imagery: an `imageUrl` when set, otherwise a generated visual in the category's colour and icon.
 
----
+### Back office (`/admin`)
+The scaffolded Regira app shell (config-driven dashboard + navbar) with one entity slice per entity:
+- **Orders**: filter on code, email, status, total range; sortable; tabbed details page with customer/shipping data,
+  status workflow and an editable **order lines table** (add via server-side product picker, quantity edits,
+  undoable `_deleted` removal) - totals are recomputed by the server on every save.
+- **Products**: filters (category, brand, price, published, on sale, in stock, featured) and sorting; tabbed form
+  (details + pricing & stock) with relation pickers and a live storefront preview.
+- **Categories** and **Brands**: lookup entities edited in modals.
+- **Promotions**: banner editor with theme, icon, validity period and a live banner preview.
 
-## Architecture
+## Back-end design
 
-### Back-end &mdash; `backend/Webshop.Api`
+**Regira Entities free-tier budget (5 simple + 2 complex)** - confirmed at startup:
+`Regira.Entities: 3 simple / 2 complex registered -> tier = free`.
 
-ASP.NET Core 10 Web API on the Regira Entities stack (`Regira.Entities.Web` +
-`Regira.Entities.Mapping.Mapster`, EF Core + SQLite, Serilog, OpenAPI/Scalar). No authentication
-(`BasicApi` template) &mdash; this is a public storefront + guest checkout, not an authenticated back
-office.
-
-**Entities** (free tier: 5 simple + 2 complex registrations &mdash; this app uses 1 simple + 2 complex):
-
-| Entity | Classification | Notes |
+| Entity | Registration | Notes |
 |---|---|---|
-| `Category` | simple | Reference data. Not `IArchivable` on purpose &mdash; a required FK from `Product` behind soft-delete would silently drop rows from list `items` while `/search` kept counting them (see the framework's soft-delete guidance for reference data). Products are hard-deleted on `OnDelete(Restrict)` instead. |
-| `Product` | complex (`TSortBy` + `TIncludes`) | Complex so the shop page can offer server-side sorting (price, rating, newest, title) via `?sortBy=`. `Category` is eager-loaded unconditionally (a to-one shown on every product card). |
-| `Order` | complex | Owns `OrderLines` via `e.Related()` &mdash; no separate registration, no controller, no budget slot. A `Prepare` hook resolves `UnitPrice`/`SubTotal` from the current `Product.Price` server-side (price-tampering guard) and recomputes `Total`. `OrderManager` (an `EntityWrappingServiceBase`) rejects a save with zero order lines and mints the `ORD-XXXXXXXX` code on create. |
-| `OrderLine` | owned child of `Order` | No own `.For<>()`/controller &mdash; edited only through the parent. |
+| `Category` | simple `For<Category>()` | `CategoryProcessor` fills `ProductCount`; delete of a used category returns 409 (`Restrict`) |
+| `Brand` | simple `For<Brand>()` | normalized full-text `?q=` |
+| `Promotion` | simple `For<Promotion, int, PromotionSearchObject>()` | `?live=true` = active and inside its validity period (`IHasStartEndDate`) |
+| `Product` (primary, 500 seeded) | complex `For<Product, ProductSearchObject, ProductSortBy, EntityIncludes>()` | `ProductQueryBuilder` (category, brand, price, rating, on sale, in stock, featured, published); typed sorting; category + brand eager-loaded for every row |
+| `Order` | complex `For<Order, OrderSearchObject, OrderSortBy, OrderIncludes>()` | owns `OrderLine` via `e.Related()` (no slot); lines gated behind `?includes=Lines` (Details loads them) |
 
-**No separate `Customer` entity.** This is a guest-checkout storefront (no login), so
-name/e-mail/phone/shipping address live directly on `Order`. That keeps the entity budget small and
-matches how most demo webshops actually check out.
+Key behaviours:
+- **Server-owned order data**: `Code` is minted on create with `e.ServerOwned(x => x.Code, ...)` and restored on update;
+  `OrderPrepper` resolves unit prices and titles from the products (price-tampering guard; existing lines keep their
+  ordered price), validates lines (at least one, quantity 1-99, product exists and is published, stock on new orders)
+  and computes `ItemCount`, `Subtotal`, `ShippingCost` (free over EUR 50) and `Total` - including the
+  "lines not sent" case of a status-only PATCH. Validation failures return a 400 field map.
+- **Stock reactor**: `OrderStockReactor` runs after the commit - a placed order takes stock, a cancelled order puts it back.
+- Money is stored as SQLite REAL (`decimal` -> `double` conversion) so range filters and `ORDER BY` compare numerically.
+- `ConfigureDefaultJsonOptions()` (enum names, UTC dates, 400/409 mapping), central `api` route prefix,
+  OpenAPI + Scalar, Serilog (console + `logs/`), `ValidateOnBuild`, SQLite with foreign keys on.
 
-### Front-end &mdash; `frontend/`
+**Seeding** (`Data/Seeding/WebshopSeeder.cs`) runs on an empty database, entirely through the `IEntityService`
+implementations (so preppers, normalizers, primers and reactors run exactly as for API writes), using Bogus with a fixed seed:
+10 categories, 32 brands, **500 products** (brand, product type, price range and features drawn together per
+category so names and descriptions are coherent; ~22% on sale, ~7% sold out, ~3% unpublished), 7 promotions
+(live, expired and inactive) and 350 orders over the last 180 days whose status follows their age
+(recent = pending/paid, older = shipped/delivered, ~5% cancelled).
 
-Vue 3 + TypeScript + Vite + Pinia + vue-router. Built on the Regira Vue module family's **headless
-tier** (`regira_modules.vue.entities` &rsaquo; *Headless quick-start*): the shared `initAxios` HTTP
-client from `@regira/modules/vue/http` talks to the API, but the storefront UI (product cards, promo
-banners, cart, checkout) is fully hand-built rather than generated from the framework's admin-CRUD
-scaffold (`scaffold.mjs --shell` + per-entity List/Details/Form slices). That scaffold is optimised
-for back-office data management; a customer-facing shopping experience with cart/checkout doesn't fit
-that shape, and the guide explicitly sanctions a bespoke-UI/headless build for exactly this case
-(*"Hand-rolling one of these on a lean or headless build is a deviation to declare, not a shortcut"* &mdash;
-declared here). The `@regira/modules/vue/ui` component kit (Feedback, Paging, LoadingContainer, ...)
-was likewise skipped in favour of hand-built, storefront-styled equivalents (toasts, pagination,
-skeleton loaders) for visual cohesion with the custom design system.
+## Project layout
 
 ```
-src/
-  api/            typed axios calls (categories, products, orders) against the Regira Entities wire
-                  contract ({ item } / { items, count } envelopes, field-error responses)
-  types/models.ts hand-written DTO types mirroring the back-end DTOs
-  stores/         Pinia: cart (persisted to localStorage), toast notifications
-  components/
-    layout/       header (search, cart badge, mobile nav), footer
-    home/         hero, category grid, promo banners, USP strip, product rails
-    product/      ProductCard, RatingStars, PriceTag
-    shop/         FilterSidebar (category/brand/price/availability)
-    common/       Pagination, ToastContainer
-  views/          Home, Shop, ProductDetail, Cart, Checkout, OrderConfirmation, NotFound
+Webshop/
+  Webshop.Api/
+    Program.cs, Infrastructure/HostingExtensions.cs, Extensions/ServiceCollectionExtensions.cs
+    Controllers/Controllers.cs            # one EntityControllerBase per entity
+    Data/WebshopDbContext.cs, Data/Seeding/{CatalogData,WebshopSeeder}.cs
+    Entities/{Categories,Brands,Promotions,Products,Orders}/...
+  webshop-spa/
+    public/config.json, public/data/translations.json
+    src/entities/<slice>/...              # scaffolded Regira slices (admin)
+    src/shop/{ShopLayout.vue,cart.ts,catalog.ts,money.ts,components/,views/}   # storefront
+    src/assets/{theme.scss,shop.scss}
 ```
 
-Pages: **Home** (hero banner, category grid, two promo banners, featured/on-sale product rails) &middot;
-**Shop** (full catalog with category/brand/price/availability filters, sort, pagination) &middot;
-**Product detail** (gallery, rating, price, stock, related products) &middot; **Cart** &middot;
-**Checkout** (shipping form, order summary, submits to the API) &middot; **Order confirmation**.
+## Notes and limitations
+- No authentication: the back office is open (as requested scope did not include accounts). Adding the Regira auth
+  plugin + `SelfHostingApiWithAuth` registrations would gate `/admin` and the write endpoints.
+- Payments are simulated; no card or account data is ever requested.
+- Editing lines of an existing order does not adjust stock (only placing and cancelling do).
 
----
+## Build & verification status
+- `dotnet build`: succeeded, 0 warnings, 0 errors; no vulnerable packages.
+- `npm run build` (`vue-tsc -b` + `vite build`): succeeded.
+- Verified at runtime: API create -> update -> update -> PATCH round-trips (code/totals survive), 400 validation, 409 on
+  referenced delete, stock decrement/restock; in the browser: filters/sort/paging via URL, add to cart, full checkout,
+  confirmation page, admin order line add/remove + double save, product and promotion double save, category modal.
 
-## Seeding
+## Project statistics
 
-Seeded once on first run via `IEntityService<T,TKey>` (never raw `DbContext.Add`), using
-[Bogus](https://github.com/bchavez/Bogus) for realistic names/addresses/commerce text, with a fixed
-seed (`20260819`) for reproducibility:
+| Phase | Wall-clock time | Regira MCP calls | Tokens (approx., session budget consumed) |
+|---|---|---|---|
+| Back-end (API, seeding, API verification) | ~11 min (12:19 - 12:30) | 16 | ~221k |
+| Front-end (SPA, storefront, admin slices, browser verification, README) | ~23 min (12:30 - 12:53) | 14 | ~221k |
+| **Total** | **~33 min** | **30** | **~442k** |
 
-- **14 categories** (Electronics, Fashion, Home & Kitchen, ...)
-- **500 products** &mdash; the primary entity &mdash; spread evenly across categories, with brand,
-  price, an optional sale price (`CompareAtPrice`, ~22% of products), stock (~8% intentionally at 0
-  for an out-of-stock state), rating, review count and a `Created` date spread across the last ~300
-  days (so "Newest" sorting and any recency badge aren't a 0%/100% bucket)
-- **150 orders**, 1&ndash;5 lines each, statuses weighted across all five `OrderStatus` values and
-  skewed so newer orders lean Pending/Processing and older ones lean Delivered/Cancelled (verified
-  distribution: Pending 16, Processing 15, Shipped 22, Delivered 81, Cancelled 16 &mdash; no bucket
-  sits at 0% or 100%)
-
----
-
-## What was verified
-
-- `dotnet build` &mdash; 0 warnings, 0 errors. `npm run build` (`vue-tsc -b` + Vite) &mdash; 0 type
-  errors.
-- Startup log confirms the entity budget: `Regira.Entities: 1 simple / 2 complex registered → tier =
-  free`.
-- Golden-path round trip via the live API: create an order &rarr; `PATCH` status only &rarr; re-read
-  &mdash; `Code` and `Total` (server-owned fields excluded from `OrderInputDto`) survive the partial
-  update unchanged, confirming the `Prepare` hook's restore logic.
-- Full browser walkthrough: home &rarr; shop (filter/sort/paginate 500 products across 42 pages)
-  &rarr; product detail (slug-based routing, related products) &rarr; add to cart &rarr; cart review
-  &rarr; checkout form &rarr; order created against the API &rarr; confirmation page with the real
-  order code and line items.
-- This walkthrough caught and fixed one real bug: the checkout page redirected back to `/cart`
-  instead of the confirmation page, because a live `watch` on "cart is empty" fired the instant a
-  successful order cleared the cart, racing the post-order navigation. Fixed by replacing the live
-  watch with a one-time `onMounted` guard (only redirect away from checkout when it's *entered* with
-  an empty cart) and awaiting the confirmation navigation before releasing the submit button.
-
----
-
-## MCP calls, time and cost
-
-Tracked for this build session (Regira MCP server calls, `https://mcp.regira.com/mcp`):
-
-| | Regira MCP calls |
-|---|---|
-| Back-end (bootstrap guide, package docs, `how_to` recipes, `get_type` signature checks) | 21 |
-| Front-end (bootstrap guide, package docs, `get_type`) | 6 |
-| **Total** | **27** |
-
-Wall-clock time for the full build (project scaffolding through verified, seeded, working app):
-**~35 minutes**.
-
-Token/cost accounting isn't exposed to the agent inside this session, so an exact dollar cost can't
-be reported from here; the Regira MCP call count above is the closest available proxy for how much
-external documentation was pulled in versus generated from local reasoning.
-
----
+Token figures are read from the session's remaining-token counter, so they are approximate; an exact monetary cost
+is not observable from inside the session and is therefore not reported.
 
 ## Credits
 
-Built by **Claude** (model **Claude Sonnet 5**), running as the **Claude Code** CLI agent, in one
-continuous session with no explicit extended-thinking/reasoning-effort override configured (default
-effort). Scaffolding, package/API decisions and UI design followed the Regira MCP server's bootstrap
-guides and package documentation throughout.
+Built by **Claude** (Anthropic), model **Claude Opus 5.5**, running as a **Claude Code general-purpose sub-agent**
+with **low reasoning effort**, following the Regira MCP documentation server's golden path
+(bootstrap guide -> package cards -> heading-scoped guides -> generators).
+Framework: [Regira](https://regira.com) (`Regira.Entities.*` 6.4.0, `@regira/modules` 6.4.0).

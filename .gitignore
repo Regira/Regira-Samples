@@ -418,3 +418,7 @@ Thumbs.db
 
 # Serilog file sink output (also covered by [Ll]ogs/ above)
 logs/
+
+# Attachment storage written by the seeders and by uploads at runtime (AssetHub, HelpDesk)
+**/*.Api/uploads/
+App_Data/

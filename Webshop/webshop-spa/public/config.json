@@ -1,0 +1,23 @@
+{
+    "api": "/api",
+    "culture": "en-IE",
+    "currency": "EUR",
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "Nordlys Store" },
+    "adminTitle": { "en": "Nordlys Back Office" },
+    "navigation": {
+        "groups": [
+            { "id": "Sales", "title": "sales", "icon": "bi bi-receipt" },
+            { "id": "Catalog", "title": "catalog", "icon": "bi bi-box-seam" },
+            { "id": "Marketing", "title": "marketing", "icon": "bi bi-megaphone" }
+        ],
+        "dashboard": [
+            ["Sales", ["Order"]],
+            ["Catalog", ["Product", "Category", "Brand"]],
+            ["Marketing", ["Promotion"]]
+        ],
+        "navbar": ["Order", ["Catalog", ["Product", "Category", "Brand"]], "Promotion"],
+        "search": "Product"
+    }
+}

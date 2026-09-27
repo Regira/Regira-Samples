@@ -2,43 +2,56 @@ using Microsoft.EntityFrameworkCore;
 using Regira.Entities.DependencyInjection.ServiceCollections;
 using Regira.Entities.DependencyInjection.ServiceCollections.Abstractions;
 using Regira.Entities.EFcore.Extensions;
+using Regira.Entities.Models;
 using ShopMate.Api.Data;
 
 namespace ShopMate.Api.Entities.Articles;
 
 public static class ArticleServiceConfiguration
 {
+    // complex registration (1 complex slot); ArticleCategory is an owned join row (no slot)
     public static EntityServiceCollection<ShopMateDbContext> AddArticles(this IEntityServiceCollection<ShopMateDbContext> services)
         => services.For<Article, ArticleSearchObject, ArticleSortBy, ArticleIncludes>(e =>
         {
             e.AddFilter<ArticleQueryBuilder>();
-            // NOTE - confirmed framework quirk: ordering the unfiltered (all-lists) Article query by
-            // SortOrder returns one row fewer than the requested pageSize on every page (count is
-            // correct, items is short) - reproducible with a plain .OrderBy(x => x.SortOrder), with or
-            // without a .ThenBy(x => x.Id) tiebreaker, and NOT reproduced when ordering by another
-            // equally-duplicated int column (e.g. ShoppingListId) instead. SortOrder is scoped per
-            // shopping list (many rows share the same value across different lists), so this only shows
-            // up cross-list; ordering by SortOrder once scoped to a single shoppingListId (its intended
-            // use - the per-list reorder view, where values are unique) is unaffected, see below. Default
-            // therefore sorts by Title for the unscoped browse; SortOrder stays available (and correct)
-            // once a caller filters to one list.
             e.SortBy((query, sortBy) => sortBy switch
             {
-                ArticleSortBy.SortOrder => query.OrderOrThenBy(x => x.SortOrder).OrderOrThenBy(x => x.Id),
-                ArticleSortBy.Title => query.OrderOrThenBy(x => x.Title).OrderOrThenBy(x => x.Id),
-                ArticleSortBy.TitleDesc => query.OrderOrThenByDescending(x => x.Title).OrderOrThenBy(x => x.Id),
-                ArticleSortBy.Created => query.OrderOrThenBy(x => x.Created).OrderOrThenBy(x => x.Id),
-                ArticleSortBy.CreatedDesc => query.OrderOrThenByDescending(x => x.Created).OrderOrThenBy(x => x.Id),
-                _ => query.OrderOrThenBy(x => x.Title).OrderOrThenBy(x => x.Id)
+                ArticleSortBy.SortOrder => query.OrderOrThenBy(x => x.SortOrder),
+                ArticleSortBy.ActiveFirst => query.OrderOrThenByDescending(x => x.IsActive).ThenBy(x => x.SortOrder),
+                ArticleSortBy.Title => query.OrderOrThenBy(x => x.Title),
+                ArticleSortBy.TitleDesc => query.OrderOrThenByDescending(x => x.Title),
+                ArticleSortBy.Created => query.OrderOrThenBy(x => x.Created),
+                ArticleSortBy.CreatedDesc => query.OrderOrThenByDescending(x => x.Created),
+                _ => query.OrderOrThenBy(x => x.ShoppingListId).ThenBy(x => x.SortOrder).ThenBy(x => x.Id)
             });
-            // ShoppingList is a to-one shown on every row (breadcrumb) -> eager-load unconditionally.
-            // Categories is a collection kept behind the ArticleIncludes.Categories flag.
             e.Includes((query, includes) =>
             {
-                query = query.Include(x => x.ShoppingList!);
+                if (includes?.HasFlag(ArticleIncludes.ShoppingList) == true)
+                    query = query.Include(x => x.ShoppingList);
                 if (includes?.HasFlag(ArticleIncludes.Categories) == true)
-                    query = query.Include(x => x.Categories!).ThenInclude(ac => ac.Category);
+                    query = query.Include(x => x.Categories!).ThenInclude(x => x.Category);
                 return query;
+            });
+            // Validate the list FK (400 instead of 409) and mint SortOrder on create (append to the end).
+            // [ServerOwned] restores SortOrder from the stored row on update, so only new rows are minted here.
+            e.Prepare(async (item, db) =>
+            {
+                var listExists = await db.ShoppingLists.AnyAsync(x => x.Id == item.ShoppingListId);
+                if (!listExists)
+                {
+                    throw new EntityInputException<Article>("Invalid shopping list")
+                    {
+                        Item = item,
+                        InputErrors = new Dictionary<string, string> { [nameof(Article.ShoppingListId)] = "Shopping list does not exist" }
+                    };
+                }
+                if (item.Id == 0 && item.SortOrder == 0)
+                {
+                    var max = await db.Articles
+                        .Where(x => x.ShoppingListId == item.ShoppingListId)
+                        .MaxAsync(x => (int?)x.SortOrder) ?? 0;
+                    item.SortOrder = max + 1;
+                }
             });
             e.Related(x => x.Categories);
         });

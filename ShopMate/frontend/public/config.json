@@ -1,12 +1,19 @@
 {
-    "api": { "development": "http://localhost:6170/api", "production": "/api" },
+    "api": "/api",
     "includeCredentials": false,
     "isDebug": false,
+    "culture": "en-GB",
     "title": { "en": "ShopMate" },
     "navigation": {
-        "groups": [{ "id": "Main", "title": "main", "icon": "bi bi-grid" }],
-        "dashboard": [["Main", ["ShoppingList", "Category"]]],
-        "navbar": ["ShoppingList", "Category"],
-        "search": ""
+        "groups": [
+            { "id": "Shopping", "title": "shopping", "icon": "bi bi-basket2" },
+            { "id": "Manage", "title": "manage", "icon": "bi bi-sliders" }
+        ],
+        "dashboard": [
+            ["Shopping", ["ShoppingList", "Article"]],
+            ["Manage", ["Category", "Shopper"]]
+        ],
+        "navbar": ["ShoppingList", "Article", "Category", "Shopper"],
+        "search": "Article"
     }
 }

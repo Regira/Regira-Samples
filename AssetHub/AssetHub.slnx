@@ -1,5 +1,0 @@
-<Solution>
-  <Folder Name="/backend/">
-    <Project Path="backend/AssetHub.Api.csproj" />
-  </Folder>
-</Solution>

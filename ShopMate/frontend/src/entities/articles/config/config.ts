@@ -11,17 +11,16 @@ const config: IConfig = {
     isComplex: true,
 
     routePrefix: "articles",
-    // Categories is a collection gated behind the API's ArticleIncludes.[Flags] enum (ShoppingList is
-    // eager-loaded unconditionally server-side, so it needs no entry here).
-    baseQueryParams: { includes: ["Categories"] },
-    initialQuery: {},
+    // the API gates both behind its named [Flags] ArticleIncludes; list rows show the list name + category chips
+    baseQueryParams: { includes: ["Categories", "ShoppingList"] },
+    initialQuery: {}, // route query for the GENERATED nav link ONLY — lost on refresh/deep-link. A default sortBy or includes belongs in baseQueryParams
 
     overviewTitle: "articles",
     detailsTitle: "article",
     description: "article.description",
-    icon: "bi bi-basket2",
+    icon: "bi bi-bag-check",
 
-    defaultPageSize: 30,
+    defaultPageSize: 25,
 
     api, // every *Url below defaults to `api` when omitted; keep only the ones you override
     searchUrl: api + "/search", // counted search endpoint — the overview pages through it (every controller exposes /search)

@@ -1,0 +1,25 @@
+{
+    "api": { "development": "/api", "production": "/api" },
+    "culture": "en-GB",
+    "includeCredentials": false,
+    "isDebug": false,
+    "title": { "en": "FleetOps" },
+    "navigation": {
+        "groups": [
+            { "id": "Fleet", "title": "fleet", "icon": "bi bi-truck-front" },
+            { "id": "Operations", "title": "operations", "icon": "bi bi-tools" },
+            { "id": "Partners", "title": "partners", "icon": "bi bi-people" }
+        ],
+        "dashboard": [
+            ["Fleet", ["Vehicle"]],
+            ["Operations", ["Intervention", "Invoice"]],
+            ["Partners", ["Supplier", "InterventionType"]]
+        ],
+        "navbar": [
+            ["Fleet", ["Vehicle"]],
+            ["Operations", ["Intervention", "Invoice"]],
+            ["Partners", ["Supplier", "InterventionType"]]
+        ],
+        "search": "Vehicle"
+    }
+}
