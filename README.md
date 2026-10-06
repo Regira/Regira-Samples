@@ -9,7 +9,9 @@ What makes them unusual: every sample was **generated end-to-end by an AI agent*
 no boilerplate written by hand — driven exclusively by the **Regira MCP server**
 (`https://mcp.regira.com/mcp`) as the single source of truth for package selection, setup and APIs.
 Each sample carries its own `README.md` covering what it does, how to run it, and the design decisions
-(and deviations) the agent made along the way, plus the `prompt.txt` it was generated from. The samples
+(and deviations) the agent made along the way, plus the `prompt.txt` it was generated from. That file
+holds the domain; three standing lines went with every one — use the Regira MCP server for anything
+Regira, seed the database through the entity services, and close with a README documenting the run. The samples
 were not touched after their generating session completed — except [StableGenius](StableGenius/), which
 was developed a little further afterwards with vibe coding.
 
@@ -150,6 +152,7 @@ Regira-Samples/
 ├── StableGenius/        README.md + GeniusTest.Api/ + GeniusTest.Web/ + GeniusTest.Tests/
 ├── Webshop/             README.md + prompt.txt + Webshop.Api/ + webshop-spa/
 ├── .mcp.json            Regira MCP server registration (for agents working in this repo)
+├── AGENTS.md            tells those agents to use it (CLAUDE.md imports it for Claude Code)
 └── Regira-Samples.slnx  all ten APIs in one solution
 ```
 
@@ -305,8 +308,8 @@ entirely by the **Regira MCP server** (`https://mcp.regira.com/mcp`) — package
 classification, scaffolding and conventions all came from the MCP docs rather than prior model knowledge.
 
 The nine generated samples were each built by their own Claude Code sub-agent (general-purpose agent type),
-running in parallel, all on **Claude Opus 5.5** with **low reasoning effort**. No agent used memory or any
-other project as a reference.
+running in parallel, all on **Claude Opus 5.5** with **low reasoning effort**. Each was told to set aside
+its memory and the other projects on disk, so no agent used either as a reference.
 
 | Sample | Regira MCP calls | Wall-clock | Tokens (approx.) |
 |---|---|---|---|
