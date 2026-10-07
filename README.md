@@ -151,9 +151,7 @@ Regira-Samples/
 ├── ShopMate/            README.md + prompt.txt + backend/ShopMate.Api/ + frontend/
 ├── StableGenius/        README.md + GeniusTest.Api/ + GeniusTest.Web/ + GeniusTest.Tests/
 ├── Webshop/             README.md + prompt.txt + Webshop.Api/ + webshop-spa/
-├── .mcp.json            Regira MCP server registration (for agents working in this repo)
-├── AGENTS.md            tells those agents to use it (CLAUDE.md imports it for Claude Code)
-└── Regira-Samples.slnx  all ten APIs in one solution
+├── .mcp.json            Regira MCP server registration (for agents working in this repo)└── Regira-Samples.slnx  all ten APIs in one solution
 ```
 
 A back end follows the framework's own layout — one folder per entity holding the model, its DTOs, search
